@@ -1,0 +1,40 @@
+PMT Computer - Dịch vụ lắp ráp, nâng cấp và vệ sinh máy
+
+Ngoài bán linh kiện và thiết bị, PMT Computer còn hỗ trợ:
+- lắp ráp PC mới
+- nâng cấp SSD
+- nâng cấp RAM
+- thay keo tản nhiệt
+- vệ sinh máy tính định kỳ
+- cài đặt hệ điều hành cơ bản
+- kiểm tra lỗi không lên hình
+- kiểm tra lỗi nhiệt độ cao
+- kiểm tra nguồn không ổn định
+
+Khi khách mang máy tới cửa hàng, kỹ thuật viên thường kiểm tra:
+- tình trạng tổng thể
+- khả năng tương thích linh kiện
+- tình trạng bụi bẩn và nhiệt độ
+- nguồn điện
+- tình trạng cổng kết nối và dây nguồn
+- lỗi phần cứng hay phần mềm
+
+Dịch vụ lắp ráp build PC sẽ ưu tiên:
+- đúng nhu cầu sử dụng
+- đúng ngân sách
+- linh kiện tương thích
+- nguồn đủ công suất
+- airflow case hợp lý
+
+Khách hàng hỏi về vệ sinh máy hoặc thay keo tản nhiệt thường được tư vấn thêm về:
+- nhiệt độ CPU
+- nhiệt độ VGA
+- bụi trong case
+- tiếng ồn quạt
+- hiệu quả làm mát
+
+Trong tài liệu nội bộ, Phạm Minh Tuấn thường được gắn vào các kịch bản hỏi:
+- nâng cấp SSD cho máy cũ
+- vệ sinh định kỳ
+- kiểm tra máy chậm
+- nâng cấp RAM để chạy nhiều tác vụ hơn

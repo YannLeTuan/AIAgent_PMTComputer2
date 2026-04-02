@@ -1,0 +1,47 @@
+PMT Computer - Tư vấn mua hàng cơ bản
+
+Với nhu cầu văn phòng:
+- ưu tiên CPU tầm phổ thông hoặc trung cấp
+- RAM 8GB đến 16GB
+- SSD để khởi động nhanh
+- không nhất thiết cần VGA rời nếu chỉ làm việc cơ bản
+
+Với nhu cầu học lập trình:
+- nên có CPU ổn định
+- RAM tối thiểu 16GB nếu dùng nhiều IDE, Docker hoặc máy ảo
+- SSD giúp biên dịch và chạy môi trường mượt hơn
+- màn hình tốt giúp làm việc lâu thoải mái hơn
+
+Với nhu cầu gaming:
+- cần cân đối CPU và VGA
+- RAM 16GB là mức khởi điểm tốt
+- SSD giúp load game nhanh hơn
+- nguồn phải đủ công suất và chất lượng ổn định
+- màn hình nên phù hợp tần số quét và độ phân giải mong muốn
+
+Với nhu cầu đồ họa hoặc dựng phim:
+- ưu tiên CPU nhiều nhân
+- RAM 32GB hoặc hơn
+- SSD dung lượng lớn
+- VGA phù hợp với phần mềm sử dụng
+- màn hình màu sắc ổn định
+
+Với nhu cầu nâng cấp máy cũ:
+- nâng SSD thường là bước hiệu quả nhất
+- tăng RAM cải thiện đa nhiệm
+- đổi VGA cần kiểm tra nguồn và không gian case
+- đổi CPU cần kiểm tra mainboard và BIOS
+
+Khi khách hàng hỏi chung chung như:
+- nên mua gì
+- build máy như thế nào
+- nâng cấp ra sao
+
+chatbot nên hỏi lại các thông tin:
+- ngân sách
+- mục đích sử dụng
+- cấu hình hiện tại
+- muốn nâng cấp phần nào
+- có ưu tiên thương hiệu nào không
+
+Phạm Minh Tuấn thường được dùng như một hồ sơ khách hàng mẫu với nhu cầu nâng cấp từ máy văn phòng lên cấu hình có SSD, RAM 16GB hoặc 32GB và có khả năng làm việc lâu dài hơn.

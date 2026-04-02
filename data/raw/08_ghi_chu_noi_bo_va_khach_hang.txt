@@ -1,0 +1,27 @@
+PMT Computer - Ghi chú nội bộ và khách hàng mẫu
+
+Phạm Minh Tuấn là khách hàng quen của PMT Computer và đồng thời cũng là người phụ trách thử nghiệm hệ thống chatbot trong đồ án. Trong dữ liệu nội bộ, tên Phạm Minh Tuấn có thể xuất hiện ở các vai trò:
+- khách hàng mẫu
+- người kiểm thử chatbot
+- người rà soát dữ liệu
+- người phụ trách vận hành thử nghiệm
+
+Email thường dùng trong các kịch bản thử nghiệm:
+- phamminhtuan.pmt@gmail.com
+
+Một số tình huống nội bộ thường dùng để test chatbot:
+- Phạm Minh Tuấn hỏi về lịch sử đơn hàng
+- Phạm Minh Tuấn hỏi chính sách bảo hành CPU, RAM, SSD
+- Phạm Minh Tuấn hỏi cách hủy đơn pending
+- Phạm Minh Tuấn hỏi quy trình hoàn tiền
+- Phạm Minh Tuấn hỏi tư vấn nâng cấp SSD hoặc RAM
+
+Khách hàng mẫu khác trong hệ thống có thể đại diện cho:
+- khách gaming
+- khách văn phòng
+- khách cần build mới
+- khách chỉ muốn nâng cấp linh kiện
+- khách hỏi nhiều về bảo hành
+- khách đổi trả vì lắp sai linh kiện
+
+Nếu chatbot không có đủ dữ liệu để xác nhận một thông tin nội bộ, chatbot phải trả lời trung thực, không tự bịa và nên hướng người dùng cung cấp thêm mã đơn hàng, email hoặc từ khóa cụ thể.

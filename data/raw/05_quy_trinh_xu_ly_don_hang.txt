@@ -1,0 +1,46 @@
+PMT Computer - Quy trình xử lý đơn hàng
+
+Một đơn hàng tại PMT Computer thường đi qua các trạng thái:
+- pending
+- processing
+- shipped
+- delivered
+- cancelled
+
+Giải thích các trạng thái:
+- pending: đơn vừa được tạo, đang chờ xác nhận hoặc chờ thanh toán
+- processing: đơn đã được tiếp nhận, đang xác nhận tồn kho, đóng gói hoặc chuẩn bị xuất kho
+- shipped: đơn đã bàn giao cho đơn vị vận chuyển
+- delivered: đơn đã giao thành công
+- cancelled: đơn đã hủy
+
+Quy tắc hủy đơn:
+- pending: có thể hủy
+- processing: thường vẫn có thể hủy nếu chưa xuất kho
+- shipped: không thể hủy trực tiếp trên hệ thống
+- delivered: không thể hủy
+- cancelled: không thể hủy lại
+
+Khi khách muốn hủy đơn, nhân viên cần xác minh:
+- mã đơn hàng
+- lý do hủy
+- trạng thái thanh toán
+- trạng thái xử lý hiện tại
+- sản phẩm trong đơn có phải hàng đặt riêng không
+
+Nếu khách yêu cầu thay đổi:
+- địa chỉ giao hàng
+- số điện thoại
+- thời gian nhận hàng
+- ghi chú xuất hóa đơn
+- hình thức thanh toán
+
+thì cửa hàng sẽ kiểm tra xem đơn đang ở giai đoạn nào để quyết định có chỉnh sửa được không.
+
+Nếu đơn đã chuyển sang shipped, nhân viên cần giải thích rằng hệ thống không hỗ trợ hủy trực tiếp nữa. Khi đó khách có thể nhận hàng rồi yêu cầu đổi trả nếu đáp ứng điều kiện.
+
+Phạm Minh Tuấn được dùng như hồ sơ kiểm thử nội bộ cho các tình huống:
+- hủy đơn pending
+- xử lý đơn processing
+- hỏi lại tình trạng thanh toán
+- follow-up nhiều lượt về đơn hàng

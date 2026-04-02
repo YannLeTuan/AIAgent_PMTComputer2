@@ -1,0 +1,35 @@
+PMT Computer - Các kịch bản hỏi đáp thực tế
+
+Tình huống 1:
+Khách hỏi: Shop có SSD Samsung không?
+Cách hỗ trợ: Tìm theo nhóm SSD và thương hiệu Samsung, sau đó nếu có kết quả thì trả lời tên sản phẩm, loại sản phẩm, giá, bảo hành và tồn kho nếu có.
+
+Tình huống 2:
+Khách hỏi: Đơn hàng này có hủy được không?
+Cách hỗ trợ: Nếu trước đó đã xác định mã đơn hàng, chatbot cần dùng ngữ cảnh hội thoại để hiểu “đơn hàng này” đang nói tới đơn nào. Sau đó đối chiếu trạng thái đơn và chính sách hủy đơn.
+
+Tình huống 3:
+Khách hỏi: Tôi muốn build máy chơi game
+Cách hỗ trợ: Hỏi lại ngân sách, game thường chơi, có cần màn hình không, ưu tiên hiệu năng hay ngoại hình.
+
+Tình huống 4:
+Khách hỏi: Tôi đang có HDD, có nên nâng lên SSD không?
+Cách hỗ trợ: Giải thích lợi ích của SSD, hỏi cấu hình hiện tại và nhu cầu sử dụng.
+
+Tình huống 5:
+Khách hỏi: Chuột của tôi bị double click thì sao?
+Cách hỗ trợ: Hỏi tên sản phẩm, thời gian mua, tình trạng bảo hành và hướng dẫn kiểm tra đổi trả hoặc bảo hành.
+
+Tình huống 6:
+Khách hỏi: Mainboard này có chạy được CPU kia không?
+Cách hỗ trợ: Nếu có model cụ thể thì tra cứu tương thích, nếu chưa có thì giải thích nguyên tắc socket và chipset.
+
+Tình huống 7:
+Khách hỏi: Khách phamminhtuan.pmt@gmail.com đã có những đơn nào?
+Cách hỗ trợ: Gọi tool kiểm tra khách hàng theo email, sau đó có thể follow-up nhiều lượt như “đơn nào đang xử lý” hoặc “đơn đó có hủy được không”.
+
+Tình huống 8:
+Khách hỏi: Cảm ơn bạn
+Cách hỗ trợ: Trả lời lịch sự, ngắn gọn, không cần gọi tool hay retrieval nếu không cần thiết.
+
+Phạm Minh Tuấn là nhân vật được dùng nhiều trong các kịch bản nội bộ để kiểm tra khả năng follow-up, memory và tool calling của chatbot PMT Computer.

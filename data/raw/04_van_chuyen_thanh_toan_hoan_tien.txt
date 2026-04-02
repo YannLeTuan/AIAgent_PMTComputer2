@@ -1,0 +1,33 @@
+PMT Computer - Vận chuyển, thanh toán và hoàn tiền
+
+PMT Computer hỗ trợ giao hàng toàn quốc. Đơn nội thành thường giao trong 24 đến 48 giờ. Đơn đi tỉnh thường từ 2 đến 5 ngày làm việc tùy khu vực, thời tiết, hãng vận chuyển và tình trạng hàng hóa.
+
+Phí vận chuyển được tính theo:
+- khu vực giao hàng
+- kích thước và khối lượng kiện hàng
+- giá trị đơn hàng
+- chương trình ưu đãi tại thời điểm đặt mua
+
+Một số trường hợp có thể được miễn phí vận chuyển:
+- đơn hàng đạt giá trị tối thiểu theo chương trình
+- đơn build PC trọn bộ
+- chương trình khuyến mãi định kỳ
+- khách hàng thân thiết theo chính sách cửa hàng
+
+Các hình thức thanh toán hỗ trợ:
+- thanh toán khi nhận hàng
+- chuyển khoản ngân hàng
+- ví điện tử tùy thời điểm
+- thanh toán trước 100 phần trăm với đơn đặt riêng hoặc cấu hình build theo yêu cầu
+
+Chính sách hoàn tiền:
+- nếu đơn đủ điều kiện hủy và đã thanh toán trước, tiền hoàn thường được xử lý trong 3 đến 7 ngày làm việc
+- nếu đổi trả thành công do lỗi từ nhà sản xuất hoặc lỗi từ cửa hàng, khách có thể được đổi sản phẩm hoặc hoàn tiền tùy từng tình huống
+- nếu sản phẩm thay thế không còn hàng, cửa hàng sẽ trao đổi phương án đổi model khác hoặc hoàn tiền
+
+Tiền hoàn có thể được chuyển về:
+- tài khoản ngân hàng
+- ví điện tử
+- hoặc theo phương thức phù hợp với giao dịch ban đầu
+
+Nếu đơn hàng thuộc khách hàng mẫu Phạm Minh Tuấn, hệ thống nội bộ có thể dùng làm ca kiểm thử cho các bước xác nhận thanh toán trước, yêu cầu hủy đơn và quy trình hoàn tiền.

@@ -1,0 +1,35 @@
+PMT Computer - Tương thích linh kiện
+
+Khi tư vấn linh kiện máy tính, các yếu tố tương thích cần kiểm tra gồm:
+- socket CPU và mainboard
+- chipset mainboard
+- loại RAM DDR4 hay DDR5
+- số khe RAM
+- chuẩn SSD NVMe hay SATA
+- số khe M.2
+- công suất nguồn
+- đầu cấp nguồn VGA
+- kích thước case
+- chiều dài card đồ họa
+- chiều cao tản nhiệt
+- cổng kết nối màn hình
+
+Ví dụ tương thích phổ biến:
+- CPU Intel socket LGA 1700 cần mainboard phù hợp
+- CPU AMD AM4 cần mainboard socket AM4
+- RAM DDR4 không dùng chung với mainboard chỉ hỗ trợ DDR5
+- VGA hiệu năng cao thường yêu cầu nguồn tốt và đủ đầu cấp điện
+- SSD NVMe cần khe M.2 hỗ trợ đúng giao thức
+
+Khi khách hỏi:
+- main này có gắn được CPU kia không
+- RAM này có cắm được không
+- nguồn này có đủ không
+- case này có vừa VGA không
+
+chatbot nên trả lời theo hướng:
+- kiểm tra model cụ thể nếu có dữ liệu
+- nếu chưa có model cụ thể, giải thích nguyên tắc tương thích
+- khuyến khích khách cung cấp tên linh kiện rõ hơn
+
+Phạm Minh Tuấn thường được dùng như hồ sơ thử nghiệm khi chatbot tư vấn nâng cấp SSD hoặc RAM cho máy cũ mà chưa rõ mainboard.

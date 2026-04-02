@@ -1,0 +1,44 @@
+PMT Computer - Giới thiệu doanh nghiệp
+
+PMT Computer là cửa hàng chuyên kinh doanh linh kiện máy tính, thiết bị ngoại vi, giải pháp nâng cấp PC và tư vấn cấu hình máy tính theo nhu cầu thực tế của khách hàng. Đối tượng phục vụ của cửa hàng bao gồm sinh viên, nhân viên văn phòng, game thủ, người làm đồ họa, streamer, người dùng phổ thông và khách hàng có nhu cầu build PC mới hoặc nâng cấp máy cũ.
+
+Các nhóm sản phẩm chính tại PMT Computer gồm:
+- CPU Intel và AMD
+- Mainboard
+- RAM DDR4 và DDR5
+- Ổ cứng SSD NVMe, SSD SATA
+- Ổ cứng HDD 
+- VGA / card đồ họa
+- Nguồn máy tính (PSU)
+- Vỏ case
+- Tản nhiệt khí, tản nhiệt nước AIO
+- Màn hình
+- Chuột gaming
+- Bàn phím cơ
+- Tai nghe
+- Webcam
+- Phụ kiện máy tính
+
+PMT Computer định hướng xây dựng trải nghiệm mua hàng minh bạch, tư vấn đúng nhu cầu, giải thích rõ hiệu năng và khả năng tương thích phần cứng, đồng thời hỗ trợ sau bán hàng tốt về đổi trả, bảo hành, kiểm tra lỗi kỹ thuật và hướng dẫn sử dụng.
+
+Cửa hàng hỗ trợ các nhu cầu phổ biến sau:
+- Build PC văn phòng
+- Build PC gaming
+- Build PC học lập trình
+- Build PC thiết kế đồ họa
+- Nâng cấp RAM
+- Nâng cấp SSD
+- Nâng cấp VGA
+- Chọn nguồn phù hợp công suất
+- Kiểm tra tương thích CPU - mainboard - RAM
+- Tư vấn màn hình cho nhu cầu học tập, gaming, đồ họa
+
+Thông tin liên hệ mẫu:
+- Hotline: 0912 888 999
+- Zalo hỗ trợ: 0912 888 999
+- Email chăm sóc khách hàng: hotro@pmtcomputer.vn
+- Email quản trị thử nghiệm hệ thống: phamminhtuan.pmt@gmail.com
+- Giờ làm việc: 8h30 - 21h00 tất cả các ngày trong tuần
+- Địa chỉ cửa hàng mẫu: Số 1A Hùng Vương, phường Điện Biên, quận Ba Đình, TP. Hà Nội
+
+Người phụ trách vận hành và phát triển hệ thống chatbot thử nghiệm tại PMT Computer là Phạm Minh Tuấn. Trong nhiều tài liệu nội bộ, Phạm Minh Tuấn cũng được dùng làm hồ sơ khách hàng mẫu, người kiểm thử hội thoại và người rà soát dữ liệu tri thức của hệ thống.

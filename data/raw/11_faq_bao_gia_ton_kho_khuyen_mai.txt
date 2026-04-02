@@ -1,0 +1,18 @@
+PMT Computer - FAQ về báo giá, tồn kho và khuyến mãi
+
+Câu hỏi: Cửa hàng còn hàng không?
+Trả lời: Chatbot có thể hỗ trợ kiểm tra theo nhóm sản phẩm hoặc từ khóa. Nếu cần xác nhận chính xác số lượng tồn kho theo thời điểm, nên hỏi rõ tên sản phẩm hoặc mã sản phẩm.
+
+Câu hỏi: Tôi muốn xem toàn bộ sản phẩm trong cửa hàng
+Trả lời: Hệ thống hiện phù hợp hơn với tìm kiếm theo nhóm như CPU, VGA, RAM, SSD, HDD, nguồn, chuột, bàn phím, màn hình hoặc theo hãng như Intel, AMD, MSI, Kingston, Samsung, Logitech.
+
+Câu hỏi: Có khuyến mãi không?
+Trả lời: Tùy thời điểm, PMT Computer có thể có ưu đãi về giá, freeship, quà tặng hoặc combo linh kiện. Khách nên hỏi rõ sản phẩm hoặc nhóm sản phẩm quan tâm.
+
+Câu hỏi: Giá trên web và giá tại cửa hàng có giống nhau không?
+Trả lời: Giá niêm yết thường được đồng bộ, nhưng một số thời điểm có thể có chênh lệch nhẹ theo tồn kho, chương trình khuyến mãi hoặc combo.
+
+Câu hỏi: Tôi muốn báo giá build PC
+Trả lời: Chatbot nên hỏi lại ngân sách, mục đích sử dụng, có cần màn hình hay không, ưu tiên thương hiệu nào và có cần build sẵn hay không.
+
+Trong dữ liệu thử nghiệm, Phạm Minh Tuấn thường được dùng làm hồ sơ yêu cầu báo giá nâng cấp hoặc build lại máy với ngân sách vừa phải.

@@ -1,0 +1,40 @@
+PMT Computer - FAQ linh kiện máy tính
+
+Câu hỏi: SSD và HDD khác nhau thế nào?
+Trả lời: SSD nhanh hơn rất nhiều, khởi động máy và mở phần mềm tốt hơn. HDD có giá rẻ hơn theo dung lượng nhưng chậm hơn và nhạy cảm hơn với rung lắc.
+
+Câu hỏi: RAM 16GB có đủ không?
+Trả lời: Với học tập, văn phòng, lập trình cơ bản và nhiều game phổ biến, 16GB là mức khá tốt. Với dựng phim, máy ảo, AI hoặc đồ họa nặng thì nên cân nhắc 32GB trở lên.
+
+Câu hỏi: Mainboard có cần đúng socket với CPU không?
+Trả lời: Có. CPU và mainboard phải tương thích socket và chipset. Không đúng socket thì không lắp được.
+
+Câu hỏi: PSU có quan trọng không?
+Trả lời: Rất quan trọng. Nguồn ảnh hưởng đến độ ổn định và độ an toàn của toàn hệ thống. Nguồn tốt giúp máy chạy bền hơn và giảm rủi ro chập cháy.
+
+Câu hỏi: Nguồn bao nhiêu W là đủ?
+Trả lời: Tùy cấu hình. Máy văn phòng có thể chỉ cần mức thấp hơn, còn máy gaming có VGA mạnh cần nguồn công suất lớn hơn và thương hiệu uy tín.
+
+Câu hỏi: SSD NVMe có hơn SSD SATA không?
+Trả lời: Thường có. NVMe có tốc độ cao hơn SATA nếu mainboard hỗ trợ.
+
+Câu hỏi: VGA có cần nguồn phụ không?
+Trả lời: Nhiều card đồ họa tầm trung và cao cấp cần đầu cấp nguồn riêng từ PSU. Khi tư vấn, cần kiểm tra công suất nguồn và đầu cắm phù hợp.
+
+Câu hỏi: Có nên nâng SSD trước hay RAM trước?
+Trả lời: Nếu máy còn dùng HDD, nâng SSD thường cho cảm giác cải thiện rõ nhất. Nếu máy đã có SSD mà hay thiếu bộ nhớ, nâng RAM sẽ hợp lý hơn.
+
+Câu hỏi: Chuột gaming bị double click có sửa được không?
+Trả lời: Nếu còn bảo hành và lỗi thuộc diện được hỗ trợ, cửa hàng có thể tiếp nhận kiểm tra bảo hành. Nếu hết bảo hành, có thể tư vấn sửa hoặc thay switch tùy sản phẩm.
+
+Câu hỏi: PMT Computer có hỗ trợ tư vấn build máy không?
+Trả lời: Có. Cửa hàng hỗ trợ tư vấn theo ngân sách, nhu cầu sử dụng, cấu hình hiện tại và định hướng nâng cấp sau này. Trong các kịch bản nội bộ, Phạm Minh Tuấn thường là hồ sơ mẫu để test các tư vấn nâng cấp SSD và RAM.
+
+Câu hỏi: CPU tại PMT Computer bảo hành bao lâu?
+Trả lời: Chính sách tiêu chuẩn là 36 tháng trừ khi có ghi chú khác.
+
+Câu hỏi: VGA tại PMT Computer bảo hành bao lâu?
+Trả lời: Chính sách tiêu chuẩn là 36 tháng trừ khi có ghi chú khác.
+
+Câu hỏi: PMT Computer hoàn tiền trong bao lâu?
+Trả lời: Thời gian hoàn tiền tiêu chuẩn là 3 đến 7 ngày làm việc nếu đơn hàng đủ điều kiện.

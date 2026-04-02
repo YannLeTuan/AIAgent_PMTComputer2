@@ -1,0 +1,15 @@
+numpy
+fastapi
+uvicorn
+google-genai
+sqlalchemy
+pydantic
+pydantic-settings
+python-dotenv
+faiss-cpu
+sentence-transformers
+pypdf
+streamlit
+requests
+loguru
+python-telegram-bot
