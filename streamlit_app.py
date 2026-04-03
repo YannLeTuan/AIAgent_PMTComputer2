@@ -1,11 +1,8 @@
-import html
 import os
-import re
 import uuid
 from pathlib import Path
 
 import streamlit as st
-
 
 st.set_page_config(
     page_title="PMT Computer AI Agent",
@@ -13,7 +10,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 
 def load_cloud_secrets_to_env():
     keys = [
@@ -25,14 +21,12 @@ def load_cloud_secrets_to_env():
         if key in st.secrets:
             os.environ[key] = str(st.secrets[key])
 
-
 load_cloud_secrets_to_env()
 
 from app.agent.memory import session_store
 from app.agent.orchestrator import chat_with_agent
 from app.db.seed import seed
 from app.rag.ingest import ingest_folder
-
 
 st.markdown("""
 <style>
@@ -45,9 +39,6 @@ st.markdown("""
         --pmt-primary: #163a70;
         --pmt-primary-2: #275faa;
         --pmt-primary-soft: #eef4ff;
-        --pmt-user-bg: #dcecff;
-        --pmt-user-text: #17345d;
-        --pmt-bot-bg: #f7f8fb;
         --pmt-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
     }
 
@@ -244,72 +235,7 @@ st.markdown("""
         border-radius: 24px;
         box-shadow: var(--pmt-shadow);
         padding: 1.05rem 1rem 1rem 1rem;
-    }
-
-    .msg-row {
-        display: flex;
         margin-bottom: 1rem;
-        width: 100%;
-    }
-
-    .msg-row.user {
-        justify-content: flex-end;
-    }
-
-    .msg-row.assistant {
-        justify-content: flex-start;
-    }
-
-    .msg-bubble {
-        max-width: 76%;
-        padding: 0.95rem 1.05rem;
-        border-radius: 22px;
-        line-height: 1.7;
-        font-size: 1rem;
-        word-wrap: break-word;
-        white-space: normal;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
-    }
-
-    .msg-bubble.user {
-        background: var(--pmt-user-bg);
-        color: var(--pmt-user-text);
-        border: 1px solid #cddfff;
-        border-bottom-right-radius: 8px;
-    }
-
-    .msg-bubble.assistant {
-        background: var(--pmt-bot-bg);
-        color: #1f2937;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-bottom-left-radius: 8px;
-    }
-
-    .msg-label {
-        font-size: 0.76rem;
-        font-weight: 800;
-        margin-bottom: 0.42rem;
-        opacity: 0.72;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-    }
-
-    .msg-bubble p {
-        margin: 0 0 0.65rem 0;
-    }
-
-    .msg-bubble p:last-child {
-        margin-bottom: 0;
-    }
-
-    .msg-bubble ul {
-        margin-top: 0.25rem;
-        margin-bottom: 0.6rem;
-        padding-left: 1.25rem;
-    }
-
-    .msg-bubble li {
-        margin-bottom: 0.35rem;
     }
 
     .input-guide {
@@ -394,69 +320,6 @@ def reset_demo_state():
         session_store.clear_session(st.session_state.thread_id)
     st.session_state.messages = []
     st.session_state.thread_id = str(uuid.uuid4())
-
-
-def simple_markdown_to_html(text: str) -> str:
-    text = text or ""
-    lines = text.splitlines()
-    parts = []
-    in_list = False
-
-    def format_inline(s: str) -> str:
-        s = html.escape(s)
-        s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
-        return s
-
-    for raw in lines:
-        stripped = raw.strip()
-
-        if not stripped:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            continue
-
-        if stripped.startswith("- ") or stripped.startswith("* "):
-            if not in_list:
-                parts.append("<ul>")
-                in_list = True
-            item = format_inline(stripped[2:].strip())
-            parts.append(f"<li>{item}</li>")
-        else:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            parts.append(f"<p>{format_inline(stripped)}</p>")
-
-    if in_list:
-        parts.append("</ul>")
-
-    return "".join(parts) if parts else "<p></p>"
-
-
-def get_message_html(role: str, content: str) -> str:
-    role_class = "user" if role == "user" else "assistant"
-    label = "Bạn" if role == "user" else "PMT Assistant"
-    bubble_html = simple_markdown_to_html(content)
-
-    return f"""
-    <div class="msg-row {role_class}">
-        <div class="msg-bubble {role_class}">
-            <div class="msg-label">{label}</div>
-            {bubble_html}
-        </div>
-    </div>
-    """
-
-
-def render_chat_block(messages: list[dict]):
-    if not messages:
-        return
-    full_chat_html = '<div class="chat-shell">'
-    for msg in messages:
-        full_chat_html += get_message_html(msg["role"], msg["content"])
-    full_chat_html += '</div>'
-    st.markdown(full_chat_html, unsafe_allow_html=True)
 
 
 def process_prompt(prompt: str):
@@ -584,48 +447,50 @@ with center:
     </div>
     """, unsafe_allow_html=True)
     
-if len(st.session_state.messages) == 0:
-    st.markdown("""
-    <div class="welcome-card">
-        <div class="welcome-title">Bắt đầu nhanh</div>
-        <div class="welcome-subtitle">
-            Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
+    if len(st.session_state.messages) == 0:
+        st.markdown("""
+        <div class="welcome-card">
+            <div class="welcome-title">Bắt đầu nhanh</div>
+            <div class="welcome-subtitle">
+                Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
+            </div>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
+        """, unsafe_allow_html=True)
 
-    st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
+        st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
-    quick_cols = st.columns(4)
+        quick_cols = st.columns(4)
 
-    with quick_cols[0]:
-        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-        if st.button("Danh sách linh kiện máy tính", use_container_width=True):
-            process_prompt("Danh sách linh kiện máy tính")
+        with quick_cols[0]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Danh sách linh kiện máy tính", use_container_width=True):
+                process_prompt("Danh sách linh kiện máy tính")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with quick_cols[1]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
+                process_prompt("Kiểm tra đơn hàng của tôi")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with quick_cols[2]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
+                process_prompt("Ổ cứng khác SSD thế nào?")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+        with quick_cols[3]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
+                process_prompt("Tôi muốn build máy chơi game")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    if len(st.session_state.messages) > 0:
+        st.markdown('<div class="chat-shell">', unsafe_allow_html=True)
+        for msg in st.session_state.messages:
+            with st.chat_message(msg["role"]):
+                st.markdown(msg["content"])
         st.markdown('</div>', unsafe_allow_html=True)
-
-    with quick_cols[1]:
-        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-        if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
-            process_prompt("Kiểm tra đơn hàng của tôi")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with quick_cols[2]:
-        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-        if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
-            process_prompt("Ổ cứng khác SSD thế nào?")
-        st.markdown('</div>', unsafe_allow_html=True)
-
-    with quick_cols[3]:
-        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-        if st.button("Tôi muốn build máy chơi game", use_container_width=True):
-            process_prompt("Tôi muốn build máy chơi game")
-        st.markdown('</div>', unsafe_allow_html=True)
-    
-    
-       
-
-    render_chat_block(st.session_state.messages)
 
     st.markdown('<div class="input-guide">Nhập câu hỏi mới để tiếp tục hội thoại với PMT Computer AI Agent</div>', unsafe_allow_html=True)
 
