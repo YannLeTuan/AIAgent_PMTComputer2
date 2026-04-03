@@ -198,37 +198,35 @@ st.markdown("""
         font-weight: 700;
     }
 
-    .intro-note {
-        background: var(--pmt-surface);
-        border: 1px solid var(--pmt-border);
-        border-radius: 18px;
-        padding: 1rem 1.05rem;
-        color: var(--pmt-muted);
-        margin-bottom: 0.9rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
-    }
-
     .quick-actions-title {
         font-size: 0.92rem;
         font-weight: 800;
         color: var(--pmt-text);
         margin-bottom: 0.55rem;
-        margin-top: 1rem;
+        margin-top: 0.5rem;
     }
 
     .stButton > button {
         width: 100%;
-        border-radius: 14px;
-        font-weight: 800;
-        padding: 0.82rem 0.95rem;
+        border-radius: 10px;
+        font-weight: 600;
+        font-size: 0.88rem;
+        padding: 0.45rem 0.7rem;
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
+        color: var(--pmt-text);
+        transition: all 0.2s ease;
+    }
+
+    .stButton > button:hover {
+        border-color: #a8bce6;
+        background: #fcfdff;
     }
 
     .msg-row {
         display: flex;
         width: 100%;
-        margin-bottom: 1.5rem;
+        margin-bottom: 1.8rem;
     }
 
     .msg-row.user {
@@ -237,52 +235,54 @@ st.markdown("""
 
     .msg-row.assistant {
         justify-content: flex-start;
-        align-items: flex-end;
+        align-items: flex-start;
     }
 
     .bot-avatar {
-        width: 28px;
-        height: 28px;
+        width: 32px;
+        height: 32px;
         border-radius: 50%;
         background: linear-gradient(135deg, #102d57 0%, #1f5fae 100%);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 0.6rem;
+        font-size: 0.65rem;
         font-weight: 800;
-        margin-right: 8px;
+        margin-right: 12px;
+        margin-top: 4px;
         flex-shrink: 0;
         box-shadow: 0 2px 5px rgba(22, 58, 112, 0.15);
     }
 
     .msg-bubble {
-        max-width: 78%;
-        padding: 0.9rem 1.2rem;
-        border-radius: 22px;
         font-size: 0.98rem;
-        line-height: 1.6;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        line-height: 1.65;
         word-wrap: break-word;
     }
 
     .msg-bubble.user {
+        max-width: 75%;
+        padding: 0.85rem 1.15rem;
+        border-radius: 20px;
         background-color: #4072c2;
         color: #ffffff;
         border-bottom-right-radius: 4px;
+        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
     }
 
     .msg-bubble.assistant {
-        background-color: #f0f2f5;
+        max-width: 92%;
+        padding: 0.2rem 0;
+        border-radius: 0;
+        background-color: transparent;
         color: #1c1e21;
-        border-bottom-left-radius: 4px;
-        border: 1px solid #e4e6eb;
     }
 
-    .msg-bubble p { margin: 0 0 0.5rem 0; }
+    .msg-bubble p { margin: 0 0 0.6rem 0; }
     .msg-bubble p:last-child { margin-bottom: 0; }
     .msg-bubble ul { margin: 0.3rem 0; padding-left: 1.5rem; }
-    .msg-bubble li { margin-bottom: 0.2rem; }
+    .msg-bubble li { margin-bottom: 0.25rem; }
 </style>
 """, unsafe_allow_html=True)
 
@@ -310,9 +310,10 @@ def reset_demo_state():
     st.session_state.thread_id = str(uuid.uuid4())
 
 def stream_generator(text: str):
-    for word in text.split(" "):
-        yield word + " "
-        time.sleep(0.03)
+    words = text.split(" ")
+    for i in range(0, len(words), 2):
+        yield " ".join(words[i:i+2]) + " "
+        time.sleep(0.015)
 
 def simple_markdown_to_html(text: str) -> str:
     text = text or ""
@@ -394,20 +395,6 @@ with st.sidebar:
         unsafe_allow_html=True
     )
 
-    st.markdown('<div class="sidebar-section-title">Chức năng chính</div>', unsafe_allow_html=True)
-    st.markdown("""
-    <div class="sidebar-card">
-        <ul>
-            <li>Tư vấn linh kiện máy tính</li>
-            <li>Kiểm tra đơn hàng</li>
-            <li>Chính sách bảo hành / đổi trả</li>
-            <li>Hỗ trợ sản phẩm theo hãng / nhóm</li>
-            <li>Ghi nhớ hội thoại ngắn</li>
-            <li>RAG + Tool Calling + Memory</li>
-        </ul>
-    </div>
-    """, unsafe_allow_html=True)
-
     st.markdown('<div class="sidebar-section-title">Gợi ý câu hỏi</div>', unsafe_allow_html=True)
     st.markdown("""
     <div class="sidebar-card">
@@ -416,13 +403,16 @@ with st.sidebar:
             <li>Tôi muốn build PC chơi game</li>
             <li>Kiểm tra đơn hàng của tôi</li>
             <li>Liệt kê danh sách các CPU</li>
+            <li>Mainboard nào hỗ trợ Intel Gen 14?</li>
+            <li>Shop có hỗ trợ trả góp không?</li>
+            <li>Cho tôi xin địa chỉ cửa hàng</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
 
     col_a, col_b = st.columns(2)
     with col_a:
-        if st.button("Reset dữ liệu demo", use_container_width=True):
+        if st.button("Reset dữ liệu", use_container_width=True):
             reset_demo_state()
             st.rerun()
     with col_b:
@@ -449,12 +439,6 @@ st.markdown("""
         <div class="hero-badge">Bảo hành / đổi trả</div>
         <div class="hero-badge">Memory multi-turn</div>
     </div>
-</div>
-""", unsafe_allow_html=True)
-
-st.markdown("""
-<div class="intro-note">
-    Bạn có thể hỏi về sản phẩm, đơn hàng, bảo hành, đổi trả, FAQ linh kiện hoặc tư vấn mua hàng.
 </div>
 """, unsafe_allow_html=True)
 
