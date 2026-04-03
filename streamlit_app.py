@@ -33,7 +33,6 @@ from app.rag.ingest import ingest_folder
 
 st.markdown("""
 <style>
-    /* Xóa khoảng trắng và thanh header thừa trên cùng của Streamlit */
     [data-testid="stHeader"] {display: none;}
     [data-testid="stTopBlock"] {display: none;}
 
@@ -63,7 +62,7 @@ st.markdown("""
     .block-container {
         max-width: 1480px;
         padding-top: 2rem;
-        padding-bottom: 6rem; /* Tạo khoảng trống cho chat input */
+        padding-bottom: 6rem; 
     }
 
     [data-testid="stSidebar"] {
@@ -225,32 +224,8 @@ st.markdown("""
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
     }
-
-    .welcome-card {
-        background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
-        border: 1px solid var(--pmt-border);
-        border-radius: 22px;
-        padding: 1.1rem 1.1rem 1rem 1.1rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
-        margin-bottom: 1rem;
-        margin-top: 1rem;
-    }
-
-    .welcome-title {
-        font-size: 1.08rem;
-        font-weight: 800;
-        color: var(--pmt-text);
-        margin-bottom: 0.45rem;
-    }
-
-    .welcome-subtitle {
-        color: var(--pmt-muted);
-        line-height: 1.65;
-        margin-bottom: 0.9rem;
-    }
 </style>
 """, unsafe_allow_html=True)
-
 
 @st.cache_resource(show_spinner=False)
 def init_demo_resources():
@@ -274,7 +249,6 @@ def reset_demo_state():
     st.session_state.messages = []
     st.session_state.thread_id = str(uuid.uuid4())
 
-# Hàm generator để tạo hiệu ứng chữ chạy từ từ (Streaming)
 def stream_generator(text: str):
     for word in text.split(" "):
         yield word + " "
@@ -342,11 +316,10 @@ with st.sidebar:
 
     st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
 
-
 left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
-
 prompt_to_send = None
 
+# Gộp toàn bộ nội dung hiển thị vào chung một cột Center để đồng bộ Layout
 with center:
     st.markdown("""
     <div class="hero-wrap">
@@ -370,20 +343,10 @@ with center:
     </div>
     """, unsafe_allow_html=True)
 
-    # Chỉ hiển thị phần Gợi ý thao tác nhanh nếu chưa có hội thoại
+    # Đã xóa phần thẻ "Bắt đầu nhanh", chỉ giữ lại nút gợi ý nếu chưa có tin nhắn nào
     if len(st.session_state.messages) == 0:
-        st.markdown("""
-        <div class="welcome-card">
-            <div class="welcome-title">Bắt đầu nhanh</div>
-            <div class="welcome-subtitle">
-                Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
-            </div>
-        </div>
-        """, unsafe_allow_html=True)
-
         st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
-        # Cập nhật thành 4 nút trên 2 cột
         row1 = st.columns(2)
         with row1[0]:
             if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
@@ -400,41 +363,39 @@ with center:
             if st.button("Liệt kê danh sách các CPU", use_container_width=True):
                 prompt_to_send = "Liệt kê danh sách các CPU"
 
-    # Render lịch sử tin nhắn bằng native chat component
+    # Lịch sử tin nhắn BẮT BUỘC phải nằm trong 'with center:'
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-# Sử dụng st.chat_input để tạo thanh nhập liệu chuẩn và gắn liền với dưới cùng màn hình
 user_input = st.chat_input("Nhập câu hỏi của bạn...")
-
-# Xử lý luồng chat khi người dùng nhập liệu hoặc ấn vào nút gợi ý
 prompt = user_input or prompt_to_send
 
 if prompt:
-    # 1. Thêm và hiển thị tin nhắn của user
     st.session_state.messages.append({"role": "user", "content": prompt})
+    
+    # Luồng xử lý tin nhắn mới cũng BẮT BUỘC nằm trong 'with center:'
     with center:
         with st.chat_message("user"):
             st.markdown(prompt)
 
-    # 2. Xử lý RAG backend
-    history = session_store.get_history(st.session_state.thread_id)
-    context_state = session_store.get_context(st.session_state.thread_id)
+        history = session_store.get_history(st.session_state.thread_id)
+        context_state = session_store.get_context(st.session_state.thread_id)
 
-    result = chat_with_agent(
-        prompt,
-        history,
-        context_state,
-        thread_id=st.session_state.thread_id
-    )
+        result = chat_with_agent(
+            prompt,
+            history,
+            context_state,
+            thread_id=st.session_state.thread_id
+        )
 
-    session_store.set_history(st.session_state.thread_id, result["history"])
-    session_store.set_context(st.session_state.thread_id, result["context_state"])
+        session_store.set_history(st.session_state.thread_id, result["history"])
+        session_store.set_context(st.session_state.thread_id, result["context_state"])
 
-    # 3. Hiển thị tin nhắn của assistant bằng hiệu ứng streaming
-    with center:
         with st.chat_message("assistant"):
             st.write_stream(stream_generator(result["answer"]))
             
     st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
+    
+    # Bổ sung st.rerun() để giao diện làm mới ngay lập tức, ẩn các nút gợi ý đi
+    st.rerun()
