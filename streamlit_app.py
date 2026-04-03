@@ -224,6 +224,56 @@ st.markdown("""
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
     }
+
+    /* --- BẮT ĐẦU: CSS CUSTOM BONG BÓNG CHAT --- */
+    
+    /* 1. Ẩn avatar mặc định của Streamlit */
+    [data-testid="stChatMessageAvatar"] {
+        display: none !important;
+    }
+    
+    /* 2. Reset định dạng của thẻ bọc ngoài tin nhắn */
+    [data-testid="stChatMessage"] {
+        background-color: transparent !important;
+        border: none !important;
+        padding: 0 !important;
+        margin-bottom: 1.2rem;
+        display: flex;
+        width: 100%;
+    }
+
+    /* 3. Tin nhắn của User: Căn phải, nền xanh, bo góc kiểu bong bóng */
+    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) {
+        flex-direction: row-reverse; /* Đẩy nội dung sang phải */
+    }
+    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) > div[data-testid="stChatMessageContent"] {
+        background-color: var(--pmt-user-bg);
+        color: var(--pmt-user-text);
+        border-radius: 18px;
+        border-bottom-right-radius: 4px; /* Góc nhọn trỏ về phía người gửi */
+        padding: 12px 18px;
+        max-width: 80%;
+        margin-left: auto;
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+
+    /* 4. Tin nhắn của Assistant: Căn trái, nền xám, bo góc kiểu bong bóng */
+    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-assistant"]) {
+        flex-direction: row;
+    }
+    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-assistant"]) > div[data-testid="stChatMessageContent"] {
+        background-color: var(--pmt-bot-bg);
+        color: var(--pmt-text);
+        border-radius: 18px;
+        border-bottom-left-radius: 4px;
+        padding: 12px 18px;
+        max-width: 80%;
+        margin-right: auto;
+        border: 1px solid var(--pmt-border);
+        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    }
+    
+    /* --- KẾT THÚC: CSS CUSTOM BONG BÓNG CHAT --- */
 </style>
 """, unsafe_allow_html=True)
 
@@ -319,7 +369,7 @@ with st.sidebar:
 left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
 prompt_to_send = None
 
-# Gộp toàn bộ nội dung hiển thị vào chung một cột Center để đồng bộ Layout
+# Mọi thứ hiển thị chính đều được lồng vào cột center
 with center:
     st.markdown("""
     <div class="hero-wrap">
@@ -343,7 +393,6 @@ with center:
     </div>
     """, unsafe_allow_html=True)
 
-    # Đã xóa phần thẻ "Bắt đầu nhanh", chỉ giữ lại nút gợi ý nếu chưa có tin nhắn nào
     if len(st.session_state.messages) == 0:
         st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
@@ -363,18 +412,20 @@ with center:
             if st.button("Liệt kê danh sách các CPU", use_container_width=True):
                 prompt_to_send = "Liệt kê danh sách các CPU"
 
-    # Lịch sử tin nhắn BẮT BUỘC phải nằm trong 'with center:'
+    # Lịch sử tin nhắn
     for msg in st.session_state.messages:
         with st.chat_message(msg["role"]):
             st.markdown(msg["content"])
 
-user_input = st.chat_input("Nhập câu hỏi của bạn...")
+    # CHÚ Ý: st.chat_input được đặt BÊN TRONG `with center:`
+    # Việc này giúp nó tự động lấy chiều rộng bằng đúng với chiều rộng của cột center
+    user_input = st.chat_input("Nhập câu hỏi của bạn...")
+
 prompt = user_input or prompt_to_send
 
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
     
-    # Luồng xử lý tin nhắn mới cũng BẮT BUỘC nằm trong 'with center:'
     with center:
         with st.chat_message("user"):
             st.markdown(prompt)
@@ -396,6 +447,4 @@ if prompt:
             st.write_stream(stream_generator(result["answer"]))
             
     st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
-    
-    # Bổ sung st.rerun() để giao diện làm mới ngay lập tức, ẩn các nút gợi ý đi
     st.rerun()
