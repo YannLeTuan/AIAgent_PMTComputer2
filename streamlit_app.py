@@ -237,6 +237,23 @@ st.markdown("""
 
     .msg-row.assistant {
         justify-content: flex-start;
+        align-items: flex-end;
+    }
+
+    .bot-avatar {
+        width: 28px;
+        height: 28px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #102d57 0%, #1f5fae 100%);
+        color: white;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        font-size: 0.6rem;
+        font-weight: 800;
+        margin-right: 8px;
+        flex-shrink: 0;
+        box-shadow: 0 2px 5px rgba(22, 58, 112, 0.15);
     }
 
     .msg-bubble {
@@ -250,7 +267,7 @@ st.markdown("""
     }
 
     .msg-bubble.user {
-        background-color: #0084ff;
+        background-color: #0b57d0;
         color: #ffffff;
         border-bottom-right-radius: 4px;
     }
@@ -335,15 +352,24 @@ def simple_markdown_to_html(text: str) -> str:
     return "".join(parts) if parts else "<p></p>"
 
 def get_message_html(role: str, content: str) -> str:
-    role_class = "user" if role == "user" else "assistant"
     bubble_html = simple_markdown_to_html(content)
-    return f"""
-    <div class="msg-row {role_class}">
-        <div class="msg-bubble {role_class}">
-            {bubble_html}
+    if role == "user":
+        return f"""
+        <div class="msg-row user">
+            <div class="msg-bubble user">
+                {bubble_html}
+            </div>
         </div>
-    </div>
-    """
+        """
+    else:
+        return f"""
+        <div class="msg-row assistant">
+            <div class="bot-avatar">PMT</div>
+            <div class="msg-bubble assistant">
+                {bubble_html}
+            </div>
+        </div>
+        """
 
 init_demo_resources()
 
@@ -421,7 +447,7 @@ st.markdown("""
         <div class="hero-badge">Tư vấn linh kiện</div>
         <div class="hero-badge">Tra cứu đơn hàng</div>
         <div class="hero-badge">Bảo hành / đổi trả</div>
-        <div class="hero-badge">Memory nhiều lượt</div>
+        <div class="hero-badge">Memory multi-turn</div>
     </div>
 </div>
 """, unsafe_allow_html=True)
