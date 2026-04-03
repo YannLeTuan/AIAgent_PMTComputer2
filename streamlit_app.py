@@ -8,8 +8,8 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="PMT Computer AI Agent",
-    page_icon="💻",
+    page_title="PMT Computer",
+    page_icon="🖥️",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -37,51 +37,75 @@ from app.rag.ingest import ingest_folder
 st.markdown("""
 <style>
     .main > div {
-        padding-top: 1rem;
+        padding-top: 0.8rem;
     }
 
     .block-container {
-        padding-top: 1.2rem;
+        padding-top: 1rem;
         padding-bottom: 1rem;
-        max-width: 1450px;
+        max-width: 1500px;
     }
 
     [data-testid="stSidebar"] {
-        background: #f7f8fb;
-        border-right: 1px solid rgba(15, 23, 42, 0.08);
-        min-width: 290px;
-        max-width: 290px;
+        background: #0f1115;
+        border-right: 1px solid rgba(255,255,255,0.06);
+        min-width: 300px;
+        max-width: 300px;
+    }
+
+    [data-testid="stSidebar"] * {
+        color: #f3f4f6 !important;
+    }
+
+    .sidebar-brand {
+        display: flex;
+        align-items: center;
+        gap: 0.8rem;
+        margin-bottom: 0.7rem;
+    }
+
+    .sidebar-logo {
+        width: 48px;
+        height: 48px;
+        border-radius: 14px;
+        background: linear-gradient(135deg, #d90429, #8d0b22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 800;
+        font-size: 1rem;
+        box-shadow: 0 8px 22px rgba(217, 4, 41, 0.28);
     }
 
     .sidebar-title {
-        font-size: 1.9rem;
+        font-size: 1.5rem;
         font-weight: 800;
-        color: #1f2f46;
-        margin-bottom: 0.25rem;
+        color: #ffffff;
+        margin: 0;
     }
 
     .sidebar-subtitle {
-        color: #6b7280;
-        font-size: 0.95rem;
-        line-height: 1.6;
-        margin-bottom: 1rem;
+        color: #b8bec9 !important;
+        font-size: 0.92rem;
+        line-height: 1.65;
+        margin-bottom: 1.2rem;
     }
 
     .sidebar-section-title {
-        font-size: 1rem;
+        font-size: 0.98rem;
         font-weight: 700;
-        color: #1f2f46;
-        margin-top: 0.8rem;
+        color: #ffffff;
+        margin-top: 0.9rem;
         margin-bottom: 0.55rem;
     }
 
     .sidebar-card {
-        background: white;
-        border: 1px solid rgba(15, 23, 42, 0.07);
+        background: #171a21;
+        border: 1px solid rgba(255,255,255,0.06);
         border-radius: 18px;
         padding: 0.95rem 1rem;
         margin-bottom: 1rem;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
     }
 
     .sidebar-card ul {
@@ -91,19 +115,48 @@ st.markdown("""
 
     .sidebar-card li {
         margin-bottom: 0.55rem;
-        color: #2d3748;
+        color: #e5e7eb !important;
         line-height: 1.65;
     }
 
+    .sidebar-footer {
+        margin-top: 1rem;
+        color: #98a2b3 !important;
+        font-size: 0.82rem;
+        text-align: center;
+    }
+
     .hero-wrap {
-        padding-top: 0.3rem;
-        padding-bottom: 0.8rem;
+        padding-top: 0.2rem;
+        padding-bottom: 0.6rem;
+    }
+
+    .hero-brand-row {
+        display: flex;
+        align-items: center;
+        gap: 0.9rem;
+        margin-bottom: 0.35rem;
+    }
+
+    .hero-logo {
+        width: 58px;
+        height: 58px;
+        border-radius: 18px;
+        background: linear-gradient(135deg, #d90429, #8d0b22);
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        color: white;
+        font-weight: 900;
+        font-size: 1.05rem;
+        box-shadow: 0 10px 28px rgba(217, 4, 41, 0.22);
+        flex-shrink: 0;
     }
 
     .hero-title {
-        font-size: 2.7rem;
+        font-size: 2.5rem;
         font-weight: 800;
-        color: #1f2f46;
+        color: #121826;
         margin: 0;
         line-height: 1.15;
     }
@@ -123,31 +176,23 @@ st.markdown("""
     }
 
     .hero-badge {
-        background: #eef4ff;
-        color: #295eb7;
-        border: 1px solid #dce7ff;
-        padding: 0.4rem 0.8rem;
+        background: #fff1f3;
+        color: #b00020;
+        border: 1px solid #ffd0d8;
+        padding: 0.42rem 0.82rem;
         border-radius: 999px;
         font-size: 0.86rem;
-        font-weight: 600;
+        font-weight: 700;
     }
 
     .intro-note {
         background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.07);
+        border: 1px solid rgba(15, 23, 42, 0.08);
         border-radius: 18px;
-        padding: 0.95rem 1rem;
+        padding: 1rem 1rem;
         color: #5f6b7a;
         margin-bottom: 1rem;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
-    }
-
-    .chat-shell {
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 24px;
-        box-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-        padding: 1.1rem 1rem 0.8rem 1rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
     }
 
     .msg-row {
@@ -166,34 +211,43 @@ st.markdown("""
 
     .msg-bubble {
         max-width: 76%;
-        padding: 0.88rem 1rem;
-        border-radius: 20px;
-        line-height: 1.65;
+        padding: 0.92rem 1rem;
+        border-radius: 22px;
+        line-height: 1.7;
         font-size: 1rem;
         word-wrap: break-word;
         white-space: normal;
+        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.03);
     }
 
     .msg-bubble.user {
-        background: #e9f1ff;
-        color: #1e3a5f;
-        border: 1px solid #d8e7ff;
-        border-bottom-right-radius: 8px;
+        background: #d90429;
+        color: #ffffff;
+        border: 1px solid #b00020;
+        border-bottom-right-radius: 9px;
     }
 
     .msg-bubble.assistant {
-        background: #f7f8fb;
+        background: #ffffff;
         color: #1f2937;
         border: 1px solid rgba(15, 23, 42, 0.08);
-        border-bottom-left-radius: 8px;
+        border-bottom-left-radius: 9px;
     }
 
     .msg-label {
         font-size: 0.77rem;
-        font-weight: 700;
-        margin-bottom: 0.4rem;
-        opacity: 0.75;
+        font-weight: 800;
+        margin-bottom: 0.42rem;
+        opacity: 0.82;
         letter-spacing: 0.02em;
+    }
+
+    .msg-bubble.user .msg-label {
+        color: rgba(255,255,255,0.86);
+    }
+
+    .msg-bubble.assistant .msg-label {
+        color: #5b6472;
     }
 
     .msg-bubble p {
@@ -206,42 +260,74 @@ st.markdown("""
 
     .msg-bubble ul {
         margin-top: 0.2rem;
-        margin-bottom: 0.6rem;
+        margin-bottom: 0.55rem;
         padding-left: 1.25rem;
     }
 
     .msg-bubble li {
-        margin-bottom: 0.35rem;
+        margin-bottom: 0.32rem;
     }
 
-    .input-shell {
+    .quick-row-title {
+        margin-top: 0.4rem;
+        margin-bottom: 0.55rem;
+        color: #4b5563;
+        font-weight: 700;
+        font-size: 0.95rem;
+    }
+
+    .input-card {
         background: #ffffff;
         border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 18px;
-        padding: 0.75rem 0.8rem 0.25rem 0.8rem;
+        border-radius: 20px;
+        padding: 0.85rem 0.95rem 0.35rem 0.95rem;
         margin-top: 1rem;
-        box-shadow: 0 6px 18px rgba(15, 23, 42, 0.03);
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
     }
 
     .stTextInput > div > div > input {
-        border-radius: 12px !important;
-        padding: 0.78rem 0.95rem !important;
+        border-radius: 14px !important;
+        padding: 0.88rem 1rem !important;
         border: 1px solid rgba(15, 23, 42, 0.12) !important;
         background: #fbfcfe !important;
+        font-size: 1rem !important;
     }
 
     .stButton > button {
         width: 100%;
-        border-radius: 12px;
+        border-radius: 14px;
         font-weight: 700;
-        padding: 0.72rem 0.9rem;
+        padding: 0.78rem 0.95rem;
+        border: 1px solid rgba(15, 23, 42, 0.08);
     }
 
-    .sidebar-footer {
-        margin-top: 1rem;
-        color: #8b95a7;
-        font-size: 0.82rem;
-        text-align: center;
+    .send-button button {
+        background: linear-gradient(135deg, #d90429, #b00020) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 10px 22px rgba(217, 4, 41, 0.2);
+    }
+
+    .welcome-card {
+        background: #ffffff;
+        border: 1px solid rgba(15, 23, 42, 0.08);
+        border-radius: 18px;
+        padding: 1rem 1rem;
+        margin-bottom: 1rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .welcome-title {
+        font-size: 1.05rem;
+        font-weight: 800;
+        color: #121826;
+        margin-bottom: 0.35rem;
+    }
+
+    .welcome-text {
+        color: #5f6b7a;
+        line-height: 1.7;
+        font-size: 0.96rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -293,7 +379,7 @@ def simple_markdown_to_html(text: str) -> str:
 
         if stripped.startswith("- ") or stripped.startswith("* "):
             if not in_list:
-                parts.append('<ul>')
+                parts.append("<ul>")
                 in_list = True
             item = format_inline(stripped[2:].strip())
             parts.append(f"<li>{item}</li>")
@@ -327,6 +413,35 @@ def render_message(role: str, content: str):
     )
 
 
+def submit_prompt(prompt: str):
+    clean_input = (prompt or "").strip()
+    if not clean_input:
+        return
+
+    st.session_state.messages.append({
+        "role": "user",
+        "content": clean_input
+    })
+
+    history = session_store.get_history(st.session_state.thread_id)
+    context_state = session_store.get_context(st.session_state.thread_id)
+
+    result = chat_with_agent(
+        clean_input,
+        history,
+        context_state,
+        thread_id=st.session_state.thread_id
+    )
+
+    session_store.set_history(st.session_state.thread_id, result["history"])
+    session_store.set_context(st.session_state.thread_id, result["context_state"])
+
+    st.session_state.messages.append({
+        "role": "assistant",
+        "content": result["answer"]
+    })
+
+
 init_demo_resources()
 
 if "thread_id" not in st.session_state:
@@ -337,9 +452,17 @@ if "messages" not in st.session_state:
 
 
 with st.sidebar:
-    st.markdown('<div class="sidebar-title">PMT Computer</div>', unsafe_allow_html=True)
+    st.markdown("""
+    <div class="sidebar-brand">
+        <div class="sidebar-logo">PMT</div>
+        <div>
+            <div class="sidebar-title">PMT Computer</div>
+        </div>
+    </div>
+    """, unsafe_allow_html=True)
+
     st.markdown(
-        '<div class="sidebar-subtitle">Nhân viên chăm sóc khách hàng AI, hỗ trợ cho cửa hàng Phạm Minh Tuấn Computer</div>',
+        '<div class="sidebar-subtitle">Trợ lý AI hỗ trợ chăm sóc khách hàng cho cửa hàng linh kiện và thiết bị máy tính PMT Computer.</div>',
         unsafe_allow_html=True
     )
 
@@ -381,15 +504,20 @@ with st.sidebar:
         st.session_state.messages = []
         st.rerun()
 
-    st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-footer">PMT Computer • Online demo</div>', unsafe_allow_html=True)
 
 
-left_pad, center, right_pad = st.columns([1.1, 6.2, 1.1])
+left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
 
 with center:
     st.markdown("""
     <div class="hero-wrap">
-        <div class="hero-title">💻 PMT Computer AI Agent</div>
+        <div class="hero-brand-row">
+            <div class="hero-logo">PMT</div>
+            <div>
+                <div class="hero-title">PMT Computer AI Agent</div>
+            </div>
+        </div>
         <div class="hero-subtitle">
             Hệ thống AI Agent đa kênh ứng dụng RAG cho chăm sóc khách hàng cửa hàng máy tính
         </div>
@@ -408,17 +536,42 @@ with center:
     </div>
     """, unsafe_allow_html=True)
 
-    st.markdown('<div class="chat-shell">', unsafe_allow_html=True)
+    if not st.session_state.messages:
+        st.markdown("""
+        <div class="welcome-card">
+            <div class="welcome-title">Bắt đầu nhanh</div>
+            <div class="welcome-text">
+                Chọn một câu hỏi gợi ý bên dưới hoặc nhập câu hỏi của bạn để trải nghiệm hệ thống.
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+
+        st.markdown('<div class="quick-row-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
+        q1, q2, q3, q4 = st.columns(4)
+        with q1:
+            if st.button("CPU bảo hành bao lâu?"):
+                submit_prompt("CPU bảo hành bao lâu?")
+                st.rerun()
+        with q2:
+            if st.button("Tìm SSD Samsung"):
+                submit_prompt("Tìm SSD Samsung")
+                st.rerun()
+        with q3:
+            if st.button("Kiểm tra ORD003"):
+                submit_prompt("Kiểm tra đơn hàng ORD003")
+                st.rerun()
+        with q4:
+            if st.button("Tôi muốn build máy chơi game"):
+                submit_prompt("Tôi muốn build máy chơi game")
+                st.rerun()
 
     for msg in st.session_state.messages:
         render_message(msg["role"], msg["content"])
 
-    st.markdown('</div>', unsafe_allow_html=True)
-
     with st.container():
-        st.markdown('<div class="input-shell">', unsafe_allow_html=True)
+        st.markdown('<div class="input-card">', unsafe_allow_html=True)
         with st.form("chat_form", clear_on_submit=True):
-            input_col, button_col = st.columns([8.8, 1.2])
+            input_col, button_col = st.columns([8.9, 1.1])
             with input_col:
                 user_input = st.text_input(
                     "",
@@ -426,34 +579,12 @@ with center:
                     label_visibility="collapsed"
                 )
             with button_col:
+                st.markdown('<div class="send-button">', unsafe_allow_html=True)
                 submitted = st.form_submit_button("Gửi")
+                st.markdown('</div>', unsafe_allow_html=True)
 
         st.markdown('</div>', unsafe_allow_html=True)
 
     if submitted and user_input.strip():
-        clean_input = user_input.strip()
-
-        st.session_state.messages.append({
-            "role": "user",
-            "content": clean_input
-        })
-
-        history = session_store.get_history(st.session_state.thread_id)
-        context_state = session_store.get_context(st.session_state.thread_id)
-
-        result = chat_with_agent(
-            clean_input,
-            history,
-            context_state,
-            thread_id=st.session_state.thread_id
-        )
-
-        session_store.set_history(st.session_state.thread_id, result["history"])
-        session_store.set_context(st.session_state.thread_id, result["context_state"])
-
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": result["answer"]
-        })
-
+        submit_prompt(user_input)
         st.rerun()
