@@ -8,8 +8,8 @@ import streamlit as st
 
 
 st.set_page_config(
-    page_title="PMT Computer",
-    page_icon="🖥️",
+    page_title="PMT Computer AI Agent",
+    page_icon="💻",
     layout="wide",
     initial_sidebar_state="expanded"
 )
@@ -36,76 +36,93 @@ from app.rag.ingest import ingest_folder
 
 st.markdown("""
 <style>
+    :root {
+        --pmt-bg: #f4f6fb;
+        --pmt-surface: #ffffff;
+        --pmt-border: rgba(15, 23, 42, 0.08);
+        --pmt-text: #1f2f46;
+        --pmt-muted: #687385;
+        --pmt-primary: #163a70;
+        --pmt-primary-soft: #e7efff;
+        --pmt-user-bg: #dcecff;
+        --pmt-user-text: #17345d;
+        --pmt-bot-bg: #f7f8fb;
+        --pmt-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
+        --pmt-danger: #d92d20;
+    }
+
+    html, body, [class*="css"] {
+        font-family: "Inter", "Segoe UI", sans-serif;
+    }
+
     .main > div {
-        padding-top: 0.8rem;
+        padding-top: 0.6rem;
     }
 
     .block-container {
+        max-width: 1480px;
         padding-top: 1rem;
         padding-bottom: 1rem;
-        max-width: 1500px;
     }
 
     [data-testid="stSidebar"] {
-        background: #0f1115;
-        border-right: 1px solid rgba(255,255,255,0.06);
-        min-width: 300px;
-        max-width: 300px;
-    }
-
-    [data-testid="stSidebar"] * {
-        color: #f3f4f6 !important;
+        background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
+        border-right: 1px solid var(--pmt-border);
+        min-width: 310px;
+        max-width: 310px;
     }
 
     .sidebar-brand {
         display: flex;
         align-items: center;
         gap: 0.8rem;
-        margin-bottom: 0.7rem;
+        margin-bottom: 0.8rem;
     }
 
     .sidebar-logo {
-        width: 48px;
-        height: 48px;
+        width: 46px;
+        height: 46px;
         border-radius: 14px;
-        background: linear-gradient(135deg, #d90429, #8d0b22);
+        background: linear-gradient(135deg, #102d57 0%, #1f5fae 100%);
+        color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        color: white;
+        font-size: 1.25rem;
         font-weight: 800;
-        font-size: 1rem;
-        box-shadow: 0 8px 22px rgba(217, 4, 41, 0.28);
+        box-shadow: 0 10px 20px rgba(22, 58, 112, 0.18);
     }
 
-    .sidebar-title {
-        font-size: 1.5rem;
+    .sidebar-brand-title {
+        font-size: 1.55rem;
         font-weight: 800;
-        color: #ffffff;
+        color: var(--pmt-text);
+        line-height: 1.1;
         margin: 0;
     }
 
-    .sidebar-subtitle {
-        color: #b8bec9 !important;
-        font-size: 0.92rem;
-        line-height: 1.65;
-        margin-bottom: 1.2rem;
+    .sidebar-brand-subtitle {
+        color: var(--pmt-muted);
+        font-size: 0.93rem;
+        line-height: 1.5;
+        margin-top: 0.35rem;
     }
 
     .sidebar-section-title {
-        font-size: 0.98rem;
-        font-weight: 700;
-        color: #ffffff;
-        margin-top: 0.9rem;
+        font-size: 1rem;
+        font-weight: 800;
+        color: var(--pmt-text);
+        margin-top: 1rem;
         margin-bottom: 0.55rem;
     }
 
     .sidebar-card {
-        background: #171a21;
-        border: 1px solid rgba(255,255,255,0.06);
-        border-radius: 18px;
-        padding: 0.95rem 1rem;
+        background: rgba(255,255,255,0.95);
+        border: 1px solid var(--pmt-border);
+        border-radius: 20px;
+        padding: 1rem 1rem 0.95rem 1rem;
         margin-bottom: 1rem;
+        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.03);
     }
 
     .sidebar-card ul {
@@ -114,90 +131,106 @@ st.markdown("""
     }
 
     .sidebar-card li {
-        margin-bottom: 0.55rem;
-        color: #e5e7eb !important;
+        margin-bottom: 0.52rem;
         line-height: 1.65;
+        color: #243244;
     }
 
     .sidebar-footer {
         margin-top: 1rem;
-        color: #98a2b3 !important;
+        color: #8a93a5;
         font-size: 0.82rem;
         text-align: center;
     }
 
     .hero-wrap {
-        padding-top: 0.2rem;
-        padding-bottom: 0.6rem;
+        padding-top: 0.4rem;
+        padding-bottom: 0.8rem;
     }
 
-    .hero-brand-row {
-        display: flex;
-        align-items: center;
-        gap: 0.9rem;
-        margin-bottom: 0.35rem;
-    }
-
-    .hero-logo {
-        width: 58px;
-        height: 58px;
-        border-radius: 18px;
-        background: linear-gradient(135deg, #d90429, #8d0b22);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        color: white;
-        font-weight: 900;
-        font-size: 1.05rem;
-        box-shadow: 0 10px 28px rgba(217, 4, 41, 0.22);
-        flex-shrink: 0;
+    .hero-topline {
+        display: inline-block;
+        font-size: 0.82rem;
+        font-weight: 700;
+        color: #295eb7;
+        background: #edf3ff;
+        border: 1px solid #dbe7ff;
+        padding: 0.35rem 0.75rem;
+        border-radius: 999px;
+        margin-bottom: 0.85rem;
     }
 
     .hero-title {
-        font-size: 2.5rem;
-        font-weight: 800;
-        color: #121826;
+        font-size: 2.8rem;
+        font-weight: 900;
+        color: var(--pmt-text);
         margin: 0;
-        line-height: 1.15;
+        line-height: 1.1;
+        letter-spacing: -0.02em;
+    }
+
+    .hero-title-accent {
+        color: var(--pmt-primary);
     }
 
     .hero-subtitle {
-        color: #6b7280;
+        color: var(--pmt-muted);
         font-size: 1rem;
-        margin-top: 0.35rem;
+        margin-top: 0.45rem;
         margin-bottom: 1rem;
+        line-height: 1.7;
     }
 
     .hero-badge-row {
         display: flex;
         gap: 0.65rem;
         flex-wrap: wrap;
-        margin-bottom: 0.8rem;
+        margin-bottom: 1rem;
     }
 
     .hero-badge {
-        background: #fff1f3;
-        color: #b00020;
-        border: 1px solid #ffd0d8;
-        padding: 0.42rem 0.82rem;
+        background: #eef4ff;
+        color: #2b5fb8;
+        border: 1px solid #dce7ff;
+        padding: 0.42rem 0.85rem;
         border-radius: 999px;
         font-size: 0.86rem;
         font-weight: 700;
     }
 
     .intro-note {
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
+        background: var(--pmt-surface);
+        border: 1px solid var(--pmt-border);
         border-radius: 18px;
-        padding: 1rem 1rem;
-        color: #5f6b7a;
+        padding: 1rem 1.05rem;
+        color: var(--pmt-muted);
+        margin-bottom: 0.9rem;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
+    }
+
+    .quick-actions-wrap {
+        margin-top: 0.2rem;
         margin-bottom: 1rem;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+    }
+
+    .quick-actions-title {
+        font-size: 0.92rem;
+        font-weight: 800;
+        color: var(--pmt-text);
+        margin-bottom: 0.55rem;
+    }
+
+    .chat-shell {
+        background: var(--pmt-surface);
+        border: 1px solid var(--pmt-border);
+        border-radius: 24px;
+        box-shadow: var(--pmt-shadow);
+        padding: 1.05rem 1rem 1rem 1rem;
     }
 
     .msg-row {
         display: flex;
-        margin-bottom: 0.95rem;
+        margin-bottom: 1rem;
         width: 100%;
     }
 
@@ -211,43 +244,36 @@ st.markdown("""
 
     .msg-bubble {
         max-width: 76%;
-        padding: 0.92rem 1rem;
+        padding: 0.95rem 1.05rem;
         border-radius: 22px;
         line-height: 1.7;
         font-size: 1rem;
         word-wrap: break-word;
         white-space: normal;
-        box-shadow: 0 8px 22px rgba(15, 23, 42, 0.03);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
     }
 
     .msg-bubble.user {
-        background: #d90429;
-        color: #ffffff;
-        border: 1px solid #b00020;
-        border-bottom-right-radius: 9px;
+        background: var(--pmt-user-bg);
+        color: var(--pmt-user-text);
+        border: 1px solid #cddfff;
+        border-bottom-right-radius: 8px;
     }
 
     .msg-bubble.assistant {
-        background: #ffffff;
+        background: var(--pmt-bot-bg);
         color: #1f2937;
         border: 1px solid rgba(15, 23, 42, 0.08);
-        border-bottom-left-radius: 9px;
+        border-bottom-left-radius: 8px;
     }
 
     .msg-label {
-        font-size: 0.77rem;
+        font-size: 0.76rem;
         font-weight: 800;
         margin-bottom: 0.42rem;
-        opacity: 0.82;
+        opacity: 0.72;
         letter-spacing: 0.02em;
-    }
-
-    .msg-bubble.user .msg-label {
-        color: rgba(255,255,255,0.86);
-    }
-
-    .msg-bubble.assistant .msg-label {
-        color: #5b6472;
+        text-transform: uppercase;
     }
 
     .msg-bubble p {
@@ -259,75 +285,99 @@ st.markdown("""
     }
 
     .msg-bubble ul {
-        margin-top: 0.2rem;
-        margin-bottom: 0.55rem;
+        margin-top: 0.25rem;
+        margin-bottom: 0.6rem;
         padding-left: 1.25rem;
     }
 
     .msg-bubble li {
-        margin-bottom: 0.32rem;
+        margin-bottom: 0.35rem;
     }
 
-    .quick-row-title {
-        margin-top: 0.4rem;
-        margin-bottom: 0.55rem;
-        color: #4b5563;
-        font-weight: 700;
-        font-size: 0.95rem;
-    }
-
-    .input-card {
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 20px;
-        padding: 0.85rem 0.95rem 0.35rem 0.95rem;
+    .composer-shell {
+        background: var(--pmt-surface);
+        border: 1px solid var(--pmt-border);
+        border-radius: 22px;
+        padding: 0.95rem;
         margin-top: 1rem;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
+    }
+
+    .composer-title {
+        font-size: 0.82rem;
+        font-weight: 800;
+        color: #5a6577;
+        margin-bottom: 0.55rem;
+        text-transform: uppercase;
+        letter-spacing: 0.03em;
     }
 
     .stTextInput > div > div > input {
         border-radius: 14px !important;
-        padding: 0.88rem 1rem !important;
+        padding: 0.95rem 1rem !important;
         border: 1px solid rgba(15, 23, 42, 0.12) !important;
         background: #fbfcfe !important;
-        font-size: 1rem !important;
+        box-shadow: none !important;
+    }
+
+    .stTextInput > div > div > input:focus {
+        border: 1px solid #8db4ff !important;
+        box-shadow: 0 0 0 3px rgba(80, 130, 255, 0.12) !important;
     }
 
     .stButton > button {
         width: 100%;
         border-radius: 14px;
-        font-weight: 700;
-        padding: 0.78rem 0.95rem;
-        border: 1px solid rgba(15, 23, 42, 0.08);
+        font-weight: 800;
+        padding: 0.82rem 0.95rem;
+        border: 1px solid rgba(15, 23, 42, 0.1);
     }
 
-    .send-button button {
-        background: linear-gradient(135deg, #d90429, #b00020) !important;
+    .primary-send button {
+        background: linear-gradient(135deg, #14386a 0%, #275faa 100%) !important;
         color: white !important;
         border: none !important;
-        box-shadow: 0 10px 22px rgba(217, 4, 41, 0.2);
+    }
+
+    .primary-send button:hover {
+        filter: brightness(1.03);
+    }
+
+    .ghost-button button {
+        background: #ffffff !important;
     }
 
     .welcome-card {
-        background: #ffffff;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-radius: 18px;
-        padding: 1rem 1rem;
+        background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+        border: 1px solid var(--pmt-border);
+        border-radius: 22px;
+        padding: 1.1rem 1.1rem 1rem 1.1rem;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
         margin-bottom: 1rem;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.04);
     }
 
     .welcome-title {
-        font-size: 1.05rem;
+        font-size: 1.08rem;
         font-weight: 800;
-        color: #121826;
-        margin-bottom: 0.35rem;
+        color: var(--pmt-text);
+        margin-bottom: 0.45rem;
     }
 
-    .welcome-text {
-        color: #5f6b7a;
-        line-height: 1.7;
-        font-size: 0.96rem;
+    .welcome-subtitle {
+        color: var(--pmt-muted);
+        line-height: 1.65;
+        margin-bottom: 0.9rem;
+    }
+
+    .section-divider-space {
+        height: 0.15rem;
+    }
+
+    .footer-note {
+        text-align: center;
+        color: #8b95a7;
+        font-size: 0.82rem;
+        margin-top: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -413,21 +463,17 @@ def render_message(role: str, content: str):
     )
 
 
-def submit_prompt(prompt: str):
-    clean_input = (prompt or "").strip()
-    if not clean_input:
-        return
-
-    st.session_state.messages.append({
-        "role": "user",
-        "content": clean_input
-    })
-
+def submit_quick_prompt(prompt: str):
     history = session_store.get_history(st.session_state.thread_id)
     context_state = session_store.get_context(st.session_state.thread_id)
 
+    st.session_state.messages.append({
+        "role": "user",
+        "content": prompt
+    })
+
     result = chat_with_agent(
-        clean_input,
+        prompt,
         history,
         context_state,
         thread_id=st.session_state.thread_id
@@ -440,6 +486,8 @@ def submit_prompt(prompt: str):
         "role": "assistant",
         "content": result["answer"]
     })
+
+    st.rerun()
 
 
 init_demo_resources()
@@ -456,13 +504,13 @@ with st.sidebar:
     <div class="sidebar-brand">
         <div class="sidebar-logo">PMT</div>
         <div>
-            <div class="sidebar-title">PMT Computer</div>
+            <div class="sidebar-brand-title">PMT Computer</div>
         </div>
     </div>
     """, unsafe_allow_html=True)
 
     st.markdown(
-        '<div class="sidebar-subtitle">Trợ lý AI hỗ trợ chăm sóc khách hàng cho cửa hàng linh kiện và thiết bị máy tính PMT Computer.</div>',
+        '<div class="sidebar-brand-subtitle">Trợ lý AI chăm sóc khách hàng cho hệ thống PMT Computer, hỗ trợ sản phẩm, đơn hàng, bảo hành và tư vấn mua hàng.</div>',
         unsafe_allow_html=True
     )
 
@@ -495,16 +543,18 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    if st.button("Reset dữ liệu demo"):
-        reset_demo_state()
-        st.rerun()
+    col_a, col_b = st.columns(2)
+    with col_a:
+        if st.button("Reset dữ liệu demo", use_container_width=True):
+            reset_demo_state()
+            st.rerun()
+    with col_b:
+        if st.button("Xóa hội thoại", use_container_width=True):
+            session_store.clear_session(st.session_state.thread_id)
+            st.session_state.messages = []
+            st.rerun()
 
-    if st.button("Xóa hội thoại hiện tại"):
-        session_store.clear_session(st.session_state.thread_id)
-        st.session_state.messages = []
-        st.rerun()
-
-    st.markdown('<div class="sidebar-footer">PMT Computer • Online demo</div>', unsafe_allow_html=True)
+    st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
 
 
 left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
@@ -512,12 +562,8 @@ left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
 with center:
     st.markdown("""
     <div class="hero-wrap">
-        <div class="hero-brand-row">
-            <div class="hero-logo">PMT</div>
-            <div>
-                <div class="hero-title">PMT Computer AI Agent</div>
-            </div>
-        </div>
+        <div class="hero-topline">AI Customer Support • PMT Computer</div>
+        <div class="hero-title"><span class="hero-title-accent">PMT Computer</span> AI Agent</div>
         <div class="hero-subtitle">
             Hệ thống AI Agent đa kênh ứng dụng RAG cho chăm sóc khách hàng cửa hàng máy tính
         </div>
@@ -536,55 +582,101 @@ with center:
     </div>
     """, unsafe_allow_html=True)
 
-    if not st.session_state.messages:
+    if len(st.session_state.messages) == 0:
         st.markdown("""
         <div class="welcome-card">
             <div class="welcome-title">Bắt đầu nhanh</div>
-            <div class="welcome-text">
-                Chọn một câu hỏi gợi ý bên dưới hoặc nhập câu hỏi của bạn để trải nghiệm hệ thống.
+            <div class="welcome-subtitle">
+                Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
             </div>
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="quick-row-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
-        q1, q2, q3, q4 = st.columns(4)
-        with q1:
-            if st.button("CPU bảo hành bao lâu?"):
-                submit_prompt("CPU bảo hành bao lâu?")
-                st.rerun()
-        with q2:
-            if st.button("Tìm SSD Samsung"):
-                submit_prompt("Tìm SSD Samsung")
-                st.rerun()
-        with q3:
-            if st.button("Kiểm tra ORD003"):
-                submit_prompt("Kiểm tra đơn hàng ORD003")
-                st.rerun()
-        with q4:
-            if st.button("Tôi muốn build máy chơi game"):
-                submit_prompt("Tôi muốn build máy chơi game")
-                st.rerun()
+        st.markdown('<div class="quick-actions-wrap"><div class="quick-actions-title">Gợi ý thao tác nhanh</div></div>', unsafe_allow_html=True)
+
+        row1 = st.columns(4)
+        with row1[0]:
+            if st.button("CPU bảo hành bao lâu?", use_container_width=True):
+                submit_quick_prompt("CPU bảo hành bao lâu?")
+        with row1[1]:
+            if st.button("Tìm SSD Samsung", use_container_width=True):
+                submit_quick_prompt("Tìm SSD Samsung")
+        with row1[2]:
+            if st.button("Kiểm tra đơn ORD003", use_container_width=True):
+                submit_quick_prompt("Kiểm tra đơn hàng ORD003")
+        with row1[3]:
+            if st.button("Khách Phạm Minh Tuấn đã đặt gì?", use_container_width=True):
+                submit_quick_prompt("Khách phamminhtuan.pmt@gmail.com đã đặt gì?")
+
+        row2 = st.columns(4)
+        with row2[0]:
+            if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
+                submit_quick_prompt("Ổ cứng khác SSD thế nào?")
+        with row2[1]:
+            if st.button("Trong các đơn đó, đơn nào đang xử lý?", use_container_width=True):
+                submit_quick_prompt("Trong các đơn đó, đơn nào đang xử lý?")
+        with row2[2]:
+            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
+                submit_quick_prompt("Tôi muốn build máy chơi game")
+        with row2[3]:
+            if st.button("Phạm Minh Tuấn là ai?", use_container_width=True):
+                submit_quick_prompt("Phạm Minh Tuấn là ai?")
+
+        st.markdown('<div class="section-divider-space"></div>', unsafe_allow_html=True)
+
+    st.markdown('<div class="chat-shell">', unsafe_allow_html=True)
 
     for msg in st.session_state.messages:
         render_message(msg["role"], msg["content"])
 
-    with st.container():
-        st.markdown('<div class="input-card">', unsafe_allow_html=True)
-        with st.form("chat_form", clear_on_submit=True):
-            input_col, button_col = st.columns([8.9, 1.1])
-            with input_col:
-                user_input = st.text_input(
-                    "",
-                    placeholder="Nhập câu hỏi của bạn...",
-                    label_visibility="collapsed"
-                )
-            with button_col:
-                st.markdown('<div class="send-button">', unsafe_allow_html=True)
-                submitted = st.form_submit_button("Gửi")
-                st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('</div>', unsafe_allow_html=True)
 
-        st.markdown('</div>', unsafe_allow_html=True)
+    st.markdown('<div class="composer-shell">', unsafe_allow_html=True)
+    st.markdown('<div class="composer-title">Nhập câu hỏi</div>', unsafe_allow_html=True)
+
+    with st.form("chat_form", clear_on_submit=True):
+        input_col, button_col = st.columns([9.2, 1.3])
+
+        with input_col:
+            user_input = st.text_input(
+                "",
+                placeholder="Nhập câu hỏi của bạn...",
+                label_visibility="collapsed"
+            )
+
+        with button_col:
+            st.markdown('<div class="primary-send">', unsafe_allow_html=True)
+            submitted = st.form_submit_button("Gửi")
+            st.markdown('</div>', unsafe_allow_html=True)
+
+    st.markdown('</div>', unsafe_allow_html=True)
 
     if submitted and user_input.strip():
-        submit_prompt(user_input)
+        clean_input = user_input.strip()
+
+        st.session_state.messages.append({
+            "role": "user",
+            "content": clean_input
+        })
+
+        history = session_store.get_history(st.session_state.thread_id)
+        context_state = session_store.get_context(st.session_state.thread_id)
+
+        result = chat_with_agent(
+            clean_input,
+            history,
+            context_state,
+            thread_id=st.session_state.thread_id
+        )
+
+        session_store.set_history(st.session_state.thread_id, result["history"])
+        session_store.set_context(st.session_state.thread_id, result["context_state"])
+
+        st.session_state.messages.append({
+            "role": "assistant",
+            "content": result["answer"]
+        })
+
         st.rerun()
+
+    st.markdown('<div class="footer-note">Bản demo phục vụ đánh giá đồ án • PMT Computer AI Agent</div>', unsafe_allow_html=True)
