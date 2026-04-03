@@ -43,12 +43,6 @@ st.markdown("""
         --pmt-text: #1f2f46;
         --pmt-muted: #687385;
         --pmt-primary: #163a70;
-        --pmt-primary-soft: #e7efff;
-        --pmt-user-bg: #dcecff;
-        --pmt-user-text: #17345d;
-        --pmt-bot-bg: #f7f8fb;
-        --pmt-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-        --pmt-danger: #d92d20;
     }
 
     html, body, [class*="css"] {
@@ -60,9 +54,15 @@ st.markdown("""
     }
 
     .block-container {
-        max-width: 1480px;
+        max-width: 850px !important;
+        margin: 0 auto !important;
         padding-top: 2rem;
-        padding-bottom: 6rem; 
+        padding-bottom: 7rem; 
+    }
+
+    div[data-testid="stChatInput"] {
+        max-width: 850px !important;
+        margin: 0 auto !important;
     }
 
     [data-testid="stSidebar"] {
@@ -225,57 +225,50 @@ st.markdown("""
         background: #ffffff;
     }
 
-    /* --- BẮT ĐẦU: CSS CUSTOM BONG BÓNG CHAT --- */
-    
-    /* 1. Ẩn avatar mặc định của Streamlit */
-    [data-testid="stChatMessageAvatar"] {
-        display: none !important;
-    }
-    
-    /* 2. Reset định dạng của thẻ bọc ngoài tin nhắn */
-    [data-testid="stChatMessage"] {
-        background-color: transparent !important;
-        border: none !important;
-        padding: 0 !important;
-        margin-bottom: 1.2rem;
+    .msg-row {
         display: flex;
         width: 100%;
+        margin-bottom: 1.5rem;
     }
 
-    /* 3. Tin nhắn của User: Căn phải, nền xanh, bo góc kiểu bong bóng */
-    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) {
-        flex-direction: row-reverse; /* Đẩy nội dung sang phải */
-    }
-    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-user"]) > div[data-testid="stChatMessageContent"] {
-        background-color: var(--pmt-user-bg);
-        color: var(--pmt-user-text);
-        border-radius: 18px;
-        border-bottom-right-radius: 4px; /* Góc nhọn trỏ về phía người gửi */
-        padding: 12px 18px;
-        max-width: 80%;
-        margin-left: auto;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+    .msg-row.user {
+        justify-content: flex-end;
     }
 
-    /* 4. Tin nhắn của Assistant: Căn trái, nền xám, bo góc kiểu bong bóng */
-    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-assistant"]) {
-        flex-direction: row;
+    .msg-row.assistant {
+        justify-content: flex-start;
     }
-    [data-testid="stChatMessage"]:has(div[data-testid="chatAvatarIcon-assistant"]) > div[data-testid="stChatMessageContent"] {
-        background-color: var(--pmt-bot-bg);
-        color: var(--pmt-text);
-        border-radius: 18px;
+
+    .msg-bubble {
+        max-width: 78%;
+        padding: 0.9rem 1.2rem;
+        border-radius: 22px;
+        font-size: 0.98rem;
+        line-height: 1.6;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+        word-wrap: break-word;
+    }
+
+    .msg-bubble.user {
+        background-color: #0084ff;
+        color: #ffffff;
+        border-bottom-right-radius: 4px;
+    }
+
+    .msg-bubble.assistant {
+        background-color: #f0f2f5;
+        color: #1c1e21;
         border-bottom-left-radius: 4px;
-        padding: 12px 18px;
-        max-width: 80%;
-        margin-right: auto;
-        border: 1px solid var(--pmt-border);
-        box-shadow: 0 2px 5px rgba(0,0,0,0.02);
+        border: 1px solid #e4e6eb;
     }
-    
-    /* --- KẾT THÚC: CSS CUSTOM BONG BÓNG CHAT --- */
+
+    .msg-bubble p { margin: 0 0 0.5rem 0; }
+    .msg-bubble p:last-child { margin-bottom: 0; }
+    .msg-bubble ul { margin: 0.3rem 0; padding-left: 1.5rem; }
+    .msg-bubble li { margin-bottom: 0.2rem; }
 </style>
 """, unsafe_allow_html=True)
+
 
 @st.cache_resource(show_spinner=False)
 def init_demo_resources():
@@ -303,6 +296,54 @@ def stream_generator(text: str):
     for word in text.split(" "):
         yield word + " "
         time.sleep(0.03)
+
+def simple_markdown_to_html(text: str) -> str:
+    text = text or ""
+    lines = text.splitlines()
+    parts = []
+    in_list = False
+
+    def format_inline(s: str) -> str:
+        s = html.escape(s)
+        s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
+        return s
+
+    for raw in lines:
+        stripped = raw.strip()
+
+        if not stripped:
+            if in_list:
+                parts.append("</ul>")
+                in_list = False
+            continue
+
+        if stripped.startswith("- ") or stripped.startswith("* "):
+            if not in_list:
+                parts.append("<ul>")
+                in_list = True
+            item = format_inline(stripped[2:].strip())
+            parts.append(f"<li>{item}</li>")
+        else:
+            if in_list:
+                parts.append("</ul>")
+                in_list = False
+            parts.append(f"<p>{format_inline(stripped)}</p>")
+
+    if in_list:
+        parts.append("</ul>")
+
+    return "".join(parts) if parts else "<p></p>"
+
+def get_message_html(role: str, content: str) -> str:
+    role_class = "user" if role == "user" else "assistant"
+    bubble_html = simple_markdown_to_html(content)
+    return f"""
+    <div class="msg-row {role_class}">
+        <div class="msg-bubble {role_class}">
+            {bubble_html}
+        </div>
+    </div>
+    """
 
 init_demo_resources()
 
@@ -366,85 +407,78 @@ with st.sidebar:
 
     st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
 
-left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
+
 prompt_to_send = None
 
-# Mọi thứ hiển thị chính đều được lồng vào cột center
-with center:
-    st.markdown("""
-    <div class="hero-wrap">
-        <div class="hero-topline">AI Customer Support • PMT Computer</div>
-        <div class="hero-title"><span class="hero-title-accent">PMT Computer</span> AI Agent</div>
-        <div class="hero-subtitle">
-            Hệ thống AI Agent đa kênh ứng dụng RAG cho chăm sóc khách hàng cửa hàng máy tính
-        </div>
-        <div class="hero-badge-row">
-            <div class="hero-badge">Tư vấn linh kiện</div>
-            <div class="hero-badge">Tra cứu đơn hàng</div>
-            <div class="hero-badge">Bảo hành / đổi trả</div>
-            <div class="hero-badge">Memory nhiều lượt</div>
-        </div>
+st.markdown("""
+<div class="hero-wrap">
+    <div class="hero-topline">AI Customer Support • PMT Computer</div>
+    <div class="hero-title"><span class="hero-title-accent">PMT Computer</span> AI Agent</div>
+    <div class="hero-subtitle">
+        Hệ thống AI Agent đa kênh ứng dụng RAG cho chăm sóc khách hàng cửa hàng máy tính
     </div>
-    """, unsafe_allow_html=True)
-
-    st.markdown("""
-    <div class="intro-note">
-        Bạn có thể hỏi về sản phẩm, đơn hàng, bảo hành, đổi trả, FAQ linh kiện hoặc tư vấn mua hàng.
+    <div class="hero-badge-row">
+        <div class="hero-badge">Tư vấn linh kiện</div>
+        <div class="hero-badge">Tra cứu đơn hàng</div>
+        <div class="hero-badge">Bảo hành / đổi trả</div>
+        <div class="hero-badge">Memory nhiều lượt</div>
     </div>
-    """, unsafe_allow_html=True)
+</div>
+""", unsafe_allow_html=True)
 
-    if len(st.session_state.messages) == 0:
-        st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
+st.markdown("""
+<div class="intro-note">
+    Bạn có thể hỏi về sản phẩm, đơn hàng, bảo hành, đổi trả, FAQ linh kiện hoặc tư vấn mua hàng.
+</div>
+""", unsafe_allow_html=True)
 
-        row1 = st.columns(2)
-        with row1[0]:
-            if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
-                prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
-        with row1[1]:
-            if st.button("Tôi muốn build PC chơi game", use_container_width=True):
-                prompt_to_send = "Tôi muốn build PC chơi game"
+if len(st.session_state.messages) == 0:
+    st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
-        row2 = st.columns(2)
-        with row2[0]:
-            if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
-                prompt_to_send = "Kiểm tra đơn hàng của tôi"
-        with row2[1]:
-            if st.button("Liệt kê danh sách các CPU", use_container_width=True):
-                prompt_to_send = "Liệt kê danh sách các CPU"
+    row1 = st.columns(2)
+    with row1[0]:
+        if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
+            prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
+    with row1[1]:
+        if st.button("Tôi muốn build PC chơi game", use_container_width=True):
+            prompt_to_send = "Tôi muốn build PC chơi game"
 
-    # Lịch sử tin nhắn
-    for msg in st.session_state.messages:
-        with st.chat_message(msg["role"]):
-            st.markdown(msg["content"])
+    row2 = st.columns(2)
+    with row2[0]:
+        if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
+            prompt_to_send = "Kiểm tra đơn hàng của tôi"
+    with row2[1]:
+        if st.button("Liệt kê danh sách các CPU", use_container_width=True):
+            prompt_to_send = "Liệt kê danh sách các CPU"
 
-    # CHÚ Ý: st.chat_input được đặt BÊN TRONG `with center:`
-    # Việc này giúp nó tự động lấy chiều rộng bằng đúng với chiều rộng của cột center
-    user_input = st.chat_input("Nhập câu hỏi của bạn...")
+for msg in st.session_state.messages:
+    st.markdown(get_message_html(msg["role"], msg["content"]), unsafe_allow_html=True)
 
+user_input = st.chat_input("Nhập câu hỏi của bạn...")
 prompt = user_input or prompt_to_send
 
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
-    
-    with center:
-        with st.chat_message("user"):
-            st.markdown(prompt)
+    st.markdown(get_message_html("user", prompt), unsafe_allow_html=True)
 
-        history = session_store.get_history(st.session_state.thread_id)
-        context_state = session_store.get_context(st.session_state.thread_id)
+    history = session_store.get_history(st.session_state.thread_id)
+    context_state = session_store.get_context(st.session_state.thread_id)
 
-        result = chat_with_agent(
-            prompt,
-            history,
-            context_state,
-            thread_id=st.session_state.thread_id
-        )
+    result = chat_with_agent(
+        prompt,
+        history,
+        context_state,
+        thread_id=st.session_state.thread_id
+    )
 
-        session_store.set_history(st.session_state.thread_id, result["history"])
-        session_store.set_context(st.session_state.thread_id, result["context_state"])
+    session_store.set_history(st.session_state.thread_id, result["history"])
+    session_store.set_context(st.session_state.thread_id, result["context_state"])
 
-        with st.chat_message("assistant"):
-            st.write_stream(stream_generator(result["answer"]))
-            
+    placeholder = st.empty()
+    streamed_text = ""
+    for chunk in stream_generator(result["answer"]):
+        streamed_text += chunk
+        placeholder.markdown(get_message_html("assistant", streamed_text), unsafe_allow_html=True)
+        
     st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
     st.rerun()
