@@ -518,12 +518,10 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-card">
         <ul>
-            <li>Tư vấn linh kiện máy tính</li>
-            <li>Kiểm tra đơn hàng</li>
-            <li>Chính sách bảo hành / đổi trả</li>
-            <li>Hỗ trợ sản phẩm theo hãng / nhóm</li>
-            <li>Ghi nhớ hội thoại ngắn</li>
-            <li>RAG + Tool Calling + Memory</li>
+            <li>Danh sách linh kiện máy tính</li>
+            <li>Kiểm tra đơn hàng của tôi</li>
+            <li>Ổ cứng khác SSD thế nào?</li>
+            <li>Tôi muốn build máy chơi game</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -532,9 +530,12 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-card">
         <ul>
-            <li>Danh sách linh kiện máy tính</li>
+            <li>CPU bảo hành bao lâu?</li>
+            <li>Tìm SSD Samsung</li>
             <li>Ổ cứng khác SSD thế nào?</li>
-            <li>Kiểm tra đơn hàng của tôi</li>
+            <li>Kiểm tra đơn hàng ORD003</li>
+            <li>Khách Phạm Minh Tuấn đã đặt gì?</li>
+            <li>Trong các đơn đó, đơn nào đang xử lý?</li>
             <li>Tôi muốn build máy chơi game</li>
         </ul>
     </div>
@@ -582,68 +583,47 @@ with center:
         Bạn có thể hỏi về sản phẩm, đơn hàng, bảo hành, đổi trả, FAQ linh kiện hoặc tư vấn mua hàng.
     </div>
     """, unsafe_allow_html=True)
-
-    if len(st.session_state.messages) == 0:
-        st.markdown("""
-        <div class="welcome-card">
-            <div class="welcome-title">Bắt đầu nhanh</div>
-            <div class="welcome-subtitle">
-                Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
-            </div>
+    
+if len(st.session_state.messages) == 0:
+    st.markdown("""
+    <div class="welcome-card">
+        <div class="welcome-title">Bắt đầu nhanh</div>
+        <div class="welcome-subtitle">
+            Chọn một gợi ý bên dưới để trải nghiệm nhanh các chức năng chính của hệ thống.
         </div>
-        """, unsafe_allow_html=True)
+    </div>
+    """, unsafe_allow_html=True)
 
-        st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
+    st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
-        row1 = st.columns(4)
-        with row1[0]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("CPU bảo hành bao lâu?", use_container_width=True):
-                process_prompt("CPU bảo hành bao lâu?")
-            st.markdown('</div>', unsafe_allow_html=True)
+    quick_cols = st.columns(4)
 
-        with row1[1]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Tìm SSD Samsung", use_container_width=True):
-                process_prompt("Tìm SSD Samsung")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with quick_cols[0]:
+        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+        if st.button("Danh sách linh kiện máy tính", use_container_width=True):
+            process_prompt("Danh sách linh kiện máy tính")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        with row1[2]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Kiểm tra đơn ORD003", use_container_width=True):
-                process_prompt("Kiểm tra đơn hàng ORD003")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with quick_cols[1]:
+        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+        if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
+            process_prompt("Kiểm tra đơn hàng của tôi")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        with row1[3]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Khách Phạm Minh Tuấn đã đặt gì?", use_container_width=True):
-                process_prompt("Khách phamminhtuan.pmt@gmail.com đã đặt gì?")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with quick_cols[2]:
+        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+        if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
+            process_prompt("Ổ cứng khác SSD thế nào?")
+        st.markdown('</div>', unsafe_allow_html=True)
 
-        row2 = st.columns(4)
-        with row2[0]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
-                process_prompt("Ổ cứng khác SSD thế nào?")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with row2[1]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Trong các đơn đó, đơn nào đang xử lý?", use_container_width=True):
-                process_prompt("Trong các đơn đó, đơn nào đang xử lý?")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with row2[2]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
-                process_prompt("Tôi muốn build máy chơi game")
-            st.markdown('</div>', unsafe_allow_html=True)
-
-        with row2[3]:
-            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
-            if st.button("Phạm Minh Tuấn là ai?", use_container_width=True):
-                process_prompt("Phạm Minh Tuấn là ai?")
-            st.markdown('</div>', unsafe_allow_html=True)
+    with quick_cols[3]:
+        st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+        if st.button("Tôi muốn build máy chơi game", use_container_width=True):
+            process_prompt("Tôi muốn build máy chơi game")
+        st.markdown('</div>', unsafe_allow_html=True)
+    
+    
+       
 
     render_chat_block(st.session_state.messages)
 
