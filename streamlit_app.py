@@ -2,10 +2,10 @@ import html
 import os
 import re
 import uuid
+import time
 from pathlib import Path
 
 import streamlit as st
-
 
 st.set_page_config(
     page_title="PMT Computer AI Agent",
@@ -13,7 +13,6 @@ st.set_page_config(
     layout="wide",
     initial_sidebar_state="expanded"
 )
-
 
 def load_cloud_secrets_to_env():
     keys = [
@@ -25,7 +24,6 @@ def load_cloud_secrets_to_env():
         if key in st.secrets:
             os.environ[key] = str(st.secrets[key])
 
-
 load_cloud_secrets_to_env()
 
 from app.agent.memory import session_store
@@ -33,9 +31,12 @@ from app.agent.orchestrator import chat_with_agent
 from app.db.seed import seed
 from app.rag.ingest import ingest_folder
 
-
 st.markdown("""
 <style>
+    /* Xóa khoảng trắng và thanh header thừa trên cùng của Streamlit */
+    [data-testid="stHeader"] {display: none;}
+    [data-testid="stTopBlock"] {display: none;}
+
     :root {
         --pmt-bg: #f4f6fb;
         --pmt-surface: #ffffff;
@@ -56,13 +57,13 @@ st.markdown("""
     }
 
     .main > div {
-        padding-top: 0.6rem;
+        padding-top: 0rem;
     }
 
     .block-container {
         max-width: 1480px;
-        padding-top: 1rem;
-        padding-bottom: 1rem;
+        padding-top: 2rem;
+        padding-bottom: 6rem; /* Tạo khoảng trống cho chat input */
     }
 
     [data-testid="stSidebar"] {
@@ -208,121 +209,12 @@ st.markdown("""
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
     }
 
-    .quick-actions-wrap {
-        margin-top: 0.2rem;
-        margin-bottom: 1rem;
-    }
-
     .quick-actions-title {
         font-size: 0.92rem;
         font-weight: 800;
         color: var(--pmt-text);
         margin-bottom: 0.55rem;
-    }
-
-    .chat-shell {
-        background: var(--pmt-surface);
-        border: 1px solid var(--pmt-border);
-        border-radius: 24px;
-        box-shadow: var(--pmt-shadow);
-        padding: 1.05rem 1rem 1rem 1rem;
-    }
-
-    .msg-row {
-        display: flex;
-        margin-bottom: 1rem;
-        width: 100%;
-    }
-
-    .msg-row.user {
-        justify-content: flex-end;
-    }
-
-    .msg-row.assistant {
-        justify-content: flex-start;
-    }
-
-    .msg-bubble {
-        max-width: 76%;
-        padding: 0.95rem 1.05rem;
-        border-radius: 22px;
-        line-height: 1.7;
-        font-size: 1rem;
-        word-wrap: break-word;
-        white-space: normal;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.02);
-    }
-
-    .msg-bubble.user {
-        background: var(--pmt-user-bg);
-        color: var(--pmt-user-text);
-        border: 1px solid #cddfff;
-        border-bottom-right-radius: 8px;
-    }
-
-    .msg-bubble.assistant {
-        background: var(--pmt-bot-bg);
-        color: #1f2937;
-        border: 1px solid rgba(15, 23, 42, 0.08);
-        border-bottom-left-radius: 8px;
-    }
-
-    .msg-label {
-        font-size: 0.76rem;
-        font-weight: 800;
-        margin-bottom: 0.42rem;
-        opacity: 0.72;
-        letter-spacing: 0.02em;
-        text-transform: uppercase;
-    }
-
-    .msg-bubble p {
-        margin: 0 0 0.65rem 0;
-    }
-
-    .msg-bubble p:last-child {
-        margin-bottom: 0;
-    }
-
-    .msg-bubble ul {
-        margin-top: 0.25rem;
-        margin-bottom: 0.6rem;
-        padding-left: 1.25rem;
-    }
-
-    .msg-bubble li {
-        margin-bottom: 0.35rem;
-    }
-
-    .composer-shell {
-        background: var(--pmt-surface);
-        border: 1px solid var(--pmt-border);
-        border-radius: 22px;
-        padding: 0.95rem;
         margin-top: 1rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
-    }
-
-    .composer-title {
-        font-size: 0.82rem;
-        font-weight: 800;
-        color: #5a6577;
-        margin-bottom: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-
-    .stTextInput > div > div > input {
-        border-radius: 14px !important;
-        padding: 0.95rem 1rem !important;
-        border: 1px solid rgba(15, 23, 42, 0.12) !important;
-        background: #fbfcfe !important;
-        box-shadow: none !important;
-    }
-
-    .stTextInput > div > div > input:focus {
-        border: 1px solid #8db4ff !important;
-        box-shadow: 0 0 0 3px rgba(80, 130, 255, 0.12) !important;
     }
 
     .stButton > button {
@@ -331,20 +223,7 @@ st.markdown("""
         font-weight: 800;
         padding: 0.82rem 0.95rem;
         border: 1px solid rgba(15, 23, 42, 0.1);
-    }
-
-    .primary-send button {
-        background: linear-gradient(135deg, #14386a 0%, #275faa 100%) !important;
-        color: white !important;
-        border: none !important;
-    }
-
-    .primary-send button:hover {
-        filter: brightness(1.03);
-    }
-
-    .ghost-button button {
-        background: #ffffff !important;
+        background: #ffffff;
     }
 
     .welcome-card {
@@ -354,6 +233,7 @@ st.markdown("""
         padding: 1.1rem 1.1rem 1rem 1.1rem;
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
         margin-bottom: 1rem;
+        margin-top: 1rem;
     }
 
     .welcome-title {
@@ -367,17 +247,6 @@ st.markdown("""
         color: var(--pmt-muted);
         line-height: 1.65;
         margin-bottom: 0.9rem;
-    }
-
-    .section-divider-space {
-        height: 0.15rem;
-    }
-
-    .footer-note {
-        text-align: center;
-        color: #8b95a7;
-        font-size: 0.82rem;
-        margin-top: 1rem;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -397,7 +266,6 @@ def init_demo_resources():
 
     return True
 
-
 def reset_demo_state():
     seed()
     ingest_folder("data/raw")
@@ -406,89 +274,11 @@ def reset_demo_state():
     st.session_state.messages = []
     st.session_state.thread_id = str(uuid.uuid4())
 
-
-def simple_markdown_to_html(text: str) -> str:
-    text = text or ""
-    lines = text.splitlines()
-    parts = []
-    in_list = False
-
-    def format_inline(s: str) -> str:
-        s = html.escape(s)
-        s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
-        return s
-
-    for raw in lines:
-        stripped = raw.strip()
-
-        if not stripped:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            continue
-
-        if stripped.startswith("- ") or stripped.startswith("* "):
-            if not in_list:
-                parts.append("<ul>")
-                in_list = True
-            item = format_inline(stripped[2:].strip())
-            parts.append(f"<li>{item}</li>")
-        else:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            parts.append(f"<p>{format_inline(stripped)}</p>")
-
-    if in_list:
-        parts.append("</ul>")
-
-    return "".join(parts) if parts else "<p></p>"
-
-
-def render_message(role: str, content: str):
-    role_class = "user" if role == "user" else "assistant"
-    label = "Bạn" if role == "user" else "PMT Assistant"
-    bubble_html = simple_markdown_to_html(content)
-
-    st.markdown(
-        f"""
-        <div class="msg-row {role_class}">
-            <div class="msg-bubble {role_class}">
-                <div class="msg-label">{label}</div>
-                {bubble_html}
-            </div>
-        </div>
-        """,
-        unsafe_allow_html=True
-    )
-
-
-def submit_quick_prompt(prompt: str):
-    history = session_store.get_history(st.session_state.thread_id)
-    context_state = session_store.get_context(st.session_state.thread_id)
-
-    st.session_state.messages.append({
-        "role": "user",
-        "content": prompt
-    })
-
-    result = chat_with_agent(
-        prompt,
-        history,
-        context_state,
-        thread_id=st.session_state.thread_id
-    )
-
-    session_store.set_history(st.session_state.thread_id, result["history"])
-    session_store.set_context(st.session_state.thread_id, result["context_state"])
-
-    st.session_state.messages.append({
-        "role": "assistant",
-        "content": result["answer"]
-    })
-
-    st.rerun()
-
+# Hàm generator để tạo hiệu ứng chữ chạy từ từ (Streaming)
+def stream_generator(text: str):
+    for word in text.split(" "):
+        yield word + " "
+        time.sleep(0.03)
 
 init_demo_resources()
 
@@ -497,7 +287,6 @@ if "thread_id" not in st.session_state:
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
-
 
 with st.sidebar:
     st.markdown("""
@@ -532,13 +321,10 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-card">
         <ul>
-            <li>CPU bảo hành bao lâu?</li>
-            <li>Tìm SSD Samsung</li>
-            <li>Ổ cứng khác SSD thế nào?</li>
-            <li>Kiểm tra đơn hàng ORD003</li>
-            <li>Khách Phạm Minh Tuấn đã đặt gì?</li>
-            <li>Trong các đơn đó, đơn nào đang xử lý?</li>
-            <li>Tôi muốn build máy chơi game</li>
+            <li>Ổ cứng SSD khác HDD thế nào?</li>
+            <li>Tôi muốn build PC chơi game</li>
+            <li>Kiểm tra đơn hàng của tôi</li>
+            <li>Liệt kê danh sách các CPU</li>
         </ul>
     </div>
     """, unsafe_allow_html=True)
@@ -558,6 +344,8 @@ with st.sidebar:
 
 
 left_pad, center, right_pad = st.columns([1.0, 6.4, 1.0])
+
+prompt_to_send = None
 
 with center:
     st.markdown("""
@@ -582,6 +370,7 @@ with center:
     </div>
     """, unsafe_allow_html=True)
 
+    # Chỉ hiển thị phần Gợi ý thao tác nhanh nếu chưa có hội thoại
     if len(st.session_state.messages) == 0:
         st.markdown("""
         <div class="welcome-card">
@@ -592,91 +381,60 @@ with center:
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="quick-actions-wrap"><div class="quick-actions-title">Gợi ý thao tác nhanh</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
-        row1 = st.columns(4)
+        # Cập nhật thành 4 nút trên 2 cột
+        row1 = st.columns(2)
         with row1[0]:
-            if st.button("CPU bảo hành bao lâu?", use_container_width=True):
-                submit_quick_prompt("CPU bảo hành bao lâu?")
+            if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
+                prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
         with row1[1]:
-            if st.button("Tìm SSD Samsung", use_container_width=True):
-                submit_quick_prompt("Tìm SSD Samsung")
-        with row1[2]:
-            if st.button("Kiểm tra đơn ORD003", use_container_width=True):
-                submit_quick_prompt("Kiểm tra đơn hàng ORD003")
-        with row1[3]:
-            if st.button("Khách Phạm Minh Tuấn đã đặt gì?", use_container_width=True):
-                submit_quick_prompt("Khách phamminhtuan.pmt@gmail.com đã đặt gì?")
+            if st.button("Tôi muốn build PC chơi game", use_container_width=True):
+                prompt_to_send = "Tôi muốn build PC chơi game"
 
-        row2 = st.columns(4)
+        row2 = st.columns(2)
         with row2[0]:
-            if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
-                submit_quick_prompt("Ổ cứng khác SSD thế nào?")
+            if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
+                prompt_to_send = "Kiểm tra đơn hàng của tôi"
         with row2[1]:
-            if st.button("Trong các đơn đó, đơn nào đang xử lý?", use_container_width=True):
-                submit_quick_prompt("Trong các đơn đó, đơn nào đang xử lý?")
-        with row2[2]:
-            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
-                submit_quick_prompt("Tôi muốn build máy chơi game")
-        with row2[3]:
-            if st.button("Phạm Minh Tuấn là ai?", use_container_width=True):
-                submit_quick_prompt("Phạm Minh Tuấn là ai?")
+            if st.button("Liệt kê danh sách các CPU", use_container_width=True):
+                prompt_to_send = "Liệt kê danh sách các CPU"
 
-        st.markdown('<div class="section-divider-space"></div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="chat-shell">', unsafe_allow_html=True)
-
+    # Render lịch sử tin nhắn bằng native chat component
     for msg in st.session_state.messages:
-        render_message(msg["role"], msg["content"])
+        with st.chat_message(msg["role"]):
+            st.markdown(msg["content"])
 
-    st.markdown('</div>', unsafe_allow_html=True)
+# Sử dụng st.chat_input để tạo thanh nhập liệu chuẩn và gắn liền với dưới cùng màn hình
+user_input = st.chat_input("Nhập câu hỏi của bạn...")
 
-    st.markdown('<div class="composer-shell">', unsafe_allow_html=True)
-    st.markdown('<div class="composer-title">Nhập câu hỏi</div>', unsafe_allow_html=True)
+# Xử lý luồng chat khi người dùng nhập liệu hoặc ấn vào nút gợi ý
+prompt = user_input or prompt_to_send
 
-    with st.form("chat_form", clear_on_submit=True):
-        input_col, button_col = st.columns([9.2, 1.3])
+if prompt:
+    # 1. Thêm và hiển thị tin nhắn của user
+    st.session_state.messages.append({"role": "user", "content": prompt})
+    with center:
+        with st.chat_message("user"):
+            st.markdown(prompt)
 
-        with input_col:
-            user_input = st.text_input(
-                "",
-                placeholder="Nhập câu hỏi của bạn...",
-                label_visibility="collapsed"
-            )
+    # 2. Xử lý RAG backend
+    history = session_store.get_history(st.session_state.thread_id)
+    context_state = session_store.get_context(st.session_state.thread_id)
 
-        with button_col:
-            st.markdown('<div class="primary-send">', unsafe_allow_html=True)
-            submitted = st.form_submit_button("Gửi")
-            st.markdown('</div>', unsafe_allow_html=True)
+    result = chat_with_agent(
+        prompt,
+        history,
+        context_state,
+        thread_id=st.session_state.thread_id
+    )
 
-    st.markdown('</div>', unsafe_allow_html=True)
+    session_store.set_history(st.session_state.thread_id, result["history"])
+    session_store.set_context(st.session_state.thread_id, result["context_state"])
 
-    if submitted and user_input.strip():
-        clean_input = user_input.strip()
-
-        st.session_state.messages.append({
-            "role": "user",
-            "content": clean_input
-        })
-
-        history = session_store.get_history(st.session_state.thread_id)
-        context_state = session_store.get_context(st.session_state.thread_id)
-
-        result = chat_with_agent(
-            clean_input,
-            history,
-            context_state,
-            thread_id=st.session_state.thread_id
-        )
-
-        session_store.set_history(st.session_state.thread_id, result["history"])
-        session_store.set_context(st.session_state.thread_id, result["context_state"])
-
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": result["answer"]
-        })
-
-        st.rerun()
-
-    st.markdown('<div class="footer-note">Bản demo phục vụ đánh giá đồ án • PMT Computer AI Agent</div>', unsafe_allow_html=True)
+    # 3. Hiển thị tin nhắn của assistant bằng hiệu ứng streaming
+    with center:
+        with st.chat_message("assistant"):
+            st.write_stream(stream_generator(result["answer"]))
+            
+    st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
