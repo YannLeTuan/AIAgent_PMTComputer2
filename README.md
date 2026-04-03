@@ -68,27 +68,24 @@ The project is structured around a modular, microservices-inspired architecture 
 
 The system is built entirely on a modern Python ecosystem, ensuring high performance and ease of deployment.
 
-**Application & API Layer**
+**Application & API Layer**<br/>
+![Python](https://img.shields.io/badge/python-3670A0?style=flat-square&logo=python&logoColor=ffdd54)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi)
 
-- Python 3.10+
-- FastAPI (Backend API routing)
+**AI & Machine Learning**<br/>
+![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=flat-square&logo=google&logoColor=white)
+![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-444444?style=flat-square)
+![Sentence Transformers](https://img.shields.io/badge/Sentence_Transformers-Embedding-blue?style=flat-square)
 
-**AI & Machine Learning**
+**Data Persistence Layer**<br/>
+![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=flat-square&logo=sqlite&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=flat-square&logo=python&logoColor=white)
 
-- Google Gemini API (Core LLM & Reasoning Engine)
-- sentence-transformers (Text Embedding)
-- FAISS (Vector Indexing & Similarity Search)
-
-**Data Persistence Layer**
-
-- SQLite (Relational Database)
-- SQLAlchemy (Object Relational Mapping)
-
-**Frontend & Integrations**
-
-- Streamlit (Web Application Framework)
-- Custom HTML/CSS (UI/UX overrides)
-- python-telegram-bot (Messaging integration)
+**Frontend & Integrations**<br/>
+![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=flat-square&logo=streamlit&logoColor=white)
+![Telegram API](https://img.shields.io/badge/Telegram_Bot-2CA5E0?style=flat-square&logo=telegram&logoColor=white)
+![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white)
 
 ## Local Installation and Setup
 
