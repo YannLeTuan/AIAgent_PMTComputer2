@@ -37,18 +37,18 @@ from app.rag.ingest import ingest_folder
 st.markdown("""
 <style>
     :root {
-        --pmt-bg: #f4f6fb;
+        --pmt-bg: #f5f7fb;
         --pmt-surface: #ffffff;
         --pmt-border: rgba(15, 23, 42, 0.08);
         --pmt-text: #1f2f46;
         --pmt-muted: #687385;
         --pmt-primary: #163a70;
-        --pmt-primary-soft: #e7efff;
+        --pmt-primary-2: #275faa;
+        --pmt-primary-soft: #eef4ff;
         --pmt-user-bg: #dcecff;
         --pmt-user-text: #17345d;
         --pmt-bot-bg: #f7f8fb;
         --pmt-shadow: 0 10px 28px rgba(15, 23, 42, 0.05);
-        --pmt-danger: #d92d20;
     }
 
     html, body, [class*="css"] {
@@ -60,7 +60,7 @@ st.markdown("""
     }
 
     .block-container {
-        max-width: 1480px;
+        max-width: 1500px;
         padding-top: 1rem;
         padding-bottom: 1rem;
     }
@@ -76,35 +76,36 @@ st.markdown("""
         display: flex;
         align-items: center;
         gap: 0.8rem;
-        margin-bottom: 0.8rem;
+        margin-bottom: 0.85rem;
     }
 
     .sidebar-logo {
-        width: 46px;
-        height: 46px;
+        width: 48px;
+        height: 48px;
         border-radius: 14px;
         background: linear-gradient(135deg, #102d57 0%, #1f5fae 100%);
         color: white;
         display: flex;
         align-items: center;
         justify-content: center;
-        font-size: 1.25rem;
-        font-weight: 800;
+        font-size: 1.15rem;
+        font-weight: 900;
         box-shadow: 0 10px 20px rgba(22, 58, 112, 0.18);
+        letter-spacing: 0.04em;
     }
 
     .sidebar-brand-title {
         font-size: 1.55rem;
-        font-weight: 800;
+        font-weight: 900;
         color: var(--pmt-text);
-        line-height: 1.1;
+        line-height: 1.05;
         margin: 0;
     }
 
     .sidebar-brand-subtitle {
         color: var(--pmt-muted);
         font-size: 0.93rem;
-        line-height: 1.5;
+        line-height: 1.55;
         margin-top: 0.35rem;
     }
 
@@ -117,7 +118,7 @@ st.markdown("""
     }
 
     .sidebar-card {
-        background: rgba(255,255,255,0.95);
+        background: rgba(255,255,255,0.96);
         border: 1px solid var(--pmt-border);
         border-radius: 20px;
         padding: 1rem 1rem 0.95rem 1rem;
@@ -144,14 +145,14 @@ st.markdown("""
     }
 
     .hero-wrap {
-        padding-top: 0.4rem;
+        padding-top: 0.35rem;
         padding-bottom: 0.8rem;
     }
 
     .hero-topline {
         display: inline-block;
         font-size: 0.82rem;
-        font-weight: 700;
+        font-weight: 800;
         color: #295eb7;
         background: #edf3ff;
         border: 1px solid #dbe7ff;
@@ -161,11 +162,11 @@ st.markdown("""
     }
 
     .hero-title {
-        font-size: 2.8rem;
+        font-size: 2.85rem;
         font-weight: 900;
         color: var(--pmt-text);
         margin: 0;
-        line-height: 1.1;
+        line-height: 1.08;
         letter-spacing: -0.02em;
     }
 
@@ -176,7 +177,7 @@ st.markdown("""
     .hero-subtitle {
         color: var(--pmt-muted);
         font-size: 1rem;
-        margin-top: 0.45rem;
+        margin-top: 0.5rem;
         margin-bottom: 1rem;
         line-height: 1.7;
     }
@@ -204,13 +205,30 @@ st.markdown("""
         border-radius: 18px;
         padding: 1rem 1.05rem;
         color: var(--pmt-muted);
-        margin-bottom: 0.9rem;
+        margin-bottom: 0.95rem;
         box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
     }
 
-    .quick-actions-wrap {
-        margin-top: 0.2rem;
+    .welcome-card {
+        background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
+        border: 1px solid var(--pmt-border);
+        border-radius: 22px;
+        padding: 1.1rem 1.1rem 1rem 1.1rem;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
         margin-bottom: 1rem;
+    }
+
+    .welcome-title {
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: var(--pmt-text);
+        margin-bottom: 0.45rem;
+    }
+
+    .welcome-subtitle {
+        color: var(--pmt-muted);
+        line-height: 1.65;
+        margin-bottom: 0.9rem;
     }
 
     .quick-actions-title {
@@ -294,90 +312,61 @@ st.markdown("""
         margin-bottom: 0.35rem;
     }
 
-    .composer-shell {
-        background: var(--pmt-surface);
-        border: 1px solid var(--pmt-border);
-        border-radius: 22px;
-        padding: 0.95rem;
-        margin-top: 1rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
-    }
-
-    .composer-title {
-        font-size: 0.82rem;
-        font-weight: 800;
-        color: #5a6577;
-        margin-bottom: 0.55rem;
-        text-transform: uppercase;
-        letter-spacing: 0.03em;
-    }
-
-    .stTextInput > div > div > input {
-        border-radius: 14px !important;
-        padding: 0.95rem 1rem !important;
-        border: 1px solid rgba(15, 23, 42, 0.12) !important;
-        background: #fbfcfe !important;
-        box-shadow: none !important;
-    }
-
-    .stTextInput > div > div > input:focus {
-        border: 1px solid #8db4ff !important;
-        box-shadow: 0 0 0 3px rgba(80, 130, 255, 0.12) !important;
-    }
-
-    .stButton > button {
-        width: 100%;
-        border-radius: 14px;
-        font-weight: 800;
-        padding: 0.82rem 0.95rem;
-        border: 1px solid rgba(15, 23, 42, 0.1);
-    }
-
-    .primary-send button {
-        background: linear-gradient(135deg, #14386a 0%, #275faa 100%) !important;
-        color: white !important;
-        border: none !important;
-    }
-
-    .primary-send button:hover {
-        filter: brightness(1.03);
-    }
-
-    .ghost-button button {
-        background: #ffffff !important;
-    }
-
-    .welcome-card {
-        background: linear-gradient(180deg, #ffffff 0%, #fbfcff 100%);
-        border: 1px solid var(--pmt-border);
-        border-radius: 22px;
-        padding: 1.1rem 1.1rem 1rem 1.1rem;
-        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
-        margin-bottom: 1rem;
-    }
-
-    .welcome-title {
-        font-size: 1.08rem;
-        font-weight: 800;
-        color: var(--pmt-text);
-        margin-bottom: 0.45rem;
-    }
-
-    .welcome-subtitle {
-        color: var(--pmt-muted);
-        line-height: 1.65;
-        margin-bottom: 0.9rem;
-    }
-
-    .section-divider-space {
-        height: 0.15rem;
+    .input-guide {
+        text-align: center;
+        color: #7b8798;
+        font-size: 0.88rem;
+        margin-top: 0.85rem;
+        margin-bottom: 0.25rem;
     }
 
     .footer-note {
         text-align: center;
         color: #8b95a7;
         font-size: 0.82rem;
-        margin-top: 1rem;
+        margin-top: 0.95rem;
+    }
+
+    /* Chat input native */
+    div[data-testid="stChatInput"] {
+        margin-top: 0.85rem;
+    }
+
+    div[data-testid="stChatInput"] > div {
+        background: #ffffff;
+        border: 1px solid var(--pmt-border);
+        border-radius: 22px;
+        box-shadow: 0 8px 20px rgba(15, 23, 42, 0.03);
+        padding-top: 0.25rem;
+        padding-bottom: 0.1rem;
+    }
+
+    div[data-testid="stChatInput"] textarea,
+    div[data-testid="stChatInput"] input {
+        background: #fbfcfe !important;
+        border-radius: 14px !important;
+    }
+
+    div[data-testid="stChatInput"] button {
+        background: linear-gradient(135deg, #14386a 0%, #275faa 100%) !important;
+        color: white !important;
+        border: none !important;
+        border-radius: 14px !important;
+    }
+
+    .quick-btn button {
+        border-radius: 999px !important;
+        font-weight: 700 !important;
+        border: 1px solid #dce7ff !important;
+        background: #eef4ff !important;
+        color: #2b5fb8 !important;
+        padding: 0.55rem 0.8rem !important;
+    }
+
+    .sidebar-action button {
+        border-radius: 14px !important;
+        font-weight: 800 !important;
+        padding: 0.78rem 0.9rem !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -445,35 +434,46 @@ def simple_markdown_to_html(text: str) -> str:
     return "".join(parts) if parts else "<p></p>"
 
 
-def render_message(role: str, content: str):
+def get_message_html(role: str, content: str) -> str:
     role_class = "user" if role == "user" else "assistant"
     label = "Bạn" if role == "user" else "PMT Assistant"
     bubble_html = simple_markdown_to_html(content)
 
-    st.markdown(
-        f"""
-        <div class="msg-row {role_class}">
-            <div class="msg-bubble {role_class}">
-                <div class="msg-label">{label}</div>
-                {bubble_html}
-            </div>
+    return f"""
+    <div class="msg-row {role_class}">
+        <div class="msg-bubble {role_class}">
+            <div class="msg-label">{label}</div>
+            {bubble_html}
         </div>
-        """,
-        unsafe_allow_html=True
-    )
+    </div>
+    """
 
 
-def submit_quick_prompt(prompt: str):
-    history = session_store.get_history(st.session_state.thread_id)
-    context_state = session_store.get_context(st.session_state.thread_id)
+def render_chat_block(messages: list[dict]):
+    if not messages:
+        return
+    full_chat_html = '<div class="chat-shell">'
+    for msg in messages:
+        full_chat_html += get_message_html(msg["role"], msg["content"])
+    full_chat_html += '</div>'
+    st.markdown(full_chat_html, unsafe_allow_html=True)
+
+
+def process_prompt(prompt: str):
+    clean_input = prompt.strip()
+    if not clean_input:
+        return
 
     st.session_state.messages.append({
         "role": "user",
-        "content": prompt
+        "content": clean_input
     })
 
+    history = session_store.get_history(st.session_state.thread_id)
+    context_state = session_store.get_context(st.session_state.thread_id)
+
     result = chat_with_agent(
-        prompt,
+        clean_input,
         history,
         context_state,
         thread_id=st.session_state.thread_id
@@ -545,14 +545,18 @@ with st.sidebar:
 
     col_a, col_b = st.columns(2)
     with col_a:
+        st.markdown('<div class="sidebar-action">', unsafe_allow_html=True)
         if st.button("Reset dữ liệu demo", use_container_width=True):
             reset_demo_state()
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
     with col_b:
+        st.markdown('<div class="sidebar-action">', unsafe_allow_html=True)
         if st.button("Xóa hội thoại", use_container_width=True):
             session_store.clear_session(st.session_state.thread_id)
             st.session_state.messages = []
             st.rerun()
+        st.markdown('</div>', unsafe_allow_html=True)
 
     st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
 
@@ -592,91 +596,65 @@ with center:
         </div>
         """, unsafe_allow_html=True)
 
-        st.markdown('<div class="quick-actions-wrap"><div class="quick-actions-title">Gợi ý thao tác nhanh</div></div>', unsafe_allow_html=True)
+        st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
         row1 = st.columns(4)
         with row1[0]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
             if st.button("CPU bảo hành bao lâu?", use_container_width=True):
-                submit_quick_prompt("CPU bảo hành bao lâu?")
+                process_prompt("CPU bảo hành bao lâu?")
+            st.markdown('</div>', unsafe_allow_html=True)
+
         with row1[1]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
             if st.button("Tìm SSD Samsung", use_container_width=True):
-                submit_quick_prompt("Tìm SSD Samsung")
+                process_prompt("Tìm SSD Samsung")
+            st.markdown('</div>', unsafe_allow_html=True)
+
         with row1[2]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
             if st.button("Kiểm tra đơn ORD003", use_container_width=True):
-                submit_quick_prompt("Kiểm tra đơn hàng ORD003")
+                process_prompt("Kiểm tra đơn hàng ORD003")
+            st.markdown('</div>', unsafe_allow_html=True)
+
         with row1[3]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
             if st.button("Khách Phạm Minh Tuấn đã đặt gì?", use_container_width=True):
-                submit_quick_prompt("Khách phamminhtuan.pmt@gmail.com đã đặt gì?")
+                process_prompt("Khách phamminhtuan.pmt@gmail.com đã đặt gì?")
+            st.markdown('</div>', unsafe_allow_html=True)
 
         row2 = st.columns(4)
         with row2[0]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
             if st.button("Ổ cứng khác SSD thế nào?", use_container_width=True):
-                submit_quick_prompt("Ổ cứng khác SSD thế nào?")
-        with row2[1]:
-            if st.button("Trong các đơn đó, đơn nào đang xử lý?", use_container_width=True):
-                submit_quick_prompt("Trong các đơn đó, đơn nào đang xử lý?")
-        with row2[2]:
-            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
-                submit_quick_prompt("Tôi muốn build máy chơi game")
-        with row2[3]:
-            if st.button("Phạm Minh Tuấn là ai?", use_container_width=True):
-                submit_quick_prompt("Phạm Minh Tuấn là ai?")
-
-        st.markdown('<div class="section-divider-space"></div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="chat-shell">', unsafe_allow_html=True)
-
-    for msg in st.session_state.messages:
-        render_message(msg["role"], msg["content"])
-
-    st.markdown('</div>', unsafe_allow_html=True)
-
-    st.markdown('<div class="composer-shell">', unsafe_allow_html=True)
-    st.markdown('<div class="composer-title">Nhập câu hỏi</div>', unsafe_allow_html=True)
-
-    with st.form("chat_form", clear_on_submit=True):
-        input_col, button_col = st.columns([9.2, 1.3])
-
-        with input_col:
-            user_input = st.text_input(
-                "",
-                placeholder="Nhập câu hỏi của bạn...",
-                label_visibility="collapsed"
-            )
-
-        with button_col:
-            st.markdown('<div class="primary-send">', unsafe_allow_html=True)
-            submitted = st.form_submit_button("Gửi")
+                process_prompt("Ổ cứng khác SSD thế nào?")
             st.markdown('</div>', unsafe_allow_html=True)
 
-    st.markdown('</div>', unsafe_allow_html=True)
+        with row2[1]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Trong các đơn đó, đơn nào đang xử lý?", use_container_width=True):
+                process_prompt("Trong các đơn đó, đơn nào đang xử lý?")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-    if submitted and user_input.strip():
-        clean_input = user_input.strip()
+        with row2[2]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Tôi muốn build máy chơi game", use_container_width=True):
+                process_prompt("Tôi muốn build máy chơi game")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        st.session_state.messages.append({
-            "role": "user",
-            "content": clean_input
-        })
+        with row2[3]:
+            st.markdown('<div class="quick-btn">', unsafe_allow_html=True)
+            if st.button("Phạm Minh Tuấn là ai?", use_container_width=True):
+                process_prompt("Phạm Minh Tuấn là ai?")
+            st.markdown('</div>', unsafe_allow_html=True)
 
-        history = session_store.get_history(st.session_state.thread_id)
-        context_state = session_store.get_context(st.session_state.thread_id)
+    render_chat_block(st.session_state.messages)
 
-        result = chat_with_agent(
-            clean_input,
-            history,
-            context_state,
-            thread_id=st.session_state.thread_id
-        )
+    st.markdown('<div class="input-guide">Nhập câu hỏi mới để tiếp tục hội thoại với PMT Computer AI Agent</div>', unsafe_allow_html=True)
 
-        session_store.set_history(st.session_state.thread_id, result["history"])
-        session_store.set_context(st.session_state.thread_id, result["context_state"])
+    user_input = st.chat_input("Nhập câu hỏi của bạn...")
 
-        st.session_state.messages.append({
-            "role": "assistant",
-            "content": result["answer"]
-        })
-
-        st.rerun()
+    if user_input:
+        process_prompt(user_input)
 
     st.markdown('<div class="footer-note">Bản demo phục vụ đánh giá đồ án • PMT Computer AI Agent</div>', unsafe_allow_html=True)
