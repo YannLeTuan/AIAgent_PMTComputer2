@@ -267,7 +267,7 @@ st.markdown("""
     }
 
     .msg-bubble.user {
-        background-color: #4b81d6;
+        background-color: #4072c2;
         color: #ffffff;
         border-bottom-right-radius: 4px;
     }
