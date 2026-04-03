@@ -532,12 +532,9 @@ with st.sidebar:
     st.markdown("""
     <div class="sidebar-card">
         <ul>
-            <li>CPU bảo hành bao lâu?</li>
-            <li>Tìm SSD Samsung</li>
+            <li>Danh sách linh kiện máy tính</li>
             <li>Ổ cứng khác SSD thế nào?</li>
-            <li>Kiểm tra đơn hàng ORD003</li>
-            <li>Khách Phạm Minh Tuấn đã đặt gì?</li>
-            <li>Trong các đơn đó, đơn nào đang xử lý?</li>
+            <li>Kiểm tra đơn hàng của tôi</li>
             <li>Tôi muốn build máy chơi game</li>
         </ul>
     </div>
