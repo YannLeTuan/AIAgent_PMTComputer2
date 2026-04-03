@@ -249,6 +249,7 @@ st.markdown("""
         justify-content: center;
         font-size: 0.65rem;
         font-weight: 800;
+        margin-left: -44px;
         margin-right: 12px;
         margin-top: 4px;
         flex-shrink: 0;
