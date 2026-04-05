@@ -18,7 +18,13 @@ def seed():
         Customer(name="Vũ Thu Hà", email="thuha.vu@gmail.com", phone="0913444555", city="Nam Định", note="khách văn phòng"),
         Customer(name="Đặng Quang Huy", email="quanghuy.d@gmail.com", phone="0915666777", city="Bắc Ninh", note="khách nâng cấp máy cũ"),
         Customer(name="Trịnh Hải Nam", email="hainam.t@gmail.com", phone="0917888999", city="Hà Nội", note="quan tâm màn hình"),
-        Customer(name="Đỗ Minh Quân", email="minhquan.do@gmail.com", phone="0920000111", city="Hưng Yên", note="thường hỏi VGA và nguồn")
+        Customer(name="Đỗ Minh Quân", email="minhquan.do@gmail.com", phone="0920000111", city="Hưng Yên", note="thường hỏi VGA và nguồn"),
+        # 5 khách hàng mới
+        Customer(name="Bùi Thị Lan", email="buithilan@gmail.com", phone="0922111333", city="Hà Nội", note="hay mua bàn phím cơ và phụ kiện"),
+        Customer(name="Hoàng Văn Khánh", email="khanhvh@gmail.com", phone="0933222444", city="Hải Dương", note="quan tâm màn hình gaming"),
+        Customer(name="Nguyễn Thị Mai", email="mai.nguyen@yahoo.com", phone="0944333555", city="Thái Nguyên", note="khách sinh viên, ngân sách thấp"),
+        Customer(name="Lý Minh Khoa", email="minhkhoa.ly@gmail.com", phone="0955444666", city="Đà Lạt", note="build máy streaming"),
+        Customer(name="Vũ Đức Anh", email="ducanh.vu@gmail.com", phone="0966555777", city="Hà Nội", note="quan tâm RAM DDR5 và CPU mới"),
     ]
 
     products = [
@@ -75,34 +81,69 @@ def seed():
     db.add_all(products)
     db.commit()
 
-    tuan = db.query(Customer).filter_by(email="phamminhtuan.pmt@gmail.com").first()
-    long = db.query(Customer).filter_by(email="long.nguyen@gmail.com").first()
-    bao = db.query(Customer).filter_by(email="bao.tran@gmail.com").first()
-    duc = db.query(Customer).filter_by(email="duc.le@gmail.com").first()
-    huy = db.query(Customer).filter_by(email="huy.pham@gmail.com").first()
-    ha = db.query(Customer).filter_by(email="thuha.vu@gmail.com").first()
+    tuan  = db.query(Customer).filter_by(email="phamminhtuan.pmt@gmail.com").first()
+    long  = db.query(Customer).filter_by(email="long.nguyen@gmail.com").first()
+    bao   = db.query(Customer).filter_by(email="bao.tran@gmail.com").first()
+    duc   = db.query(Customer).filter_by(email="duc.le@gmail.com").first()
+    huy   = db.query(Customer).filter_by(email="huy.pham@gmail.com").first()
+    ngo   = db.query(Customer).filter_by(email="anhtuan.ngo@gmail.com").first()
+    ha    = db.query(Customer).filter_by(email="thuha.vu@gmail.com").first()
     quang = db.query(Customer).filter_by(email="quanghuy.d@gmail.com").first()
+    trinh = db.query(Customer).filter_by(email="hainam.t@gmail.com").first()
+    mq    = db.query(Customer).filter_by(email="minhquan.do@gmail.com").first()
+    lan   = db.query(Customer).filter_by(email="buithilan@gmail.com").first()
+    khanh = db.query(Customer).filter_by(email="khanhvh@gmail.com").first()
+    mai   = db.query(Customer).filter_by(email="mai.nguyen@yahoo.com").first()
+    khoa  = db.query(Customer).filter_by(email="minhkhoa.ly@gmail.com").first()
+    danh  = db.query(Customer).filter_by(email="ducanh.vu@gmail.com").first()
 
     orders = [
-        Order(order_code="ORD001", customer_id=tuan.id, product_name="Intel Core i5 12400F", quantity=1, total_amount=3590000, status="cancelled", note="đơn của Phạm Minh Tuấn, khách đổi ý"),
-        Order(order_code="ORD002", customer_id=tuan.id, product_name="Kingston Fury Beast 16GB DDR4 3200", quantity=2, total_amount=1780000, status="processing", note="khách muốn giao giờ hành chính"),
-        Order(order_code="ORD003", customer_id=long.id, product_name="MSI GeForce RTX 4060 Ventus 8G", quantity=1, total_amount=8990000, status="shipped", note="khách đã thanh toán online"),
-        Order(order_code="ORD004", customer_id=bao.id, product_name="Samsung 970 EVO Plus 1TB NVMe", quantity=1, total_amount=1890000, status="delivered", note="khách yêu cầu xuất hóa đơn"),
-        Order(order_code="ORD005", customer_id=duc.id, product_name="Corsair CV650 650W 80 Plus Bronze", quantity=1, total_amount=1490000, status="cancelled", note="hủy do đặt nhầm công suất nguồn"),
-        Order(order_code="ORD006", customer_id=huy.id, product_name="ASUS Prime B760M-A WiFi DDR4", quantity=1, total_amount=3290000, status="pending", note="chờ xác nhận tồn kho"),
-        Order(order_code="ORD007", customer_id=ha.id, product_name="Dell P2422H 24 inch IPS", quantity=2, total_amount=8580000, status="processing", note="khách văn phòng, cần giao buổi chiều"),
-        Order(order_code="ORD008", customer_id=quang.id, product_name="Cooler Master MWE 750W Bronze V2", quantity=1, total_amount=1890000, status="delivered", note="khách build gaming"),
-        Order(order_code="ORD009", customer_id=tuan.id, product_name="Samsung 970 EVO Plus 1TB NVMe", quantity=1, total_amount=1890000, status="delivered", note="Phạm Minh Tuấn nâng cấp SSD"),
-        Order(order_code="ORD010", customer_id=tuan.id, product_name="Logitech G102 Lightsync", quantity=1, total_amount=420000, status="pending", note="đơn test nội bộ cho chatbot")
+        # --- Đơn hàng gốc (ORD001-ORD010) ---
+        Order(order_code="ORD001", customer_id=tuan.id,  product_name="Intel Core i5 12400F",               quantity=1, total_amount=3590000,  status="cancelled",  note="đơn của Phạm Minh Tuấn, khách đổi ý"),
+        Order(order_code="ORD002", customer_id=tuan.id,  product_name="Kingston Fury Beast 16GB DDR4 3200",  quantity=2, total_amount=1780000,  status="processing", note="khách muốn giao giờ hành chính"),
+        Order(order_code="ORD003", customer_id=long.id,  product_name="MSI GeForce RTX 4060 Ventus 8G",     quantity=1, total_amount=8990000,  status="shipped",    note="khách đã thanh toán online"),
+        Order(order_code="ORD004", customer_id=bao.id,   product_name="Samsung 970 EVO Plus 1TB NVMe",      quantity=1, total_amount=1890000,  status="delivered",  note="khách yêu cầu xuất hóa đơn"),
+        Order(order_code="ORD005", customer_id=duc.id,   product_name="Corsair CV650 650W 80 Plus Bronze",  quantity=1, total_amount=1490000,  status="cancelled",  note="hủy do đặt nhầm công suất nguồn"),
+        Order(order_code="ORD006", customer_id=huy.id,   product_name="ASUS Prime B760M-A WiFi DDR4",       quantity=1, total_amount=3290000,  status="pending",    note="chờ xác nhận tồn kho"),
+        Order(order_code="ORD007", customer_id=ha.id,    product_name="Dell P2422H 24 inch IPS",            quantity=2, total_amount=8580000,  status="processing", note="khách văn phòng, cần giao buổi chiều"),
+        Order(order_code="ORD008", customer_id=quang.id, product_name="Cooler Master MWE 750W Bronze V2",   quantity=1, total_amount=1890000,  status="delivered",  note="khách build gaming"),
+        Order(order_code="ORD009", customer_id=tuan.id,  product_name="Samsung 970 EVO Plus 1TB NVMe",      quantity=1, total_amount=1890000,  status="delivered",  note="Phạm Minh Tuấn nâng cấp SSD"),
+        Order(order_code="ORD010", customer_id=tuan.id,  product_name="Logitech G102 Lightsync",            quantity=1, total_amount=420000,   status="pending",    note="đơn test nội bộ cho chatbot"),
+
+        # --- Đơn hàng mở rộng (ORD011-ORD030) ---
+        Order(order_code="ORD011", customer_id=lan.id,   product_name="Akko 3087 Mechanical Keyboard",      quantity=1, total_amount=1590000,  status="pending",    note="khách chọn switch blue"),
+        Order(order_code="ORD012", customer_id=khanh.id, product_name="LG 24GN600 24 inch 144Hz",           quantity=1, total_amount=3990000,  status="processing", note="khách cần giao trước cuối tuần"),
+        Order(order_code="ORD013", customer_id=mai.id,   product_name="Kingston NV2 500GB NVMe",             quantity=1, total_amount=990000,   status="delivered",  note="sinh viên mua nâng cấp laptop"),
+        Order(order_code="ORD014", customer_id=khoa.id,  product_name="AMD Ryzen 7 5700X",                  quantity=1, total_amount=5690000,  status="processing", note="build streaming, cần thêm tư vấn tản nhiệt"),
+        Order(order_code="ORD015", customer_id=danh.id,  product_name="Corsair Vengeance 16GB DDR5 5600",   quantity=1, total_amount=1490000,  status="shipped",    note="đã giao vận chuyển, dự kiến 2 ngày"),
+        Order(order_code="ORD016", customer_id=lan.id,   product_name="Logitech G102 Lightsync",            quantity=1, total_amount=420000,   status="cancelled",  note="hủy do đặt nhầm màu sắc"),
+        Order(order_code="ORD017", customer_id=khanh.id, product_name="AOC 27G2 27 inch 144Hz",             quantity=1, total_amount=5390000,  status="delivered",  note="khách hài lòng, sẽ quay lại"),
+        Order(order_code="ORD018", customer_id=mai.id,   product_name="Kingston Fury Beast 16GB DDR4 3200", quantity=1, total_amount=890000,   status="pending",    note="chờ thanh toán"),
+        Order(order_code="ORD019", customer_id=khoa.id,  product_name="Deepcool AK400",                    quantity=1, total_amount=790000,   status="delivered",  note="tản nhiệt kèm build Ryzen 7"),
+        Order(order_code="ORD020", customer_id=danh.id,  product_name="Intel Core i5 12400F",              quantity=1, total_amount=3590000,  status="shipped",    note="đang vận chuyển, khách đã thanh toán"),
+        Order(order_code="ORD021", customer_id=long.id,  product_name="Samsung 970 EVO Plus 1TB NVMe",      quantity=1, total_amount=1890000,  status="delivered",  note="đơn thứ 2 của Long, nâng cấp storage"),
+        Order(order_code="ORD022", customer_id=bao.id,   product_name="WD Black SN770 1TB NVMe",            quantity=1, total_amount=2050000,  status="processing", note="Bảo order thêm SSD thứ 2"),
+        Order(order_code="ORD023", customer_id=ngo.id,   product_name="MSI B550M PRO-VDH WiFi",             quantity=1, total_amount=2790000,  status="pending",    note="chờ xác nhận - dùng cho test hủy đơn"),
+        Order(order_code="ORD024", customer_id=trinh.id, product_name="AOC 27G2 27 inch 144Hz",             quantity=1, total_amount=5390000,  status="shipped",    note="Hải Nam mua màn hình gaming"),
+        Order(order_code="ORD025", customer_id=mq.id,    product_name="Gigabyte GeForce RTX 4070 Windforce 12G", quantity=1, total_amount=16990000, status="processing", note="VGA cao cấp, cần nguồn mạnh"),
+        Order(order_code="ORD026", customer_id=lan.id,   product_name="HyperX Cloud Stinger",               quantity=1, total_amount=1190000,  status="delivered",  note="tai nghe cho gaming"),
+        Order(order_code="ORD027", customer_id=khanh.id, product_name="Deepcool AK400",                    quantity=1, total_amount=790000,   status="cancelled",  note="hủy do đặt trùng với đơn cũ"),
+        Order(order_code="ORD028", customer_id=mai.id,   product_name="AMD Ryzen 5 5600",                  quantity=1, total_amount=3190000,  status="pending",    note="sinh viên nâng cấp, dùng cho test hủy đơn"),
+        Order(order_code="ORD029", customer_id=khoa.id,  product_name="Corsair CV650 650W 80 Plus Bronze",  quantity=1, total_amount=1490000,  status="delivered",  note="nguồn cho build streaming"),
+        Order(order_code="ORD030", customer_id=danh.id,  product_name="ASUS Dual RTX 3050 8GB",            quantity=1, total_amount=6290000,  status="shipped",    note="VGA mid-range, đang vận chuyển"),
     ]
 
     db.add_all(orders)
     db.commit()
     db.close()
 
-    print("seed xong")
-    print("đã tạo customers, products, orders trong ecommerce.db")
+    print("seeding complete")
+    print("created customers, products, orders in ecommerce.db")
 
 
 if __name__ == "__main__":
+    import sys
+    import io
+    if sys.platform == "win32":
+        sys.stdout = io.TextIOWrapper(sys.stdout.buffer, encoding='utf-8')
     seed()

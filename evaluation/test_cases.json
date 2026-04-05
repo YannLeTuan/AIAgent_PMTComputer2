@@ -119,6 +119,366 @@
       }
     ]
   },
+  {
+    "id": "rag_11",
+    "type": "rag",
+    "thread_id": "eval-rag-11",
+    "turns": [
+      {
+        "input": "RAM bảo hành bao lâu?",
+        "must_include": ["36 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_12",
+    "type": "rag",
+    "thread_id": "eval-rag-12",
+    "turns": [
+      {
+        "input": "Ổ cứng HDD bảo hành bao nhiêu tháng?",
+        "must_include": ["24 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_13",
+    "type": "rag",
+    "thread_id": "eval-rag-13",
+    "turns": [
+      {
+        "input": "Nguồn máy tính PSU bảo hành bao lâu?",
+        "must_include": ["36 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_14",
+    "type": "rag",
+    "thread_id": "eval-rag-14",
+    "turns": [
+      {
+        "input": "Bo mạch chủ mainboard bảo hành bao lâu?",
+        "must_include": ["36 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_15",
+    "type": "rag",
+    "thread_id": "eval-rag-15",
+    "turns": [
+      {
+        "input": "Vỏ case máy tính bảo hành bao lâu?",
+        "must_include": ["12 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_16",
+    "type": "rag",
+    "thread_id": "eval-rag-16",
+    "turns": [
+      {
+        "input": "Tản nhiệt CPU cooler bảo hành bao lâu?",
+        "must_include": ["12 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_17",
+    "type": "rag",
+    "thread_id": "eval-rag-17",
+    "turns": [
+      {
+        "input": "Chuột máy tính bảo hành bao nhiêu tháng?",
+        "must_include": ["24 tháng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_18",
+    "type": "rag",
+    "thread_id": "eval-rag-18",
+    "turns": [
+      {
+        "input": "SSD NVMe Samsung bảo hành bao lâu?",
+        "must_include": ["bảo hành", "Samsung"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_19",
+    "type": "rag",
+    "thread_id": "eval-rag-19",
+    "turns": [
+      {
+        "input": "Điều kiện để được đổi trả hàng tại PMT Computer là gì?",
+        "must_include": ["7 ngày", "đổi trả"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_20",
+    "type": "rag",
+    "thread_id": "eval-rag-20",
+    "turns": [
+      {
+        "input": "Sản phẩm bị hư hỏng trong quá trình vận chuyển thì xử lý thế nào?",
+        "must_include": ["vận chuyển", "đổi"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_21",
+    "type": "rag",
+    "thread_id": "eval-rag-21",
+    "turns": [
+      {
+        "input": "PMT Computer hỗ trợ những hình thức thanh toán nào?",
+        "must_include": ["thanh toán", "PMT Computer"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_22",
+    "type": "rag",
+    "thread_id": "eval-rag-22",
+    "turns": [
+      {
+        "input": "PMT Computer có giao hàng toàn quốc không?",
+        "must_include": ["giao hàng"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_23",
+    "type": "rag",
+    "thread_id": "eval-rag-23",
+    "turns": [
+      {
+        "input": "Nếu hủy đơn thì tiền được hoàn lại trong bao lâu?",
+        "must_include": ["3 đến 7 ngày", "hoàn tiền"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_24",
+    "type": "rag",
+    "thread_id": "eval-rag-24",
+    "turns": [
+      {
+        "input": "Đặt hàng xong bao lâu thì PMT xác nhận đơn?",
+        "must_include": ["xác nhận"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_25",
+    "type": "rag",
+    "thread_id": "eval-rag-25",
+    "turns": [
+      {
+        "input": "Đơn hàng ở trạng thái processing là đang làm gì?",
+        "must_include": ["processing", "xử lý"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_26",
+    "type": "rag",
+    "thread_id": "eval-rag-26",
+    "turns": [
+      {
+        "input": "RAM DDR4 và DDR5 khác nhau thế nào?",
+        "must_include": ["DDR4", "DDR5"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_27",
+    "type": "rag",
+    "thread_id": "eval-rag-27",
+    "turns": [
+      {
+        "input": "NVMe và SATA SSD cái nào nhanh hơn?",
+        "must_include": ["NVMe", "SATA", "tốc độ"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_28",
+    "type": "rag",
+    "thread_id": "eval-rag-28",
+    "turns": [
+      {
+        "input": "RTX và GTX khác nhau thế nào?",
+        "must_include": ["RTX", "GTX"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_29",
+    "type": "rag",
+    "thread_id": "eval-rag-29",
+    "turns": [
+      {
+        "input": "RAM DDR5 có cắm vào bo mạch DDR4 được không?",
+        "must_include": ["DDR4", "DDR5", "không"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_30",
+    "type": "rag",
+    "thread_id": "eval-rag-30",
+    "turns": [
+      {
+        "input": "AMD Ryzen 5000 series cần mainboard có socket gì?",
+        "must_include": ["AMD", "socket"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_31",
+    "type": "rag",
+    "thread_id": "eval-rag-31",
+    "turns": [
+      {
+        "input": "Intel Core 12th gen dùng socket gì?",
+        "must_include": ["Intel", "socket"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_32",
+    "type": "rag",
+    "thread_id": "eval-rag-32",
+    "turns": [
+      {
+        "input": "PMT Computer có dịch vụ lắp ráp máy tính không?",
+        "must_include": ["lắp ráp", "PMT Computer"],
+        "must_not_include": ["không có"]
+      }
+    ]
+  },
+  {
+    "id": "rag_33",
+    "type": "rag",
+    "thread_id": "eval-rag-33",
+    "turns": [
+      {
+        "input": "PMT Computer có dịch vụ vệ sinh máy tính không?",
+        "must_include": ["vệ sinh"],
+        "must_not_include": ["không có"]
+      }
+    ]
+  },
+  {
+    "id": "rag_34",
+    "type": "rag",
+    "thread_id": "eval-rag-34",
+    "turns": [
+      {
+        "input": "Mua CPU Intel thì cần chọn mainboard như thế nào?",
+        "must_include": ["CPU", "Intel", "mainboard"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_35",
+    "type": "rag",
+    "thread_id": "eval-rag-35",
+    "turns": [
+      {
+        "input": "Nguồn 650W có đủ cho VGA RTX 4060 không?",
+        "must_include": ["nguồn", "RTX"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_36",
+    "type": "rag",
+    "thread_id": "eval-rag-36",
+    "turns": [
+      {
+        "input": "Tôi muốn build máy để chơi game tầm 15 triệu thì nên bắt đầu từ đâu?",
+        "must_include": ["CPU", "VGA"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_37",
+    "type": "rag",
+    "thread_id": "eval-rag-37",
+    "turns": [
+      {
+        "input": "Laptop cũ RAM 8GB có nên nâng cấp lên 16GB không?",
+        "must_include": ["RAM"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "rag_38",
+    "type": "rag",
+    "thread_id": "eval-rag-38",
+    "turns": [
+      {
+        "input": "PMT Computer có chính sách khuyến mãi hay giảm giá gì không?",
+        "must_include": ["PMT Computer"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_39",
+    "type": "rag",
+    "thread_id": "eval-rag-39",
+    "turns": [
+      {
+        "input": "Tôi mua SSD về cắm vào laptop không nhận, PMT có hỗ trợ không?",
+        "must_include": ["SSD", "hỗ trợ"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
+  {
+    "id": "rag_40",
+    "type": "rag",
+    "thread_id": "eval-rag-40",
+    "turns": [
+      {
+        "input": "Tôi ở tỉnh xa, mua hàng PMT Computer có giao không?",
+        "must_include": ["giao hàng", "PMT Computer"],
+        "must_not_include": ["không biết"]
+      }
+    ]
+  },
 
   {
     "id": "tool_01",
@@ -162,8 +522,8 @@
     "thread_id": "eval-tool-04",
     "turns": [
       {
-        "input": "Tìm VGA MSI",
-        "must_include": ["MSI", "RTX 4060"],
+        "input": "Kiểm tra đơn hàng ORD006",
+        "must_include": ["ORD006", "pending"],
         "must_not_include": ["không tìm thấy"]
       }
     ]
@@ -174,8 +534,8 @@
     "thread_id": "eval-tool-05",
     "turns": [
       {
-        "input": "Tìm SSD Samsung",
-        "must_include": ["Samsung", "970 EVO"],
+        "input": "Kiểm tra đơn hàng ORD007",
+        "must_include": ["ORD007", "processing"],
         "must_not_include": ["không tìm thấy"]
       }
     ]
@@ -186,8 +546,8 @@
     "thread_id": "eval-tool-06",
     "turns": [
       {
-        "input": "Tìm RAM Kingston",
-        "must_include": ["Kingston", "DDR4"],
+        "input": "Kiểm tra đơn hàng ORD008",
+        "must_include": ["ORD008", "delivered"],
         "must_not_include": ["không tìm thấy"]
       }
     ]
@@ -198,8 +558,8 @@
     "thread_id": "eval-tool-07",
     "turns": [
       {
-        "input": "Khách phamminhtuan.pmt@gmail.com đã đặt gì?",
-        "must_include": ["ORD001", "ORD002", "Phạm Minh Tuấn"],
+        "input": "Kiểm tra đơn hàng ORD011",
+        "must_include": ["ORD011", "pending"],
         "must_not_include": ["không tìm thấy"]
       }
     ]
@@ -210,8 +570,8 @@
     "thread_id": "eval-tool-08",
     "turns": [
       {
-        "input": "Khách long.nguyen@gmail.com đã đặt gì?",
-        "must_include": ["ORD003"],
+        "input": "Kiểm tra đơn hàng ORD012",
+        "must_include": ["ORD012", "processing"],
         "must_not_include": ["không tìm thấy"]
       }
     ]
@@ -222,9 +582,9 @@
     "thread_id": "eval-tool-09",
     "turns": [
       {
-        "input": "Kiểm tra đơn hàng ORD999",
-        "must_include": ["không tìm thấy", "ORD999"],
-        "must_not_include": []
+        "input": "Kiểm tra đơn hàng ORD015",
+        "must_include": ["ORD015", "shipped"],
+        "must_not_include": ["không tìm thấy"]
       }
     ]
   },
@@ -234,9 +594,309 @@
     "thread_id": "eval-tool-10",
     "turns": [
       {
+        "input": "Kiểm tra đơn hàng ORD017",
+        "must_include": ["ORD017", "delivered"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_11",
+    "type": "tool",
+    "thread_id": "eval-tool-11",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD022",
+        "must_include": ["ORD022", "processing"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_12",
+    "type": "tool",
+    "thread_id": "eval-tool-12",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD024",
+        "must_include": ["ORD024", "shipped"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_13",
+    "type": "tool",
+    "thread_id": "eval-tool-13",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD025",
+        "must_include": ["ORD025", "processing"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_14",
+    "type": "tool",
+    "thread_id": "eval-tool-14",
+    "turns": [
+      {
+        "input": "Hủy đơn ORD003 email long.nguyen@gmail.com lý do không cần nữa",
+        "must_include": ["ORD003", "không", "hủy"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_15",
+    "type": "tool",
+    "thread_id": "eval-tool-15",
+    "turns": [
+      {
+        "input": "Tôi muốn hủy ORD018, email mai.nguyen@yahoo.com, lý do đặt nhầm sản phẩm",
+        "must_include": ["ORD018", "hủy"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_16",
+    "type": "tool",
+    "thread_id": "eval-tool-16",
+    "turns": [
+      {
+        "input": "Hủy đơn ORD025, email sai.email@gmail.com, lý do đổi ý",
+        "must_include": ["không khớp"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_17",
+    "type": "tool",
+    "thread_id": "eval-tool-17",
+    "turns": [
+      {
+        "input": "Tìm VGA MSI",
+        "must_include": ["MSI", "RTX 4060"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_18",
+    "type": "tool",
+    "thread_id": "eval-tool-18",
+    "turns": [
+      {
+        "input": "Tìm SSD Samsung",
+        "must_include": ["Samsung", "970 EVO"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_19",
+    "type": "tool",
+    "thread_id": "eval-tool-19",
+    "turns": [
+      {
+        "input": "Tìm RAM Kingston",
+        "must_include": ["Kingston", "DDR4"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_20",
+    "type": "tool",
+    "thread_id": "eval-tool-20",
+    "turns": [
+      {
+        "input": "Tìm CPU AMD",
+        "must_include": ["AMD", "Ryzen"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_21",
+    "type": "tool",
+    "thread_id": "eval-tool-21",
+    "turns": [
+      {
+        "input": "Tìm bàn phím cơ Akko",
+        "must_include": ["Akko", "3087"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_22",
+    "type": "tool",
+    "thread_id": "eval-tool-22",
+    "turns": [
+      {
+        "input": "Tìm chuột Logitech",
+        "must_include": ["Logitech", "G102"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_23",
+    "type": "tool",
+    "thread_id": "eval-tool-23",
+    "turns": [
+      {
+        "input": "Tìm màn hình LG",
+        "must_include": ["LG", "24GN600"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_24",
+    "type": "tool",
+    "thread_id": "eval-tool-24",
+    "turns": [
+      {
+        "input": "Tìm tai nghe HyperX",
+        "must_include": ["HyperX", "Cloud"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_25",
+    "type": "tool",
+    "thread_id": "eval-tool-25",
+    "turns": [
+      {
         "input": "Tìm linh kiện Intel",
         "must_include": ["Intel"],
         "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_26",
+    "type": "tool",
+    "thread_id": "eval-tool-26",
+    "turns": [
+      {
+        "input": "Liệt kê các SSD giá dưới 2 triệu",
+        "must_include": ["SSD", "Kingston"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_27",
+    "type": "tool",
+    "thread_id": "eval-tool-27",
+    "turns": [
+      {
+        "input": "Có những loại RAM nào đang có hàng?",
+        "must_include": ["RAM", "Kingston"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_28",
+    "type": "tool",
+    "thread_id": "eval-tool-28",
+    "turns": [
+      {
+        "input": "Liệt kê mainboard dưới 3 triệu",
+        "must_include": ["Mainboard", "Gigabyte"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_29",
+    "type": "tool",
+    "thread_id": "eval-tool-29",
+    "turns": [
+      {
+        "input": "Khách phamminhtuan.pmt@gmail.com đã đặt gì?",
+        "must_include": ["ORD001", "ORD002", "Phạm Minh Tuấn"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_30",
+    "type": "tool",
+    "thread_id": "eval-tool-30",
+    "turns": [
+      {
+        "input": "Khách long.nguyen@gmail.com đã đặt gì?",
+        "must_include": ["ORD003"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_31",
+    "type": "tool",
+    "thread_id": "eval-tool-31",
+    "turns": [
+      {
+        "input": "Khách buithilan@gmail.com đã đặt những đơn nào?",
+        "must_include": ["ORD011"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_32",
+    "type": "tool",
+    "thread_id": "eval-tool-32",
+    "turns": [
+      {
+        "input": "Khách minhkhoa.ly@gmail.com đã đặt gì?",
+        "must_include": ["ORD014"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_33",
+    "type": "tool",
+    "thread_id": "eval-tool-33",
+    "turns": [
+      {
+        "input": "Khách hainam.t@gmail.com đã đặt gì?",
+        "must_include": ["ORD024"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "tool_34",
+    "type": "tool",
+    "thread_id": "eval-tool-34",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD999",
+        "must_include": ["không tìm thấy", "ORD999"],
+        "must_not_include": []
+      }
+    ]
+  },
+  {
+    "id": "tool_35",
+    "type": "tool",
+    "thread_id": "eval-tool-35",
+    "turns": [
+      {
+        "input": "Tìm CPU Core i9",
+        "must_include": [],
+        "must_not_include": ["không tìm thấy"]
       }
     ]
   },
@@ -340,6 +1000,329 @@
         "input": "Mẫu này bảo hành bao lâu?",
         "must_include": ["36 tháng"],
         "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_07",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-07",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD012",
+        "must_include": ["ORD012", "processing"],
+        "must_not_include": []
+      },
+      {
+        "input": "Đơn này có hủy được không?",
+        "must_include": ["ORD012", "hủy"],
+        "must_not_include": ["vui lòng cung cấp mã đơn hàng"]
+      }
+    ]
+  },
+  {
+    "id": "multi_08",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-08",
+    "turns": [
+      {
+        "input": "Tìm chuột Razer DeathAdder",
+        "must_include": ["Razer", "DeathAdder"],
+        "must_not_include": []
+      },
+      {
+        "input": "Con này bảo hành bao lâu?",
+        "must_include": ["bảo hành"],
+        "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_09",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-09",
+    "turns": [
+      {
+        "input": "Khách buithilan@gmail.com đã đặt những đơn nào?",
+        "must_include": ["ORD011"],
+        "must_not_include": []
+      },
+      {
+        "input": "Đơn nào đang ở trạng thái pending?",
+        "must_include": ["ORD011", "pending"],
+        "must_not_include": ["vui lòng cung cấp email"]
+      }
+    ]
+  },
+  {
+    "id": "multi_10",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-10",
+    "turns": [
+      {
+        "input": "Tìm màn hình LG 144Hz",
+        "must_include": ["LG", "24GN600"],
+        "must_not_include": []
+      },
+      {
+        "input": "Màn hình này bảo hành bao lâu?",
+        "must_include": ["bảo hành", "LG"],
+        "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_11",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-11",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD015",
+        "must_include": ["ORD015", "shipped"],
+        "must_not_include": []
+      },
+      {
+        "input": "Đơn đang shipped có đổi trả được không?",
+        "must_include": ["đổi trả"],
+        "must_not_include": ["vui lòng cung cấp mã đơn hàng"]
+      }
+    ]
+  },
+  {
+    "id": "multi_12",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-12",
+    "turns": [
+      {
+        "input": "Tôi muốn hủy đơn ORD028",
+        "must_include": ["email"],
+        "must_not_include": []
+      },
+      {
+        "input": "Email của tôi là mai.nguyen@yahoo.com, lý do không đủ tiền",
+        "must_include": ["ORD028", "hủy"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "multi_13",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-13",
+    "turns": [
+      {
+        "input": "Cho tôi hủy đơn ORD011",
+        "must_include": ["email"],
+        "must_not_include": []
+      },
+      {
+        "input": "Email buithilan@gmail.com, lý do đặt nhầm model",
+        "must_include": ["ORD011", "hủy"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "multi_14",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-14",
+    "turns": [
+      {
+        "input": "Khách minhkhoa.ly@gmail.com đã đặt gì?",
+        "must_include": ["ORD014"],
+        "must_not_include": []
+      },
+      {
+        "input": "Đơn ORD019 tình trạng thế nào?",
+        "must_include": ["ORD019", "delivered"],
+        "must_not_include": ["không tìm thấy"]
+      }
+    ]
+  },
+  {
+    "id": "multi_15",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-15",
+    "turns": [
+      {
+        "input": "Tìm RAM DDR5 Corsair",
+        "must_include": ["Corsair", "DDR5"],
+        "must_not_include": []
+      },
+      {
+        "input": "DDR5 có cần đổi mainboard mới không?",
+        "must_include": ["DDR5", "mainboard"],
+        "must_not_include": ["bạn vui lòng nói rõ"]
+      }
+    ]
+  },
+  {
+    "id": "multi_16",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-16",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD014",
+        "must_include": ["ORD014", "processing"],
+        "must_not_include": []
+      },
+      {
+        "input": "CPU trong đơn này bảo hành bao lâu?",
+        "must_include": ["36 tháng"],
+        "must_not_include": ["vui lòng cung cấp"]
+      }
+    ]
+  },
+  {
+    "id": "multi_17",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-17",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD025",
+        "must_include": ["ORD025", "processing"],
+        "must_not_include": []
+      },
+      {
+        "input": "VGA trong đơn này bảo hành bao lâu?",
+        "must_include": ["36 tháng"],
+        "must_not_include": ["vui lòng cung cấp"]
+      }
+    ]
+  },
+  {
+    "id": "multi_18",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-18",
+    "turns": [
+      {
+        "input": "Khách long.nguyen@gmail.com đã đặt gì?",
+        "must_include": ["ORD003"],
+        "must_not_include": []
+      },
+      {
+        "input": "ORD003 đang ở trạng thái gì?",
+        "must_include": ["ORD003", "shipped"],
+        "must_not_include": ["vui lòng cung cấp email"]
+      }
+    ]
+  },
+  {
+    "id": "multi_19",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-19",
+    "turns": [
+      {
+        "input": "Tìm SSD Crucial MX500",
+        "must_include": ["Crucial", "MX500"],
+        "must_not_include": []
+      },
+      {
+        "input": "SATA SSD này chậm hơn NVMe bao nhiêu?",
+        "must_include": ["NVMe", "tốc độ"],
+        "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_20",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-20",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD006",
+        "must_include": ["ORD006", "pending"],
+        "must_not_include": []
+      },
+      {
+        "input": "Nếu hủy đơn này thì hoàn tiền bao lâu?",
+        "must_include": ["hoàn tiền", "3 đến 7 ngày"],
+        "must_not_include": ["vui lòng cung cấp mã đơn hàng"]
+      }
+    ]
+  },
+  {
+    "id": "multi_21",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-21",
+    "turns": [
+      {
+        "input": "Tìm VGA Gigabyte RTX 4070",
+        "must_include": ["Gigabyte", "RTX 4070"],
+        "must_not_include": []
+      },
+      {
+        "input": "Nguồn máy tính bao nhiêu W là đủ cho con này?",
+        "must_include": ["nguồn"],
+        "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_22",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-22",
+    "turns": [
+      {
+        "input": "Khách phamminhtuan.pmt@gmail.com đã đặt gì?",
+        "must_include": ["ORD009"],
+        "must_not_include": []
+      },
+      {
+        "input": "Đơn nào đã giao thành công?",
+        "must_include": ["ORD009", "delivered"],
+        "must_not_include": ["vui lòng cung cấp email"]
+      }
+    ]
+  },
+  {
+    "id": "multi_23",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-23",
+    "turns": [
+      {
+        "input": "Kiểm tra đơn hàng ORD020",
+        "must_include": ["ORD020", "shipped"],
+        "must_not_include": []
+      },
+      {
+        "input": "Bao giờ thì tôi nhận được hàng?",
+        "must_include": ["ORD020"],
+        "must_not_include": ["vui lòng cung cấp mã đơn hàng"]
+      }
+    ]
+  },
+  {
+    "id": "multi_24",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-24",
+    "turns": [
+      {
+        "input": "Tìm bàn phím cơ Akko 3087",
+        "must_include": ["Akko", "3087"],
+        "must_not_include": []
+      },
+      {
+        "input": "Bàn phím này bảo hành bao lâu?",
+        "must_include": ["bảo hành", "Akko"],
+        "must_not_include": ["bạn vui lòng nói rõ sản phẩm"]
+      }
+    ]
+  },
+  {
+    "id": "multi_25",
+    "type": "multi_turn",
+    "thread_id": "eval-multi-25",
+    "turns": [
+      {
+        "input": "Khách ducanh.vu@gmail.com đã đặt gì?",
+        "must_include": ["ORD015", "ORD020", "ORD030"],
+        "must_not_include": ["không tìm thấy"]
+      },
+      {
+        "input": "Đơn nào trong đó chưa được giao tới tay khách?",
+        "must_include": ["shipped"],
+        "must_not_include": ["vui lòng cung cấp email"]
       }
     ]
   }

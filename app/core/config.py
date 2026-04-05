@@ -6,7 +6,7 @@ class Settings(BaseSettings):
     GEMINI_MODEL: str = "gemini-2.5-flash"
     DATABASE_URL: str = "sqlite:///./ecommerce.db"
     VECTOR_INDEX_PATH: str = "./data/vector_index/faiss_index"
-    EMBEDDING_MODEL: str = "sentence-transformers/all-MiniLM-L6-v2"
+    EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     TOP_K_RETRIEVAL: int = 4
     TELEGRAM_BOT_TOKEN: str | None = None
 

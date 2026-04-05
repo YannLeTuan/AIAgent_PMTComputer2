@@ -1,45 +1,33 @@
 import json
-import subprocess
-import sys
 import time
 import unicodedata
 import uuid
 from pathlib import Path
 
-import requests
+from app.agent.orchestrator import chat_with_agent
+from app.agent.memory import InMemorySessionStore
+from app.db.seed import seed
 
 BASE_DIR = Path(__file__).resolve().parent.parent
-API_URL = "http://127.0.0.1:8000/chat"
 TEST_CASES_PATH = BASE_DIR / "evaluation" / "test_cases.json"
 RESULTS_DIR = BASE_DIR / "evaluation" / "results"
 RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 EXPECTATION_ALIASES = {
-    # Trạng thái đơn hàng
     "shipped": ["shipped", "đã giao", "được giao", "giao thành công", "đang vận chuyển", "đã giao vận chuyển"],
     "processing": ["processing", "đang xử lý", "được xử lý", "đang được xử lý"],
     "cancelled": ["cancelled", "đã hủy", "bị hủy", "hủy thành công", "đã được hủy"],
     "delivered": ["delivered", "đã giao thành công", "đã nhận hàng", "đã giao tới", "giao thành công"],
     "pending": ["pending", "chờ xác nhận", "đang chờ", "chưa xác nhận", "chờ duyệt"],
-    # Thời gian bảo hành
     "36 tháng": ["36 tháng", "36 thang", "3 năm", "ba năm"],
     "24 tháng": ["24 tháng", "24 thang", "2 năm", "hai năm"],
     "12 tháng": ["12 tháng", "12 thang", "1 năm", "mot nam", "một năm"],
     "60 tháng": ["60 tháng", "60 thang", "5 năm", "nam nam", "năm năm"],
-    # Chính sách hoàn tiền
     "3 đến 7 ngày": ["3 đến 7 ngày", "3-7 ngày", "3 tới 7 ngày", "3 den 7 ngay", "3 đến 7 ngày làm việc"],
-    # Từ khóa kỹ thuật
     "tốc độ": ["tốc độ", "nhanh", "nhanh hơn", "truy xuất nhanh", "nhanh hon"],
     "đổi trả": ["đổi trả", "doi tra", "đổi hàng", "trả hàng", "hoàn hàng"],
-    "xử lý": ["xử lý", "xu ly", "đang xử lý", "đang được xử lý"],
-    "lắp ráp": ["lắp ráp", "lap rap", "lắp máy", "ráp máy"],
-    "vệ sinh": ["vệ sinh", "ve sinh", "làm sạch"],
-    "socket": ["socket", "chân cắm", "cổng cắm"],
-    "mainboard": ["mainboard", "bo mạch chủ", "bo mach chu", "board"],
     "không khớp": ["không khớp", "khong khop", "không đúng", "không trùng", "xác thực thất bại", "email không hợp lệ", "không match"],
     "hoàn tiền": ["hoàn tiền", "hoan tien", "trả tiền", "refund"],
-    "nguồn": ["nguồn", "nguon", "PSU", "power supply", "công suất"],
-    "xác nhận": ["xác nhận", "xac nhan", "confirm", "xác thực đơn"],
     "giao hàng": ["giao hàng", "giao hang", "vận chuyển", "ship hàng", "delivery"]
 }
 
@@ -84,72 +72,31 @@ def check_keywords(answer: str, must_include: list[str], must_not_include: list[
     return passed, missing, unexpected
 
 
-def ensure_test_cases_file_exists():
-    if not TEST_CASES_PATH.exists():
-        raise FileNotFoundError(
-            f"Không tìm thấy file test case tại: {TEST_CASES_PATH}\n"
-            f"Hãy tạo file này đúng tại thư mục evaluation/test_cases.json"
-        )
-
-
 def load_test_cases():
-    ensure_test_cases_file_exists()
     try:
         return json.loads(TEST_CASES_PATH.read_text(encoding="utf-8"))
     except json.JSONDecodeError as e:
-        raise ValueError(
-            f"File JSON bị lỗi định dạng: {TEST_CASES_PATH}\n"
-            f"Chi tiết: {e}"
-        )
-
-
-def reseed_database():
-    subprocess.run(
-        [sys.executable, "-m", "app.db.seed"],
-        cwd=BASE_DIR,
-        check=True
-    )
-
-
-def run_turn(thread_id: str, message: str):
-    start = time.perf_counter()
-
-    response = requests.post(
-        API_URL,
-        json={
-            "thread_id": thread_id,
-            "message": message
-        },
-        timeout=90
-    )
-
-    elapsed = time.perf_counter() - start
-
-    if response.status_code != 200:
-        return {
-            "ok": False,
-            "status_code": response.status_code,
-            "answer": "",
-            "latency_sec": round(elapsed, 3),
-            "error": f"HTTP {response.status_code}"
-        }
-
-    data = response.json()
-
-    return {
-        "ok": True,
-        "status_code": response.status_code,
-        "answer": data.get("answer", ""),
-        "latency_sec": round(elapsed, 3),
-        "error": ""
-    }
+        raise ValueError(f"File JSON invalid: {TEST_CASES_PATH}\nError: {e}")
 
 
 def main():
-    reseed_database()
-    cases = load_test_cases()
-    run_id = uuid.uuid4().hex[:8]
+    print("=" * 70)
+    print("EVALUATION WITH 100 TEST CASES (40 RAG + 35 TOOL + 25 MULTI-TURN)")
+    print("=" * 70)
 
+    # Seed database
+    print("\n[1/3] Reseeding database...")
+    seed()
+
+    # Load test cases
+    print("[2/3] Loading 100 test cases...")
+    cases = load_test_cases()
+    print(f"  Loaded {len(cases)} test cases")
+
+    # Run evaluation
+    print("[3/3] Running evaluation (this may take 5-10 minutes)...\n")
+
+    run_id = uuid.uuid4().hex[:8]
     all_results = []
     stats = {
         "total_cases": len(cases),
@@ -160,7 +107,9 @@ def main():
         "by_type": {}
     }
 
-    for case in cases:
+    memory_store = InMemorySessionStore()
+
+    for case_idx, case in enumerate(cases, start=1):
         case_id = case["id"]
         case_type = case["type"]
         thread_id = f"{case['thread_id']}-{run_id}"
@@ -181,39 +130,66 @@ def main():
             "turns": []
         }
 
-        for idx, turn in enumerate(turns, start=1):
-            result = run_turn(thread_id, turn["input"])
+        # Initialize session memory
+        history = memory_store.histories.get(thread_id, [])
+        context_state = memory_store.contexts.get(thread_id, {})
 
+        for turn_idx, turn in enumerate(turns, start=1):
+            start_time = time.perf_counter()
+
+            try:
+                result = chat_with_agent(
+                    turn["input"],
+                    history=history,
+                    context_state=context_state,
+                    thread_id=thread_id
+                )
+                answer = result.get("answer", "")
+                history = result.get("history", [])
+                context_state = result.get("context_state", {})
+                latency = time.perf_counter() - start_time
+                http_ok = True
+                error = ""
+            except Exception as e:
+                answer = ""
+                latency = time.perf_counter() - start_time
+                http_ok = False
+                error = str(e)
+
+            # Update memory store
+            memory_store.histories[thread_id] = history
+            memory_store.contexts[thread_id] = context_state
+
+            # Check keywords
             passed = False
             missing = []
             unexpected = []
 
-            if result["ok"]:
+            if http_ok:
                 passed, missing, unexpected = check_keywords(
-                    result["answer"],
+                    answer,
                     turn.get("must_include", []),
                     turn.get("must_not_include", [])
                 )
 
             turn_result = {
-                "turn_index": idx,
+                "turn_index": turn_idx,
                 "input": turn["input"],
-                "answer": result["answer"],
-                "latency_sec": result["latency_sec"],
-                "status_code": result["status_code"],
-                "http_ok": result["ok"],
+                "answer": answer[:200] + "..." if len(answer) > 200 else answer,
+                "latency_sec": round(latency, 3),
+                "http_ok": http_ok,
                 "passed": passed,
                 "missing_keywords": missing,
                 "unexpected_keywords": unexpected,
-                "error": result["error"]
+                "error": error
             }
 
             case_result["turns"].append(turn_result)
 
             stats["total_turns"] += 1
-            stats["latencies"].append(result["latency_sec"])
+            stats["latencies"].append(latency)
             stats["by_type"][case_type]["turns"] += 1
-            stats["by_type"][case_type]["latencies"].append(result["latency_sec"])
+            stats["by_type"][case_type]["latencies"].append(latency)
 
             if passed:
                 stats["passed_turns"] += 1
@@ -224,6 +200,11 @@ def main():
 
         all_results.append(case_result)
 
+        # Progress
+        if case_idx % 10 == 0:
+            print(f"  Progress: {case_idx}/{len(cases)} cases completed")
+
+    # Calculate summary
     avg_latency = round(sum(stats["latencies"]) / len(stats["latencies"]), 3) if stats["latencies"] else 0.0
     overall_accuracy = round(stats["passed_turns"] / stats["total_turns"] * 100, 2) if stats["total_turns"] else 0.0
 
@@ -251,6 +232,7 @@ def main():
             "avg_latency_sec": type_avg_latency
         }
 
+    # Save results
     timestamp = time.strftime("%Y%m%d_%H%M%S")
     result_path = RESULTS_DIR / f"evaluation_result_{timestamp}.json"
     summary_path = RESULTS_DIR / f"evaluation_summary_{timestamp}.json"
@@ -258,10 +240,13 @@ def main():
     result_path.write_text(json.dumps(all_results, ensure_ascii=False, indent=2), encoding="utf-8")
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
 
-    print("\n===== EVALUATION SUMMARY =====")
+    # Print summary
+    print("\n" + "=" * 70)
+    print("EVALUATION SUMMARY")
+    print("=" * 70)
     print(json.dumps(summary, ensure_ascii=False, indent=2))
-    print(f"\nChi tiết lưu tại: {result_path}")
-    print(f"Tóm tắt lưu tại: {summary_path}")
+    print(f"\nFull results saved to: {result_path}")
+    print(f"Summary saved to: {summary_path}")
 
 
 if __name__ == "__main__":

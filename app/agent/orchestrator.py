@@ -28,14 +28,18 @@ tool_declarations = [
     ),
     types.FunctionDeclaration(
         name="cancel_order",
-        description="hủy đơn hàng theo mã order_code và lý do reason",
+        description="hủy đơn hàng theo mã order_code và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính khách hàng trước khi hủy.",
         parameters_json_schema={
             "type": "object",
             "properties": {
                 "order_code": {"type": "string"},
-                "reason": {"type": "string"}
+                "reason": {"type": "string"},
+                "customer_email": {
+                    "type": "string",
+                    "description": "email của khách hàng để xác thực danh tính, phải khớp với email đăng ký đơn hàng"
+                }
             },
-            "required": ["order_code", "reason"]
+            "required": ["order_code", "reason", "customer_email"]
         }
     ),
     types.FunctionDeclaration(
@@ -63,7 +67,7 @@ tool_declarations = [
 ),
     types.FunctionDeclaration(
     name="cancel_multiple_orders",
-    description="hủy nhiều đơn hàng cùng lúc theo danh sách order_codes và lý do reason",
+    description="hủy nhiều đơn hàng cùng lúc theo danh sách order_codes và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính.",
     parameters_json_schema={
         "type": "object",
         "properties": {
@@ -71,9 +75,13 @@ tool_declarations = [
                 "type": "array",
                 "items": {"type": "string"}
             },
-            "reason": {"type": "string"}
+            "reason": {"type": "string"},
+            "customer_email": {
+                "type": "string",
+                "description": "email của khách hàng để xác thực danh tính"
+            }
         },
-        "required": ["order_codes", "reason"]
+        "required": ["order_codes", "reason", "customer_email"]
     }
 ),
     types.FunctionDeclaration(
