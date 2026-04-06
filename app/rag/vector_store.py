@@ -26,9 +26,19 @@ class LocalFaissStore:
     def load(self):
         if self._loaded:
             return
-        self.index = faiss.read_index(self.index_path + ".faiss")
-        with open(self.index_path + ".json", "r", encoding="utf-8") as f:
-            self.documents = json.load(f)
+        faiss_path = self.index_path + ".faiss"
+        json_path = self.index_path + ".json"
+        if not __import__("os").path.exists(faiss_path) or not __import__("os").path.exists(json_path):
+            raise FileNotFoundError(
+                f"Vector index files not found: {faiss_path} / {json_path}. "
+                "Run ingest_folder() to build the index first."
+            )
+        index = faiss.read_index(faiss_path)
+        with open(json_path, "r", encoding="utf-8") as f:
+            documents = json.load(f)
+        # Assign atomically so index and documents are always in sync
+        self.index = index
+        self.documents = documents
         self._loaded = True
 
     def reload(self):
@@ -40,11 +50,15 @@ class LocalFaissStore:
         if not self._loaded:
             self.load()
 
+        if self.index is None or len(self.documents) == 0:
+            return []
+
         distances, indices = self.index.search(query_embedding.astype("float32"), top_k)
 
+        n_docs = len(self.documents)
         results = []
         for idx in indices[0]:
-            if idx != -1:
+            if 0 <= idx < n_docs:
                 results.append(self.documents[idx])
 
         return results

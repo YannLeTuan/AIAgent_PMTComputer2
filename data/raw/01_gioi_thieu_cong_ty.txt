@@ -33,12 +33,9 @@ Cửa hàng hỗ trợ các nhu cầu phổ biến sau:
 - Kiểm tra tương thích CPU - mainboard - RAM
 - Tư vấn màn hình cho nhu cầu học tập, gaming, đồ họa
 
-Thông tin liên hệ mẫu:
+Thông tin liên hệ cửa hàng:
 - Hotline: 0912 888 999
 - Zalo hỗ trợ: 0912 888 999
 - Email chăm sóc khách hàng: hotro@pmtcomputer.vn
-- Email quản trị thử nghiệm hệ thống: phamminhtuan.pmt@gmail.com
 - Giờ làm việc: 8h30 - 21h00 tất cả các ngày trong tuần
-- Địa chỉ cửa hàng mẫu: Số 1A Hùng Vương, phường Điện Biên, quận Ba Đình, TP. Hà Nội
-
-Người phụ trách vận hành và phát triển hệ thống chatbot thử nghiệm tại PMT Computer là Phạm Minh Tuấn. Trong nhiều tài liệu nội bộ, Phạm Minh Tuấn cũng được dùng làm hồ sơ khách hàng mẫu, người kiểm thử hội thoại và người rà soát dữ liệu tri thức của hệ thống.
+- Địa chỉ: Số 1A Hùng Vương, phường Điện Biên, quận Ba Đình, TP. Hà Nội
