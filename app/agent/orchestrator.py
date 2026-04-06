@@ -1,3 +1,4 @@
+
 import re
 import time
 
@@ -13,6 +14,10 @@ from app.tools.order_tools import check_order_status, cancel_order, cancel_multi
 from app.tools.product_tools import search_product, list_products
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
+
+MAX_HISTORY_TURNS = 10
+SUMMARY_THRESHOLD = 8
+GEMINI_MAX_RETRIES = 2
 
 tool_declarations = [
     types.FunctionDeclaration(
@@ -52,38 +57,39 @@ tool_declarations = [
             },
             "required": ["keyword"]
         }
-    ),  types.FunctionDeclaration(
-    name="list_products",
-    description="liệt kê danh sách sản phẩm theo nhóm category, hãng brand hoặc giá tối đa max_price",
-    parameters_json_schema={
-        "type": "object",
-        "properties": {
-            "category": {"type": "string"},
-            "brand": {"type": "string"},
-            "max_price": {"type": "number"},
-            "limit": {"type": "integer"}
-        }
-    }
-),
+    ),
     types.FunctionDeclaration(
-    name="cancel_multiple_orders",
-    description="hủy nhiều đơn hàng cùng lúc theo danh sách order_codes và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính.",
-    parameters_json_schema={
-        "type": "object",
-        "properties": {
-            "order_codes": {
-                "type": "array",
-                "items": {"type": "string"}
-            },
-            "reason": {"type": "string"},
-            "customer_email": {
-                "type": "string",
-                "description": "email của khách hàng để xác thực danh tính"
+        name="list_products",
+        description="liệt kê danh sách sản phẩm theo nhóm category, hãng brand hoặc giá tối đa max_price",
+        parameters_json_schema={
+            "type": "object",
+            "properties": {
+                "category": {"type": "string"},
+                "brand": {"type": "string"},
+                "max_price": {"type": "number"},
+                "limit": {"type": "integer"}
             }
-        },
-        "required": ["order_codes", "reason", "customer_email"]
-    }
-),
+        }
+    ),
+    types.FunctionDeclaration(
+        name="cancel_multiple_orders",
+        description="hủy nhiều đơn hàng cùng lúc theo danh sách order_codes và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính.",
+        parameters_json_schema={
+            "type": "object",
+            "properties": {
+                "order_codes": {
+                    "type": "array",
+                    "items": {"type": "string"}
+                },
+                "reason": {"type": "string"},
+                "customer_email": {
+                    "type": "string",
+                    "description": "email của khách hàng để xác thực danh tính"
+                }
+            },
+            "required": ["order_codes", "reason", "customer_email"]
+        }
+    ),
     types.FunctionDeclaration(
         name="get_customer_orders",
         description="lấy danh sách đơn hàng của khách hàng theo email",
@@ -95,7 +101,6 @@ tool_declarations = [
             "required": ["customer_email"]
         }
     )
-    
 ]
 
 ORDER_PATTERN = re.compile(r"\bORD\d+\b", re.IGNORECASE)
@@ -114,30 +119,28 @@ FOLLOW_CUSTOMER_WORDS = [
 ]
 
 
+# ---------------------------------------------------------------------------
+# Tool dispatcher
+# ---------------------------------------------------------------------------
+
 def run_tool(name: str, args: dict):
-    if name == "check_order_status":
-        return check_order_status(**args)
-
-    if name == "cancel_order":
-        return cancel_order(**args)
-
-    if name == "cancel_multiple_orders":
-        return cancel_multiple_orders(**args)
-
-    if name == "search_product":
-        return search_product(**args)
-
-    if name == "list_products":
-        return list_products(**args)
-
-    if name == "get_customer_orders":
-        return get_customer_orders(**args)
-
-    return {
-        "success": False,
-        "message": f"tool {name} không tồn tại"
+    dispatch = {
+        "check_order_status": check_order_status,
+        "cancel_order": cancel_order,
+        "cancel_multiple_orders": cancel_multiple_orders,
+        "search_product": search_product,
+        "list_products": list_products,
+        "get_customer_orders": get_customer_orders,
     }
+    fn = dispatch.get(name)
+    if fn is None:
+        return {"success": False, "message": f"công cụ {name} không tồn tại"}
+    return fn(**args)
 
+
+# ---------------------------------------------------------------------------
+# Response normalization
+# ---------------------------------------------------------------------------
 
 def normalize_answer(text: str):
     if not text:
@@ -151,10 +154,72 @@ def normalize_answer(text: str):
     return text
 
 
-def trim_history(history: list, max_turns: int = 8):
-    if len(history) <= max_turns:
+# ---------------------------------------------------------------------------
+# History management — smart summarization thay vì hard trim
+# ---------------------------------------------------------------------------
+
+def _extract_key_facts(turns: list) -> str:
+    """Trích xuất thông tin quan trọng từ các turns bị cắt bỏ."""
+    order_codes = set()
+    emails = set()
+    key_info = []
+
+    for turn in turns:
+        text = turn.get("text", "")
+        role = turn.get("role", "")
+
+        # Trích xuất mã đơn hàng
+        codes = ORDER_PATTERN.findall(text)
+        order_codes.update(c.upper() for c in codes)
+
+        # Trích xuất email
+        found_emails = EMAIL_PATTERN.findall(text)
+        emails.update(found_emails)
+
+        # Trích xuất tên sản phẩm từ câu trả lời bot
+        if role == "model":
+            for keyword in ["bảo hành", "đã hủy", "đã giao", "đang xử lý", "đang vận chuyển"]:
+                if keyword in text.lower():
+                    # Lấy 1 dòng ngắn mô tả trạng thái
+                    for line in text.split("\n"):
+                        line = line.strip()
+                        if keyword in line.lower() and len(line) < 120:
+                            key_info.append(line)
+                            break
+                    break
+
+    parts = []
+    if order_codes:
+        parts.append(f"Các mã đơn hàng đã nhắc tới: {', '.join(sorted(order_codes))}")
+    if emails:
+        parts.append(f"Email khách hàng: {', '.join(emails)}")
+    if key_info:
+        parts.append("Thông tin chính: " + "; ".join(key_info[:3]))
+
+    return ". ".join(parts)
+
+
+def trim_history(history: list, context_state: dict | None = None):
+    if len(history) <= MAX_HISTORY_TURNS:
         return history
-    return history[-max_turns:]
+
+    # Số turns cần cắt
+    excess = len(history) - SUMMARY_THRESHOLD
+    trimmed_turns = history[:excess]
+    kept_turns = history[excess:]
+
+    # Trích xuất key facts từ turns bị cắt
+    summary = _extract_key_facts(trimmed_turns)
+
+    if summary and context_state is not None:
+        context_state["context_summary"] = summary
+
+    # Nếu có summary, chèn dưới dạng 1 message hệ thống ở đầu
+    if summary:
+        summary_msg = {"role": "user", "text": f"[Tóm tắt ngữ cảnh trước đó: {summary}]"}
+        return [summary_msg] + kept_turns
+
+    return kept_turns
 
 
 def history_to_contents(history: list):
@@ -179,13 +244,18 @@ def history_to_contents(history: list):
     return contents
 
 
+# ---------------------------------------------------------------------------
+# Context state management
+# ---------------------------------------------------------------------------
+
 def copy_context(context_state: dict | None):
     base = {
         "last_order_code": None,
         "last_product_name": None,
         "last_customer_email": None,
         "last_customer_name": None,
-        "last_order_codes": []
+        "last_order_codes": [],
+        "context_summary": ""
     }
 
     if not context_state:
@@ -240,6 +310,10 @@ def update_context_from_tool_result(tool_name: str, tool_result: dict, args: dic
                 context_state["last_order_code"] = order_codes[0]
 
 
+# ---------------------------------------------------------------------------
+# Reference hint building
+# ---------------------------------------------------------------------------
+
 def needs_follow_order_hint(user_message: str):
     lower = user_message.lower()
     return any(x in lower for x in FOLLOW_ORDER_WORDS)
@@ -279,40 +353,33 @@ def build_reference_hint(user_message: str, context_state: dict):
     if "vậy" in lower and context_state.get("last_order_code"):
         hints.append(f'Ngữ cảnh gần nhất liên quan tới đơn hàng {context_state["last_order_code"]}.')
 
+    # Thêm context summary từ các turns đã bị trim
+    if context_state.get("context_summary"):
+        hints.append(f"Thông tin từ đầu hội thoại: {context_state['context_summary']}")
+
     return "\n".join(hints).strip()
 
 
+# ---------------------------------------------------------------------------
+# RAG retrieval query building — không inject câu trả lời vào query
+# ---------------------------------------------------------------------------
+
 def build_retrieval_query(user_message: str, context_state: dict):
-    lower = user_message.lower()
     parts = [user_message]
 
+    # Chỉ bổ sung entity tham chiếu, KHÔNG inject nội dung đáp án
     if needs_follow_order_hint(user_message) and context_state.get("last_order_code"):
         parts.append(f"đơn hàng {context_state['last_order_code']}")
 
     if needs_follow_product_hint(user_message) and context_state.get("last_product_name"):
         parts.append(context_state["last_product_name"])
 
-    if "hoàn tiền" in lower:
-        parts.append("thời gian hoàn tiền 3 đến 7 ngày làm việc")
-
-    if "bảo hành" in lower and "cpu" in lower:
-        parts.append("CPU bảo hành 36 tháng")
-
-    if "bảo hành" in lower and "vga" in lower:
-        parts.append("VGA bảo hành 36 tháng")
-
-    if "đổi trả" in lower and "ssd" in lower:
-        parts.append("SSD đổi trả trong 7 ngày nếu lỗi kỹ thuật")
-
     return " | ".join(parts)
 
-SMALL_TALK_PATTERNS = [
-    "xin cảm ơn", "cảm ơn", "cam on",
-    "ok", "oke", "okay",
-    "chào", "xin chào", "hello", "hi",
-    "tạm biệt", "bye", "goodbye"
-]
 
+# ---------------------------------------------------------------------------
+# Small talk bypass
+# ---------------------------------------------------------------------------
 
 def normalize_simple(text: str):
     return (text or "").strip().lower()
@@ -320,6 +387,12 @@ def normalize_simple(text: str):
 
 def get_small_talk_answer(user_message: str):
     msg = normalize_simple(user_message)
+
+    # Chỉ match khi message TOÀN BỘ là small talk (ngắn, không chứa keyword nghiệp vụ)
+    business_keywords = ["đơn", "ord", "sản phẩm", "bảo hành", "đổi trả", "kiểm tra",
+                         "tìm", "hủy", "email", "khách", "giá", "mua", "build", "tư vấn"]
+    if any(kw in msg for kw in business_keywords):
+        return None
 
     if "cảm ơn" in msg or "cam on" in msg:
         return "Không có gì ạ. Nếu bạn cần tra cứu đơn hàng, sản phẩm, bảo hành hoặc chính sách của PMT Computer thì cứ nhắn tôi nhé."
@@ -331,6 +404,11 @@ def get_small_talk_answer(user_message: str):
         return "Cảm ơn bạn đã liên hệ PMT Computer. Khi cần hỗ trợ thêm, bạn cứ nhắn lại nhé."
 
     return None
+
+
+# ---------------------------------------------------------------------------
+# Message building
+# ---------------------------------------------------------------------------
 
 def build_user_message(user_message: str, context_state: dict):
     retrieval_query = build_retrieval_query(user_message, context_state)
@@ -354,6 +432,38 @@ def build_user_message(user_message: str, context_state: dict):
     ).strip(), retrieval_query, contexts, reference_hint
 
 
+# ---------------------------------------------------------------------------
+# Gemini API call với retry
+# ---------------------------------------------------------------------------
+
+def _call_gemini(contents: list, temperature: float = 0.2):
+    last_error = None
+    for attempt in range(GEMINI_MAX_RETRIES + 1):
+        try:
+            return client.models.generate_content(
+                model=settings.GEMINI_MODEL,
+                contents=contents,
+                config=types.GenerateContentConfig(
+                    system_instruction=SYSTEM_PROMPT,
+                    tools=[types.Tool(function_declarations=tool_declarations)],
+                    temperature=temperature
+                )
+            )
+        except Exception as e:
+            last_error = e
+            err_str = str(e).lower()
+            # Chỉ retry cho lỗi tạm thời
+            if "429" in err_str or "503" in err_str or "500" in err_str:
+                time.sleep(1.5 * (attempt + 1))
+                continue
+            raise
+    raise last_error
+
+
+# ---------------------------------------------------------------------------
+# Main chat entry point
+# ---------------------------------------------------------------------------
+
 def chat_with_agent(user_message: str, history: list | None = None, context_state: dict | None = None, thread_id: str | None = None):
     start_time = time.perf_counter()
     small_talk_answer = get_small_talk_answer(user_message)
@@ -367,7 +477,8 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
             "small_talk_bypass": True
         })
 
-        history = trim_history(history or [], max_turns=8)
+        context_state = copy_context(context_state)
+        history = trim_history(history or [], context_state)
         new_history = history + [
             {"role": "user", "text": user_message},
             {"role": "model", "text": small_talk_answer}
@@ -375,13 +486,12 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
 
         return {
             "answer": small_talk_answer,
-            "history": trim_history(new_history, max_turns=8),
-            "context_state": copy_context(context_state)
-        }    
-    
+            "history": trim_history(new_history, context_state),
+            "context_state": context_state
+        }
 
-    history = trim_history(history or [], max_turns=8)
     context_state = copy_context(context_state)
+    history = trim_history(history or [], context_state)
 
     update_context_from_user_message(user_message, context_state)
 
@@ -402,17 +512,21 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
     ]
 
     try:
-        response = client.models.generate_content(
-            model=settings.GEMINI_MODEL,
-            contents=contents,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                tools=[types.Tool(function_declarations=tool_declarations)],
-                temperature=0.2
-            )
-        )
+        response = _call_gemini(contents)
 
-        candidate = response.candidates[0]
+        candidates = response.candidates or []
+        if not candidates:
+            fallback = normalize_answer("")
+            return {
+                "answer": fallback,
+                "history": history + [
+                    {"role": "user", "text": user_message},
+                    {"role": "model", "text": fallback}
+                ],
+                "context_state": context_state
+            }
+
+        candidate = candidates[0]
         parts = candidate.content.parts
 
         function_calls = []
@@ -437,7 +551,7 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
 
             return {
                 "answer": final_text,
-                "history": trim_history(new_history, max_turns=8),
+                "history": trim_history(new_history, context_state),
                 "context_state": context_state
             }
 
@@ -474,15 +588,7 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
                 )
             )
 
-        final_response = client.models.generate_content(
-            model=settings.GEMINI_MODEL,
-            contents=current_turn_contents,
-            config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
-                tools=[types.Tool(function_declarations=tool_declarations)],
-                temperature=0.2
-            )
-        )
+        final_response = _call_gemini(current_turn_contents)
 
         final_text = normalize_answer(final_response.text)
 
@@ -502,7 +608,7 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
 
         return {
             "answer": final_text,
-            "history": trim_history(new_history, max_turns=8),
+            "history": trim_history(new_history, context_state),
             "context_state": context_state
         }
 

@@ -1,7 +1,7 @@
 from pathlib import Path
 
 from app.core.config import settings
-from app.rag.retriever import embed_texts
+from app.rag.retriever import embed_texts, store as retriever_store
 from app.rag.vector_store import LocalFaissStore
 
 # Cấu hình chunk theo loại tài liệu
@@ -118,6 +118,9 @@ def ingest_folder(folder_path: str):
     store = LocalFaissStore(settings.VECTOR_INDEX_PATH)
     store.build(embeddings, all_chunks)
     store.save()
+
+    # Buộc retriever reload index mới vào memory
+    retriever_store.reload()
 
     print("ingest xong")
     print("so file:", len(txt_files))

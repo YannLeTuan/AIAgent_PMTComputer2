@@ -1,16 +1,8 @@
-import unicodedata
-
 from sqlalchemy import or_
 
+from app.core.utils import normalize_text
 from app.db.models import Product
 from app.db.session import SessionLocal
-
-
-def normalize_text(text: str) -> str:
-    text = (text or "").strip().lower()
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return text
 
 
 def expand_keywords(keyword: str):

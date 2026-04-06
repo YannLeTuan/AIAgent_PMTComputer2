@@ -292,7 +292,7 @@ st.markdown("""
 def init_demo_resources():
     db_file = Path("ecommerce.db")
     vector_file = Path("data/vector_index/faiss_index.faiss")
-    vector_meta = Path("data/vector_index/faiss_index.pkl")
+    vector_meta = Path("data/vector_index/faiss_index.json")
 
     if not db_file.exists():
         seed()

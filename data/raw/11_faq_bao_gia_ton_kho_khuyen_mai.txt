@@ -15,4 +15,3 @@ Trả lời: Giá niêm yết thường được đồng bộ, nhưng một số
 Câu hỏi: Tôi muốn báo giá build PC
 Trả lời: Chatbot nên hỏi lại ngân sách, mục đích sử dụng, có cần màn hình hay không, ưu tiên thương hiệu nào và có cần build sẵn hay không.
 
-Trong dữ liệu thử nghiệm, Phạm Minh Tuấn thường được dùng làm hồ sơ yêu cầu báo giá nâng cấp hoặc build lại máy với ngân sách vừa phải.

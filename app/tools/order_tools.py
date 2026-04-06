@@ -1,4 +1,4 @@
-from app.db.models import Customer, Order
+from app.db.models import Customer, Order, Product
 from app.db.session import SessionLocal
 
 
@@ -13,7 +13,7 @@ def check_order_status(order_code: str) -> dict:
                 "message": f"không tìm thấy đơn hàng {order_code}"
             }
 
-        return {
+        result = {
             "success": True,
             "order_code": order.order_code,
             "product_name": order.product_name,
@@ -22,11 +22,29 @@ def check_order_status(order_code: str) -> dict:
             "status": order.status,
             "note": order.note
         }
+
+        # Enrich với thông tin sản phẩm nếu có product_id FK
+        if order.product_id:
+            product = db.query(Product).filter(Product.id == order.product_id).first()
+            if product:
+                result["product_category"] = product.category
+                result["product_brand"] = product.brand
+                result["warranty_months"] = product.warranty_months
+                result["current_price"] = product.price
+
+        return result
     finally:
         db.close()
 
 
-def cancel_order(order_code: str, reason: str, customer_email: str | None = None) -> dict:
+def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
+    """Hủy đơn hàng. customer_email bắt buộc để xác thực danh tính."""
+    if not customer_email or not customer_email.strip():
+        return {
+            "success": False,
+            "message": "thiếu email xác thực. Vui lòng cung cấp email đã đặt hàng để xác thực danh tính."
+        }
+
     db = SessionLocal()
     try:
         order = db.query(Order).filter(Order.order_code == order_code).first()
@@ -37,14 +55,13 @@ def cancel_order(order_code: str, reason: str, customer_email: str | None = None
                 "message": f"không tìm thấy đơn hàng {order_code}"
             }
 
-        # Xác thực danh tính khách hàng qua email nếu được cung cấp
-        if customer_email:
-            customer = db.query(Customer).filter(Customer.id == order.customer_id).first()
-            if not customer or customer.email.lower() != customer_email.strip().lower():
-                return {
-                    "success": False,
-                    "message": f"email xác thực không khớp với đơn hàng {order_code}. Vui lòng kiểm tra lại email đã đặt hàng."
-                }
+        # Xác thực danh tính khách hàng qua email
+        customer = db.query(Customer).filter(Customer.id == order.customer_id).first()
+        if not customer or customer.email.lower() != customer_email.strip().lower():
+            return {
+                "success": False,
+                "message": f"email xác thực không khớp với đơn hàng {order_code}. Vui lòng kiểm tra lại email đã đặt hàng."
+            }
 
         if order.status in ["shipped", "delivered", "cancelled"]:
             return {
@@ -73,7 +90,14 @@ def cancel_order(order_code: str, reason: str, customer_email: str | None = None
         db.close()
 
 
-def cancel_multiple_orders(order_codes: list[str], reason: str, customer_email: str | None = None) -> dict:
+def cancel_multiple_orders(order_codes: list[str], reason: str, customer_email: str) -> dict:
+    """Hủy nhiều đơn hàng. customer_email bắt buộc để xác thực."""
+    if not customer_email or not customer_email.strip():
+        return {
+            "success": False,
+            "message": "thiếu email xác thực. Vui lòng cung cấp email đã đặt hàng để xác thực danh tính."
+        }
+
     results = []
     success_count = 0
     failed_count = 0

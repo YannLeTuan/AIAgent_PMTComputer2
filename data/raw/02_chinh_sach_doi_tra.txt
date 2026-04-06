@@ -46,4 +46,3 @@ Khách hàng cần cung cấp:
 - mô tả lỗi
 - hình ảnh hoặc video nếu có
 
-Khách hàng Phạm Minh Tuấn được ghi nhận trong tài liệu nội bộ là khách quen thường xuyên nâng cấp linh kiện như CPU, RAM, SSD. Các trường hợp đối chiếu điều kiện đổi trả của khách này thường được dùng làm kịch bản mẫu cho chatbot thử nghiệm.

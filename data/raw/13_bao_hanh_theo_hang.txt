@@ -1,0 +1,111 @@
+PMT Computer - Chính sách bảo hành theo thương hiệu
+
+Dưới đây là thông tin bảo hành chi tiết theo từng thương hiệu đang phân phối tại PMT Computer.
+
+Intel (CPU):
+- Bảo hành: 36 tháng
+- Áp dụng cho tất cả CPU Intel Core i5, i7 mua tại PMT Computer
+- Bảo hành hãng thông qua đại lý phân phối chính hãng tại Việt Nam
+
+AMD (CPU):
+- Bảo hành: 36 tháng
+- Áp dụng cho tất cả CPU AMD Ryzen 5, Ryzen 7 mua tại PMT Computer
+- Bảo hành hãng thông qua nhà phân phối chính thức
+
+Samsung (SSD):
+- Samsung 970 EVO Plus: bảo hành 60 tháng (5 năm)
+- Samsung SSD dòng khác: 36 đến 60 tháng tùy model
+- Bảo hành chính hãng Samsung tại Việt Nam
+
+Western Digital - WD (SSD, HDD):
+- WD Black SN770 (SSD NVMe): bảo hành 60 tháng (5 năm)
+- WD Blue (HDD): bảo hành 24 tháng
+- Bảo hành thông qua đại lý phân phối WD
+
+Kingston (RAM, SSD):
+- Kingston Fury Beast RAM: bảo hành 36 tháng (bảo hành trọn đời với một số dòng)
+- Kingston NV2 SSD: bảo hành 36 tháng
+- Bảo hành chính hãng Kingston
+
+Corsair (RAM, PSU):
+- Corsair Vengeance RAM: bảo hành 36 tháng
+- Corsair CV Series PSU: bảo hành 36 tháng
+- Bảo hành thông qua đại lý Corsair tại Việt Nam
+
+Crucial (SSD):
+- Crucial MX500 SSD SATA: bảo hành 36 tháng
+- Bảo hành Crucial/Micron chính hãng
+
+Seagate (HDD):
+- Seagate Barracuda: bảo hành 24 tháng
+- Bảo hành chính hãng Seagate
+
+MSI (VGA, Mainboard):
+- MSI GeForce RTX Series: bảo hành 36 tháng
+- MSI Mainboard: bảo hành 36 tháng
+- Bảo hành MSI chính hãng tại Việt Nam
+
+Gigabyte (VGA, Mainboard):
+- Gigabyte GeForce RTX Series: bảo hành 36 tháng
+- Gigabyte Mainboard: bảo hành 36 tháng
+- Bảo hành Gigabyte chính hãng
+
+ASUS (VGA, Mainboard):
+- ASUS Dual/ROG/TUF VGA: bảo hành 36 tháng
+- ASUS Prime/TUF Mainboard: bảo hành 36 tháng
+- Bảo hành ASUS chính hãng tại Việt Nam
+
+Cooler Master (PSU):
+- Cooler Master MWE Series: bảo hành 36 tháng
+- Bảo hành Cooler Master chính hãng
+
+Seasonic (PSU):
+- Seasonic Focus GX Series: bảo hành 36 tháng (một số dòng cao cấp bảo hành lên đến 120 tháng)
+- Bảo hành Seasonic chính hãng
+
+Dell (Màn hình):
+- Dell P Series: bảo hành 36 tháng
+- Bảo hành Dell chính hãng tại Việt Nam
+
+LG (Màn hình):
+- LG UltraGear Gaming: bảo hành 24 tháng
+- Bảo hành LG chính hãng
+
+AOC (Màn hình):
+- AOC Gaming Series: bảo hành 24 tháng
+- Bảo hành AOC chính hãng
+
+Logitech (Chuột, Bàn phím, Webcam):
+- Logitech G Series (chuột gaming): bảo hành 24 tháng
+- Logitech G Series (bàn phím cơ): bảo hành 24 tháng
+- Logitech Webcam: bảo hành 12 tháng
+- Bảo hành Logitech chính hãng
+
+Razer (Chuột, Tai nghe):
+- Razer DeathAdder (chuột): bảo hành 24 tháng
+- Razer tai nghe: bảo hành 24 tháng
+- Bảo hành Razer chính hãng
+
+HyperX (Tai nghe):
+- HyperX Cloud Series: bảo hành 24 tháng
+- Bảo hành HyperX/HP chính hãng
+
+Akko (Bàn phím cơ):
+- Akko bàn phím cơ: bảo hành 12 tháng
+- Bảo hành qua nhà phân phối Akko tại Việt Nam
+
+Deepcool (Tản nhiệt):
+- Deepcool AK Series: bảo hành 12 tháng
+- Bảo hành Deepcool chính hãng
+
+ID-Cooling (Tản nhiệt):
+- ID-Cooling SE Series: bảo hành 12 tháng
+- Bảo hành qua nhà phân phối ID-Cooling
+
+Montech (Case):
+- Montech Air Series: bảo hành 12 tháng
+- Bảo hành qua nhà phân phối Montech
+
+NZXT (Case):
+- NZXT H Series: bảo hành 12 tháng
+- Bảo hành NZXT chính hãng

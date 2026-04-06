@@ -7,40 +7,40 @@ Một đơn hàng tại PMT Computer thường đi qua các trạng thái:
 - delivered
 - cancelled
 
-Giải thích các trạng thái:
-- pending: đơn vừa được tạo, đang chờ xác nhận hoặc chờ thanh toán
-- processing: đơn đã được tiếp nhận, đang xác nhận tồn kho, đóng gói hoặc chuẩn bị xuất kho
-- shipped: đơn đã bàn giao cho đơn vị vận chuyển
-- delivered: đơn đã giao thành công
-- cancelled: đơn đã hủy
+Giải thích chi tiết các trạng thái:
 
-Quy tắc hủy đơn:
+1. Pending (Chờ xác nhận):
+Đơn hàng vừa được tạo, đang chờ xác nhận từ cửa hàng hoặc chờ khách hoàn tất thanh toán. Ở trạng thái này, khách có thể yêu cầu hủy đơn hoặc thay đổi thông tin giao hàng.
+
+2. Processing (Đang xử lý):
+Đơn hàng đã được tiếp nhận và đang trong quá trình xác nhận tồn kho, đóng gói hoặc chuẩn bị xuất kho. Thông thường vẫn có thể hủy nếu chưa xuất kho.
+
+3. Shipped (Đang vận chuyển):
+Đơn hàng đã được bàn giao cho đơn vị vận chuyển. Khách hàng không thể hủy đơn trực tiếp trên hệ thống. Nếu cần hủy, khách có thể nhận hàng rồi yêu cầu đổi trả theo chính sách.
+
+4. Delivered (Đã giao thành công):
+Đơn hàng đã được giao tới khách hàng. Không thể hủy. Nếu có vấn đề, khách có thể yêu cầu đổi trả hoặc bảo hành theo chính sách.
+
+5. Cancelled (Đã hủy):
+Đơn hàng đã bị hủy bởi khách hàng hoặc hệ thống. Không thể hủy lại hoặc khôi phục.
+
+Quy tắc hủy đơn theo trạng thái:
 - pending: có thể hủy
 - processing: thường vẫn có thể hủy nếu chưa xuất kho
 - shipped: không thể hủy trực tiếp trên hệ thống
 - delivered: không thể hủy
 - cancelled: không thể hủy lại
 
-Khi khách muốn hủy đơn, nhân viên cần xác minh:
+Khi khách muốn hủy đơn, hệ thống cần xác minh:
 - mã đơn hàng
+- email của khách hàng (phải khớp với email đặt hàng)
 - lý do hủy
-- trạng thái thanh toán
 - trạng thái xử lý hiện tại
-- sản phẩm trong đơn có phải hàng đặt riêng không
 
-Nếu khách yêu cầu thay đổi:
-- địa chỉ giao hàng
-- số điện thoại
-- thời gian nhận hàng
-- ghi chú xuất hóa đơn
-- hình thức thanh toán
+Nếu khách yêu cầu thay đổi thông tin đơn hàng (địa chỉ giao, số điện thoại, thời gian nhận, ghi chú xuất hóa đơn, hình thức thanh toán), cửa hàng sẽ kiểm tra trạng thái đơn để quyết định có chỉnh sửa được không.
 
-thì cửa hàng sẽ kiểm tra xem đơn đang ở giai đoạn nào để quyết định có chỉnh sửa được không.
-
-Nếu đơn đã chuyển sang shipped, nhân viên cần giải thích rằng hệ thống không hỗ trợ hủy trực tiếp nữa. Khi đó khách có thể nhận hàng rồi yêu cầu đổi trả nếu đáp ứng điều kiện.
-
-Phạm Minh Tuấn được dùng như hồ sơ kiểm thử nội bộ cho các tình huống:
-- hủy đơn pending
-- xử lý đơn processing
-- hỏi lại tình trạng thanh toán
-- follow-up nhiều lượt về đơn hàng
+Thời gian xử lý đơn hàng trung bình:
+- Xác nhận đơn hàng: trong vòng 1 đến 2 giờ trong giờ làm việc
+- Đóng gói và chuẩn bị: 4 đến 24 giờ
+- Giao hàng nội thành: 24 đến 48 giờ
+- Giao hàng tỉnh xa: 2 đến 5 ngày làm việc

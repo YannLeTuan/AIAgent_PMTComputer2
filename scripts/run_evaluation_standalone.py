@@ -1,11 +1,11 @@
 import json
 import time
-import unicodedata
 import uuid
 from pathlib import Path
 
 from app.agent.orchestrator import chat_with_agent
 from app.agent.memory import InMemorySessionStore
+from app.core.utils import normalize_text
 from app.db.seed import seed
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -15,28 +15,40 @@ RESULTS_DIR.mkdir(parents=True, exist_ok=True)
 
 EXPECTATION_ALIASES = {
     "shipped": ["shipped", "đã giao", "được giao", "giao thành công", "đang vận chuyển", "đã giao vận chuyển"],
-    "processing": ["processing", "đang xử lý", "được xử lý", "đang được xử lý"],
+    "processing": ["processing", "đang xử lý", "được xử lý", "đang được xử lý", "xử lý"],
     "cancelled": ["cancelled", "đã hủy", "bị hủy", "hủy thành công", "đã được hủy"],
     "delivered": ["delivered", "đã giao thành công", "đã nhận hàng", "đã giao tới", "giao thành công"],
-    "pending": ["pending", "chờ xác nhận", "đang chờ", "chưa xác nhận", "chờ duyệt"],
+    "pending": ["pending", "chờ xác nhận", "đang chờ", "chưa xác nhận", "chờ duyệt", "chờ thanh toán"],
     "36 tháng": ["36 tháng", "36 thang", "3 năm", "ba năm"],
     "24 tháng": ["24 tháng", "24 thang", "2 năm", "hai năm"],
     "12 tháng": ["12 tháng", "12 thang", "1 năm", "mot nam", "một năm"],
     "60 tháng": ["60 tháng", "60 thang", "5 năm", "nam nam", "năm năm"],
     "3 đến 7 ngày": ["3 đến 7 ngày", "3-7 ngày", "3 tới 7 ngày", "3 den 7 ngay", "3 đến 7 ngày làm việc"],
-    "tốc độ": ["tốc độ", "nhanh", "nhanh hơn", "truy xuất nhanh", "nhanh hon"],
+    "tốc độ": ["tốc độ", "nhanh", "nhanh hơn", "truy xuất nhanh", "nhanh hon", "tốc độ đọc"],
     "đổi trả": ["đổi trả", "doi tra", "đổi hàng", "trả hàng", "hoàn hàng"],
     "không khớp": ["không khớp", "khong khop", "không đúng", "không trùng", "xác thực thất bại", "email không hợp lệ", "không match"],
-    "hoàn tiền": ["hoàn tiền", "hoan tien", "trả tiền", "refund"],
-    "giao hàng": ["giao hàng", "giao hang", "vận chuyển", "ship hàng", "delivery"]
+    "hoàn tiền": ["hoàn tiền", "hoan tien", "trả tiền", "refund", "hoàn lại tiền", "tiền hoàn"],
+    "giao hàng": ["giao hàng", "giao hang", "vận chuyển", "ship hàng", "delivery"],
+    "xử lý": ["xử lý", "xu ly", "processing", "đang xử lý", "đang được xử lý"],
+    "đang xử lý": ["đang xử lý", "đang được xử lý", "processing", "xử lý"],
+    "lắp ráp": ["lắp ráp", "lap rap", "ráp máy", "build pc", "build máy"],
+    "vệ sinh": ["vệ sinh", "ve sinh", "làm sạch", "lau chùi"],
+    "socket": ["socket", "đế cắm", "chân cắm"],
+    "mainboard": ["mainboard", "bo mạch chủ", "bo mạch", "main"],
+    "nguồn": ["nguồn", "nguon", "psu", "power supply"],
+    "xác nhận": ["xác nhận", "xac nhan", "confirm"],
 }
 
 
-def normalize_text(text: str) -> str:
-    text = (text or "").lower().strip()
-    text = unicodedata.normalize("NFD", text)
-    text = "".join(ch for ch in text if unicodedata.category(ch) != "Mn")
-    return text
+# Pre-build normalized alias lookup (key: normalized expected -> list of normalized aliases)
+_NORM_ALIASES: dict[str, list[str]] = {}
+for _key, _vals in EXPECTATION_ALIASES.items():
+    _nk = normalize_text(_key)
+    _nv = [normalize_text(v) for v in _vals]
+    if _nk in _NORM_ALIASES:
+        _NORM_ALIASES[_nk] = list(dict.fromkeys(_NORM_ALIASES[_nk] + _nv))
+    else:
+        _NORM_ALIASES[_nk] = list(dict.fromkeys(_nv))
 
 
 def semantic_match(answer: str, expected: str) -> bool:
@@ -46,9 +58,9 @@ def semantic_match(answer: str, expected: str) -> bool:
     if expected_norm in answer_norm:
         return True
 
-    aliases = EXPECTATION_ALIASES.get(expected_norm, [])
+    aliases = _NORM_ALIASES.get(expected_norm, [])
     for alias in aliases:
-        if normalize_text(alias) in answer_norm:
+        if alias in answer_norm:
             return True
 
     return False

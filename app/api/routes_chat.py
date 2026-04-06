@@ -1,3 +1,5 @@
+import asyncio
+
 from fastapi import APIRouter
 
 from app.agent.memory import session_store
@@ -8,11 +10,12 @@ router = APIRouter()
 
 
 @router.post("/chat", response_model=ChatResponse)
-def chat(req: ChatRequest):
+async def chat(req: ChatRequest):
     history = session_store.get_history(req.thread_id)
     context_state = session_store.get_context(req.thread_id)
 
-    result = chat_with_agent(
+    result = await asyncio.to_thread(
+        chat_with_agent,
         req.message,
         history,
         context_state,

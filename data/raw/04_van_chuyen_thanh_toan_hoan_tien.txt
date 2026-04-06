@@ -30,4 +30,3 @@ Tiền hoàn có thể được chuyển về:
 - ví điện tử
 - hoặc theo phương thức phù hợp với giao dịch ban đầu
 
-Nếu đơn hàng thuộc khách hàng mẫu Phạm Minh Tuấn, hệ thống nội bộ có thể dùng làm ca kiểm thử cho các bước xác nhận thanh toán trước, yêu cầu hủy đơn và quy trình hoàn tiền.

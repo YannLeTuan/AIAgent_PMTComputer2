@@ -32,4 +32,3 @@ chatbot nên trả lời theo hướng:
 - nếu chưa có model cụ thể, giải thích nguyên tắc tương thích
 - khuyến khích khách cung cấp tên linh kiện rõ hơn
 
-Phạm Minh Tuấn thường được dùng như hồ sơ thử nghiệm khi chatbot tư vấn nâng cấp SSD hoặc RAM cho máy cũ mà chưa rõ mainboard.

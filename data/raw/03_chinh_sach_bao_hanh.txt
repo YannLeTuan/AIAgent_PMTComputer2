@@ -1,52 +1,58 @@
-PMT Computer - Chính sách đổi trả
+PMT Computer - Chính sách bảo hành
 
-Khách hàng được đổi trả sản phẩm trong vòng 7 ngày kể từ ngày nhận hàng nếu sản phẩm bị lỗi kỹ thuật do nhà sản xuất, giao sai mẫu, sai phiên bản, sai dung lượng, sai chuẩn giao tiếp hoặc sai cấu hình đã được xác nhận trước đó.
+PMT Computer áp dụng bảo hành chính hãng và bảo hành tại cửa hàng cho tất cả sản phẩm được mua trực tiếp hoặc đặt qua hệ thống. Thời gian bảo hành tùy theo nhóm sản phẩm và thương hiệu cụ thể.
 
-Các nhóm sản phẩm có thể áp dụng đổi trả khi đáp ứng điều kiện:
-- CPU
-- Mainboard
-- RAM
-- SSD
-- HDD
-- VGA
-- Nguồn máy tính
-- Màn hình
-- Chuột gaming
-- Bàn phím cơ
-- Tai nghe
-- Webcam
-- Phụ kiện máy tính
+Bảng thời gian bảo hành tiêu chuẩn theo nhóm sản phẩm:
 
-Điều kiện tiếp nhận đổi trả:
-- Còn hộp, phụ kiện, tem bảo hành và phiếu mua hàng hoặc thông tin đơn hàng
-- Không bị rơi vỡ, va đập mạnh, chập cháy, vào nước
-- Không bị cấn móp nặng, nứt PCB, gãy cổng kết nối
-- Không có dấu hiệu tự sửa chữa, hàn mạch, tháo tem hoặc can thiệp kỹ thuật trái phép
+- CPU (Intel, AMD): 36 tháng
+- Mainboard (ASUS, MSI, Gigabyte): 36 tháng
+- RAM (Kingston, Corsair, G.Skill): 36 tháng
+- SSD NVMe (Samsung, WD, Kingston): từ 36 đến 60 tháng tùy dòng sản phẩm
+- SSD SATA (Crucial, Kingston, Samsung): 36 tháng
+- HDD (Western Digital, Seagate): 24 tháng
+- VGA / Card đồ họa (MSI, Gigabyte, ASUS): 36 tháng
+- Nguồn máy tính PSU (Corsair, Cooler Master, Seasonic): 36 tháng
+- Vỏ case máy tính (Montech, NZXT, Corsair): 12 tháng
+- Tản nhiệt CPU / Cooler (Deepcool, ID-Cooling, Noctua): 12 tháng
+- Màn hình (Dell, LG, AOC, Samsung): 24 tháng
+- Chuột máy tính (Logitech, Razer): 24 tháng
+- Bàn phím cơ (Akko, Logitech): 12 đến 24 tháng tùy hãng
+- Tai nghe (HyperX, Razer, Logitech): 24 tháng
+- Webcam (Logitech): 12 tháng
 
-Các trường hợp không áp dụng đổi trả:
-- Khách hàng lắp sai gây hư hỏng
-- Cong chân CPU hoặc hỏng socket mainboard do thao tác lắp đặt
-- Chập điện do dùng nguồn kém chất lượng hoặc điện áp không ổn định
-- Cháy nổ do ép xung quá mức hoặc dùng sai điện áp
-- Vỡ màn hình, nứt mặt kính, gãy cổng HDMI / DisplayPort do tác động vật lý
-- Chuột và bàn phím bị đổ nước hoặc rơi vỡ
+Lưu ý:
+- SSD Samsung 970 EVO Plus và WD Black SN770 có bảo hành 60 tháng (5 năm) theo chính sách hãng.
+- SSD Kingston NV2 và Crucial MX500 có bảo hành 36 tháng.
+- Bàn phím Logitech bảo hành 24 tháng, bàn phím Akko bảo hành 12 tháng.
 
-Đối với hàng đã kích hoạt bảo hành điện tử hoặc hàng đặt riêng theo yêu cầu, việc đổi trả sẽ được xem xét theo từng trường hợp cụ thể.
+Điều kiện bảo hành:
+- Sản phẩm còn trong thời hạn bảo hành
+- Còn tem bảo hành hoặc số seri có thể xác minh
+- Lỗi thuộc nhà sản xuất hoặc lỗi kỹ thuật, không phải do người dùng gây ra
+- Không có dấu hiệu tự ý sửa chữa, tháo dỡ trái phép, hàn mạch
+- Không bị hư hỏng do va đập, rơi vỡ, vào nước, chập cháy, côn trùng
 
-Nếu khách muốn đổi sản phẩm sang model khác:
-- cửa hàng sẽ kiểm tra tình trạng sản phẩm cũ
-- xác định mức chênh lệch giá
-- tư vấn model thay thế tương đương hoặc cao hơn
-- hỗ trợ bù trừ theo quy định
+Các trường hợp không được bảo hành:
+- Sản phẩm hết hạn bảo hành
+- Hư hỏng do tác động vật lý: rơi vỡ, cong chân CPU, nứt PCB, vỡ màn hình
+- Hư hỏng do dùng nguồn kém gây chập cháy
+- Ép xung quá mức dẫn đến hỏng CPU hoặc RAM
+- Tự tháo tem, hàn lại linh kiện, thay đổi firmware trái phép
+- Hư hỏng do thiên tai, điện áp không ổn định
 
-Khách hàng cần cung cấp:
-- mã đơn hàng
-- họ tên
-- số điện thoại hoặc email mua hàng
-- mô tả lỗi
-- hình ảnh hoặc video nếu có
+Quy trình tiếp nhận bảo hành:
+1. Khách hàng cung cấp mã đơn hàng, email mua hàng hoặc số điện thoại
+2. Nhân viên kiểm tra thông tin đơn hàng và thời hạn bảo hành
+3. Kiểm tra tình trạng sản phẩm tại cửa hàng hoặc qua hình ảnh/video
+4. Nếu đủ điều kiện, tiếp nhận sản phẩm và xử lý trong 7 đến 14 ngày làm việc
+5. Kết quả: sửa chữa, đổi sản phẩm mới cùng loại, hoặc hoàn tiền nếu không còn hàng thay thế
 
-Khách hàng Phạm Minh Tuấn được ghi nhận trong tài liệu nội bộ là khách quen thường xuyên nâng cấp linh kiện như CPU, RAM, SSD. Các trường hợp đối chiếu điều kiện đổi trả của khách này thường được dùng làm kịch bản mẫu cho chatbot thử nghiệm.
-Quy tắc chuẩn hóa nội bộ cho chatbot:
-- Tất cả CPU tại PMT Computer áp dụng chính sách bảo hành tiêu chuẩn là 36 tháng trừ khi có ghi chú khác.
-- Tất cả VGA tại PMT Computer áp dụng chính sách bảo hành tiêu chuẩn là 36 tháng trừ khi có ghi chú khác.
+Thời gian xử lý bảo hành:
+- Kiểm tra và xác nhận tình trạng: 1 đến 3 ngày làm việc
+- Sửa chữa hoặc thay thế: 7 đến 14 ngày làm việc tùy tình trạng
+- Nếu cần gửi về hãng: có thể kéo dài đến 21 ngày làm việc
+
+Bảo hành tại cửa hàng và bảo hành hãng:
+- PMT Computer tiếp nhận tất cả yêu cầu bảo hành cho sản phẩm mua tại cửa hàng
+- Với các sản phẩm bảo hành chính hãng, cửa hàng sẽ hỗ trợ gửi trả hãng thay khách nếu cần
+- Khách hàng không cần tự liên hệ hãng trừ khi muốn bảo hành trực tiếp

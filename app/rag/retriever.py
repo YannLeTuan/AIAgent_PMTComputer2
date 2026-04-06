@@ -24,7 +24,6 @@ def embed_texts(texts: list[str]) -> np.ndarray:
 
 def retrieve_context(query: str, top_k: int = 4) -> list[str]:
     model = get_embedding_model()
-    store.load()
     query_vec = np.array([
         model.encode(query, normalize_embeddings=True)
     ])

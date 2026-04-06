@@ -19,14 +19,17 @@ def main():
     print("\nget_customer_orders phamminhtuan.pmt@gmail.com")
     print(get_customer_orders("phamminhtuan.pmt@gmail.com"))
 
-    print("\ncancel_order ORD001")
-    print(cancel_order("ORD001", "khach doi y"))
+    print("\ncancel_order ORD001 (email đúng)")
+    print(cancel_order("ORD001", "khách đổi ý", customer_email="phamminhtuan.pmt@gmail.com"))
 
-    print("\ncheck_order_status ORD001 sau khi huy")
+    print("\ncheck_order_status ORD001 sau khi hủy")
     print(check_order_status("ORD001"))
 
-    print("\ncancel_order ORD003")
-    print(cancel_order("ORD003", "khach muon huy sau khi da gui hang"))
+    print("\ncancel_order ORD003 (email đúng, nhưng đã shipped)")
+    print(cancel_order("ORD003", "khách muốn hủy sau khi đã gửi hàng", customer_email="long.nguyen@gmail.com"))
+
+    print("\ncancel_order ORD002 (email sai)")
+    print(cancel_order("ORD002", "test email sai", customer_email="wrong@gmail.com"))
 
 
 if __name__ == "__main__":

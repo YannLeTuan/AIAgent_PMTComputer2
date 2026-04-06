@@ -32,4 +32,3 @@ Tình huống 8:
 Khách hỏi: Cảm ơn bạn
 Cách hỗ trợ: Trả lời lịch sự, ngắn gọn, không cần gọi tool hay retrieval nếu không cần thiết.
 
-Phạm Minh Tuấn là nhân vật được dùng nhiều trong các kịch bản nội bộ để kiểm tra khả năng follow-up, memory và tool calling của chatbot PMT Computer.
