@@ -312,9 +312,17 @@ def reset_demo_state():
 
 def stream_generator(text: str):
     words = text.split(" ")
-    for i in range(0, len(words), 2):
-        yield " ".join(words[i:i+2]) + " "
-        time.sleep(0.015)
+    for word in words:
+        yield word + " "
+        stripped = word.rstrip("*_`")
+        if stripped.endswith((".", "!", "?")):
+            time.sleep(0.18)
+        elif stripped.endswith((",", ":", ";")):
+            time.sleep(0.07)
+        elif stripped.endswith("\n") or word == "\n":
+            time.sleep(0.12)
+        else:
+            time.sleep(0.038)
 
 def simple_markdown_to_html(text: str) -> str:
     text = text or ""
