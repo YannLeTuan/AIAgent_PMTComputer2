@@ -36,24 +36,23 @@ st.markdown("""
     [data-testid="stHeader"] {display: none;}
     [data-testid="stTopBlock"] {display: none;}
 
-    /* Sidebar collapse/expand button — styled, not hidden */
+    /* Collapse button inside sidebar */
     [data-testid="stSidebarCollapseButton"] {
-        background: rgba(255,255,255,0.85) !important;
+        display: flex !important;
+        background: rgba(255,255,255,0.9) !important;
         border: 1px solid rgba(15, 23, 42, 0.12) !important;
         border-radius: 50% !important;
         box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10) !important;
-        width: 28px !important;
-        height: 28px !important;
-        top: 12px !important;
-        right: -14px !important;
     }
     [data-testid="stSidebarCollapseButton"]:hover {
         background: #eef4ff !important;
         border-color: #9db8e8 !important;
     }
-    /* Restore collapsed sidebar expand button */
+    /* Expand button shown on left edge when sidebar is collapsed */
     [data-testid="collapsedControl"] {
         display: flex !important;
+        visibility: visible !important;
+        opacity: 1 !important;
     }
 
     :root {
@@ -85,11 +84,15 @@ st.markdown("""
         margin: 0 auto !important;
     }
 
+    /* Outer sidebar section — DO NOT set min/max-width here, breaks collapse */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
-        min-width: 260px;
-        max-width: 280px;
+    }
+
+    /* Control width via inner content div only */
+    [data-testid="stSidebarContent"] {
+        width: 272px !important;
     }
 
     .sidebar-brand {
