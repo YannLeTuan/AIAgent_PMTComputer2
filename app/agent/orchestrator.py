@@ -119,10 +119,6 @@ FOLLOW_CUSTOMER_WORDS = [
 ]
 
 
-# ---------------------------------------------------------------------------
-# Tool dispatcher
-# ---------------------------------------------------------------------------
-
 def run_tool(name: str, args: dict):
     dispatch = {
         "check_order_status": check_order_status,
@@ -138,10 +134,6 @@ def run_tool(name: str, args: dict):
     return fn(**args)
 
 
-# ---------------------------------------------------------------------------
-# Response normalization
-# ---------------------------------------------------------------------------
-
 def normalize_answer(text: str):
     if not text:
         return "Hiện tôi chưa thể trả lời rõ câu hỏi này. Bạn có thể cung cấp chi tiết hơn hoặc hỏi theo mã đơn hàng, email khách hàng, tên sản phẩm hoặc chính sách cụ thể."
@@ -154,12 +146,7 @@ def normalize_answer(text: str):
     return text
 
 
-# ---------------------------------------------------------------------------
-# History management — smart summarization thay vì hard trim
-# ---------------------------------------------------------------------------
-
 def _extract_key_facts(turns: list) -> str:
-    """Trích xuất thông tin quan trọng từ các turns bị cắt bỏ."""
     order_codes = set()
     emails = set()
     key_info = []
@@ -168,15 +155,12 @@ def _extract_key_facts(turns: list) -> str:
         text = turn.get("text", "")
         role = turn.get("role", "")
 
-        # Trích xuất mã đơn hàng
         codes = ORDER_PATTERN.findall(text)
         order_codes.update(c.upper() for c in codes)
 
-        # Trích xuất email
         found_emails = EMAIL_PATTERN.findall(text)
         emails.update(found_emails)
 
-        # Trích xuất tên sản phẩm từ câu trả lời bot
         if role == "model":
             for keyword in ["bảo hành", "đã hủy", "đã giao", "đang xử lý", "đang vận chuyển"]:
                 if keyword in text.lower():
@@ -188,7 +172,7 @@ def _extract_key_facts(turns: list) -> str:
                             break
                     break
 
-    parts = []
+    parts: list[str] = []
     if order_codes:
         parts.append(f"Các mã đơn hàng đã nhắc tới: {', '.join(sorted(order_codes))}")
     if emails:
@@ -203,18 +187,15 @@ def trim_history(history: list, context_state: dict | None = None):
     if len(history) <= MAX_HISTORY_TURNS:
         return history
 
-    # Số turns cần cắt
     excess = len(history) - SUMMARY_THRESHOLD
     trimmed_turns = history[:excess]
     kept_turns = history[excess:]
 
-    # Trích xuất key facts từ turns bị cắt
     summary = _extract_key_facts(trimmed_turns)
 
     if summary and context_state is not None:
         context_state["context_summary"] = summary
 
-    # Nếu có summary, chèn dưới dạng 1 message hệ thống ở đầu
     if summary:
         summary_msg = {"role": "user", "text": f"[Tóm tắt ngữ cảnh trước đó: {summary}]"}
         return [summary_msg] + kept_turns
@@ -243,10 +224,6 @@ def history_to_contents(history: list):
 
     return contents
 
-
-# ---------------------------------------------------------------------------
-# Context state management
-# ---------------------------------------------------------------------------
 
 def copy_context(context_state: dict | None):
     base = {
@@ -310,10 +287,6 @@ def update_context_from_tool_result(tool_name: str, tool_result: dict, args: dic
                 context_state["last_order_code"] = order_codes[0]
 
 
-# ---------------------------------------------------------------------------
-# Reference hint building
-# ---------------------------------------------------------------------------
-
 def needs_follow_order_hint(user_message: str):
     lower = user_message.lower()
     return any(x in lower for x in FOLLOW_ORDER_WORDS)
@@ -353,21 +326,16 @@ def build_reference_hint(user_message: str, context_state: dict):
     if "vậy" in lower and context_state.get("last_order_code"):
         hints.append(f'Ngữ cảnh gần nhất liên quan tới đơn hàng {context_state["last_order_code"]}.')
 
-    # Thêm context summary từ các turns đã bị trim
     if context_state.get("context_summary"):
         hints.append(f"Thông tin từ đầu hội thoại: {context_state['context_summary']}")
 
     return "\n".join(hints).strip()
 
 
-# ---------------------------------------------------------------------------
-# RAG retrieval query building — không inject câu trả lời vào query
-# ---------------------------------------------------------------------------
-
 def build_retrieval_query(user_message: str, context_state: dict):
     parts = [user_message]
 
-    # Chỉ bổ sung entity tham chiếu, KHÔNG inject nội dung đáp án
+    # inject entity refs only, not answer content
     if needs_follow_order_hint(user_message) and context_state.get("last_order_code"):
         parts.append(f"đơn hàng {context_state['last_order_code']}")
 
@@ -377,10 +345,6 @@ def build_retrieval_query(user_message: str, context_state: dict):
     return " | ".join(parts)
 
 
-# ---------------------------------------------------------------------------
-# Small talk bypass
-# ---------------------------------------------------------------------------
-
 def normalize_simple(text: str):
     return (text or "").strip().lower()
 
@@ -388,7 +352,7 @@ def normalize_simple(text: str):
 def get_small_talk_answer(user_message: str):
     msg = normalize_simple(user_message)
 
-    # Chỉ match khi message TOÀN BỘ là small talk (ngắn, không chứa keyword nghiệp vụ)
+    # skip if message contains any business keyword
     business_keywords = ["đơn", "ord", "sản phẩm", "bảo hành", "đổi trả", "kiểm tra",
                          "tìm", "hủy", "email", "khách", "giá", "mua", "build", "tư vấn"]
     if any(kw in msg for kw in business_keywords):
@@ -405,10 +369,6 @@ def get_small_talk_answer(user_message: str):
 
     return None
 
-
-# ---------------------------------------------------------------------------
-# Message building
-# ---------------------------------------------------------------------------
 
 def build_user_message(user_message: str, context_state: dict):
     retrieval_query = build_retrieval_query(user_message, context_state)
@@ -432,10 +392,6 @@ def build_user_message(user_message: str, context_state: dict):
     ).strip(), retrieval_query, contexts, reference_hint
 
 
-# ---------------------------------------------------------------------------
-# Gemini API call với retry
-# ---------------------------------------------------------------------------
-
 def _call_gemini(contents: list, temperature: float = 0.2):
     last_error = None
     for attempt in range(GEMINI_MAX_RETRIES + 1):
@@ -452,17 +408,12 @@ def _call_gemini(contents: list, temperature: float = 0.2):
         except Exception as e:
             last_error = e
             err_str = str(e).lower()
-            # Chỉ retry cho lỗi tạm thời
             if "429" in err_str or "503" in err_str or "500" in err_str:
                 time.sleep(1.5 * (attempt + 1))
                 continue
             raise
     raise last_error
 
-
-# ---------------------------------------------------------------------------
-# Main chat entry point
-# ---------------------------------------------------------------------------
 
 def chat_with_agent(user_message: str, history: list | None = None, context_state: dict | None = None, thread_id: str | None = None):
     start_time = time.perf_counter()

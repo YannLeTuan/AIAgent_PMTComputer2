@@ -42,7 +42,6 @@ class LocalFaissStore:
         self._loaded = True
 
     def reload(self):
-        """Force reload từ disk (dùng sau khi ingest lại)."""
         self._loaded = False
         self.load()
 

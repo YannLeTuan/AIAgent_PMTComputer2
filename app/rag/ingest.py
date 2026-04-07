@@ -4,10 +4,6 @@ from app.core.config import settings
 from app.rag.retriever import embed_texts, store as retriever_store
 from app.rag.vector_store import LocalFaissStore
 
-# Cấu hình chunk theo loại tài liệu
-# compact: tài liệu có cấu trúc danh sách, thông tin cô đọng (chính sách, ma trận tương thích)
-# standard: tài liệu thông tin chung (giới thiệu, quy trình, dịch vụ)
-# large: tài liệu FAQ, kịch bản hỏi đáp, hướng dẫn dài
 _CHUNK_CONFIG = {
     "compact": {"chunk_size": 600, "overlap": 120},
     "standard": {"chunk_size": 900, "overlap": 180},
@@ -75,7 +71,6 @@ def split_text(text: str, chunk_size: int = 900, overlap: int = 180):
 
         next_start = end - overlap
 
-        # đảm bảo start luôn tiến lên, không bị kẹt
         if next_start <= start:
             next_start = end
 
@@ -119,7 +114,6 @@ def ingest_folder(folder_path: str):
     store.build(embeddings, all_chunks)
     store.save()
 
-    # Buộc retriever reload index mới vào memory
     retriever_store.reload()
 
     print("ingest xong")

@@ -23,7 +23,6 @@ def check_order_status(order_code: str) -> dict:
             "note": order.note
         }
 
-        # Enrich với thông tin sản phẩm nếu có product_id FK
         if order.product_id:
             product = db.query(Product).filter(Product.id == order.product_id).first()
             if product:
@@ -38,7 +37,6 @@ def check_order_status(order_code: str) -> dict:
 
 
 def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
-    """Hủy đơn hàng. customer_email bắt buộc để xác thực danh tính."""
     if not customer_email or not customer_email.strip():
         return {
             "success": False,
@@ -55,7 +53,6 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
                 "message": f"không tìm thấy đơn hàng {order_code}"
             }
 
-        # Xác thực danh tính khách hàng qua email
         customer = db.query(Customer).filter(Customer.id == order.customer_id).first()
         if not customer or customer.email.lower() != customer_email.strip().lower():
             return {
@@ -91,7 +88,6 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
 
 
 def cancel_multiple_orders(order_codes: list[str], reason: str, customer_email: str) -> dict:
-    """Hủy nhiều đơn hàng. customer_email bắt buộc để xác thực."""
     if not customer_email or not customer_email.strip():
         return {
             "success": False,

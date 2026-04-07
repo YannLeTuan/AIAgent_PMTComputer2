@@ -1,7 +1,7 @@
 import time
 
-SESSION_TTL_SECONDS = 1800  # 30 phút
-CLEANUP_INTERVAL = 60       # Kiểm tra cleanup mỗi 60 giây
+SESSION_TTL_SECONDS = 1800  # 30 min
+CLEANUP_INTERVAL = 60       # cleanup check interval
 
 
 class InMemorySessionStore:

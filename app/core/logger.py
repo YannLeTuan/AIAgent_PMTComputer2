@@ -9,8 +9,8 @@ LOG_DIR = BASE_DIR / "logs"
 LOG_DIR.mkdir(parents=True, exist_ok=True)
 
 LOG_FILE = LOG_DIR / "app.log"
-MAX_LOG_SIZE = 10 * 1024 * 1024   # 10 MB
-MAX_LOG_FILES = 5                  # Giữ tối đa 5 file backup
+MAX_LOG_SIZE = 10 * 1024 * 1024  # 10 MB
+MAX_LOG_FILES = 5                 # max backups
 
 _EMAIL_RE = re.compile(r"([\w\.-]{2})([\w\.-]*)([\w\.-]{1})(@[\w\.-]+\.\w+)")
 _PHONE_RE = re.compile(r"(0\d{2})(\d{4,5})(\d{3})")
@@ -33,7 +33,6 @@ def mask_sensitive(text: str) -> str:
 
 
 def _sanitize_payload(obj):
-    """Đệ quy mask sensitive data trong payload trước khi ghi log."""
     if isinstance(obj, str):
         return mask_sensitive(obj)
     if isinstance(obj, dict):

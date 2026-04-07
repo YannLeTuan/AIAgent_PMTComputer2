@@ -26,7 +26,6 @@ def get_customer_orders(customer_email: str) -> dict:
                 "note": order.note
             }
 
-            # Enrich với thông tin sản phẩm nếu có product_id FK
             if order.product_id:
                 product = db.query(Product).filter(Product.id == order.product_id).first()
                 if product:
