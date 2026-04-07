@@ -11,7 +11,8 @@ from app.core.prompts import SYSTEM_PROMPT
 from app.rag.retriever import retrieve_context
 from app.tools.customer_tools import get_customer_orders
 from app.tools.order_tools import check_order_status, cancel_order, cancel_multiple_orders
-from app.tools.product_tools import search_product, list_products
+from app.tools.product_tools import search_product, list_products, get_product_details
+from app.tools.pc_build_tools import build_pc_config, check_compatibility
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
@@ -100,7 +101,58 @@ tool_declarations = [
             },
             "required": ["customer_email"]
         }
-    )
+    ),
+    types.FunctionDeclaration(
+        name="get_product_details",
+        description="xem thông số kỹ thuật chi tiết của một sản phẩm theo SKU hoặc tên. Dùng khi khách hỏi về specs, thông số, socket, DDR, TDP, tốc độ đọc ghi, v.v.",
+        parameters_json_schema={
+            "type": "object",
+            "properties": {
+                "sku_or_name": {
+                    "type": "string",
+                    "description": "SKU hoặc tên sản phẩm cần xem chi tiết"
+                }
+            },
+            "required": ["sku_or_name"]
+        }
+    ),
+    types.FunctionDeclaration(
+        name="build_pc_config",
+        description="tư vấn cấu hình PC theo ngân sách và mục đích sử dụng. Tự động chọn linh kiện tương thích từ kho hàng hiện có.",
+        parameters_json_schema={
+            "type": "object",
+            "properties": {
+                "budget": {
+                    "type": "number",
+                    "description": "ngân sách tổng (VND), tối thiểu 8.000.000"
+                },
+                "use_case": {
+                    "type": "string",
+                    "description": "mục đích sử dụng: gaming, office, streaming, graphics"
+                },
+                "brand_preference": {
+                    "type": "string",
+                    "description": "hãng ưu tiên cho CPU/VGA (nếu có), ví dụ: AMD, Intel, MSI, ASUS"
+                }
+            },
+            "required": ["budget", "use_case"]
+        }
+    ),
+    types.FunctionDeclaration(
+        name="check_compatibility",
+        description="kiểm tra tương thích phần cứng giữa các linh kiện. Truyền danh sách SKU hoặc tên sản phẩm.",
+        parameters_json_schema={
+            "type": "object",
+            "properties": {
+                "component_skus": {
+                    "type": "array",
+                    "items": {"type": "string"},
+                    "description": "danh sách SKU hoặc tên sản phẩm cần kiểm tra tương thích"
+                }
+            },
+            "required": ["component_skus"]
+        }
+    ),
 ]
 
 ORDER_PATTERN = re.compile(r"\bORD\d+\b", re.IGNORECASE)
@@ -127,6 +179,9 @@ def run_tool(name: str, args: dict):
         "search_product": search_product,
         "list_products": list_products,
         "get_customer_orders": get_customer_orders,
+        "get_product_details": get_product_details,
+        "build_pc_config": build_pc_config,
+        "check_compatibility": check_compatibility,
     }
     fn = dispatch.get(name)
     if fn is None:
@@ -286,6 +341,9 @@ def update_context_from_tool_result(tool_name: str, tool_result: dict, args: dic
             if order_codes:
                 context_state["last_order_code"] = order_codes[0]
 
+    elif tool_name == "get_product_details" and tool_result.get("success"):
+        context_state["last_product_name"] = tool_result.get("name")
+
 
 def needs_follow_order_hint(user_message: str):
     lower = user_message.lower()
@@ -354,7 +412,8 @@ def get_small_talk_answer(user_message: str):
 
     # skip if message contains any business keyword
     business_keywords = ["đơn", "ord", "sản phẩm", "bảo hành", "đổi trả", "kiểm tra",
-                         "tìm", "hủy", "email", "khách", "giá", "mua", "build", "tư vấn"]
+                         "tìm", "hủy", "email", "khách", "giá", "mua", "build", "tư vấn",
+                         "thông số", "tương thích", "cấu hình", "specs", "socket", "tdp"]
     if any(kw in msg for kw in business_keywords):
         return None
 

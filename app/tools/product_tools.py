@@ -54,6 +54,34 @@ def build_search_conditions(tokens: list[str]):
     return clauses
 
 
+def get_product_details(sku_or_name: str) -> dict:
+    db = SessionLocal()
+    try:
+        product = db.query(Product).filter(Product.sku == sku_or_name).first()
+        if not product:
+            pattern = f"%{sku_or_name}%"
+            product = db.query(Product).filter(Product.name.ilike(pattern)).first()
+
+        if not product:
+            return {"success": False, "message": f"không tìm thấy sản phẩm '{sku_or_name}'"}
+
+        result = {
+            "success": True,
+            "sku": product.sku,
+            "name": product.name,
+            "category": product.category,
+            "brand": product.brand,
+            "price": product.price,
+            "stock": product.stock,
+            "warranty_months": product.warranty_months,
+        }
+        if product.specs:
+            result["specs"] = product.specs
+        return result
+    finally:
+        db.close()
+
+
 def search_product(keyword: str, limit: int = 20) -> dict:
     db = SessionLocal()
     try:

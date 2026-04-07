@@ -1,6 +1,6 @@
 from datetime import datetime
 
-from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, String
+from sqlalchemy import Column, DateTime, Float, ForeignKey, Integer, JSON, String
 from sqlalchemy.orm import declarative_base, relationship
 
 Base = declarative_base()
@@ -28,6 +28,7 @@ class Product(Base):
     price = Column(Float, nullable=False, index=True)
     stock = Column(Integer, default=0)
     warranty_months = Column(Integer, default=0)
+    specs = Column(JSON, nullable=True)
 
 
 class Order(Base):
