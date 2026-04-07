@@ -286,23 +286,29 @@ st.markdown("""
     .msg-bubble li { margin-bottom: 0.25rem; }
 
     /* Badge clickable buttons */
-    #badge-row + div {
-        gap: 0.65rem !important;
-    }
     #badge-row + div .stButton > button {
-        background: #eef4ff !important;
-        color: #2b5fb8 !important;
-        border: 1px solid #dce7ff !important;
-        border-radius: 999px !important;
-        font-size: 0.86rem !important;
-        font-weight: 700 !important;
-        padding: 0.42rem 0.85rem !important;
-        width: auto !important;
+        background: #ffffff !important;
+        color: #163a70 !important;
+        border: 1.5px solid #b8cef0 !important;
+        border-radius: 8px !important;
+        font-size: 0.8rem !important;
+        font-weight: 600 !important;
+        padding: 0.48rem 0.5rem !important;
+        box-shadow: 0 2px 6px rgba(22, 58, 112, 0.09) !important;
+        cursor: pointer !important;
+        transition: all 0.15s ease !important;
+        width: 100% !important;
     }
     #badge-row + div .stButton > button:hover {
-        background: #d8eaff !important;
-        border-color: #a8c7f0 !important;
+        background: #eef4ff !important;
+        border-color: #2b5fb8 !important;
         color: #1a4ba0 !important;
+        box-shadow: 0 4px 14px rgba(22, 58, 112, 0.16) !important;
+        transform: translateY(-1px) !important;
+    }
+    #badge-row + div .stButton > button:active {
+        transform: translateY(0px) !important;
+        box-shadow: 0 1px 4px rgba(22, 58, 112, 0.10) !important;
     }
 </style>
 """, unsafe_allow_html=True)
@@ -468,36 +474,17 @@ st.markdown("""
 st.markdown('<div id="badge-row"></div>', unsafe_allow_html=True)
 badge_cols = st.columns(4)
 with badge_cols[0]:
-    if st.button("🖥️ Tư vấn build PC", key="badge_build"):
+    if st.button("Tư vấn build PC", key="badge_build"):
         prompt_to_send = "Tôi muốn build PC, bạn có thể tư vấn giúp tôi không?"
 with badge_cols[1]:
-    if st.button("📦 Tra cứu đơn hàng", key="badge_order"):
+    if st.button("Tra cứu đơn hàng", key="badge_order"):
         prompt_to_send = "Tôi muốn tra cứu đơn hàng của mình"
 with badge_cols[2]:
-    if st.button("🛡️ Bảo hành / đổi trả", key="badge_warranty"):
+    if st.button("Bảo hành / đổi trả", key="badge_warranty"):
         prompt_to_send = "Chính sách bảo hành và đổi trả của PMT Computer như thế nào?"
 with badge_cols[3]:
-    if st.button("📍 Thông tin cửa hàng", key="badge_info"):
+    if st.button("Thông tin cửa hàng", key="badge_info"):
         prompt_to_send = "Cho tôi biết thông tin, địa chỉ và giờ làm việc của PMT Computer"
-
-if len(st.session_state.messages) == 0:
-    st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
-
-    row1 = st.columns(2)
-    with row1[0]:
-        if st.button("Tôi có 25 triệu, build PC gaming", use_container_width=True):
-            prompt_to_send = "Tôi có 25 triệu, build PC gaming"
-    with row1[1]:
-        if st.button("Tôi muốn build PC văn phòng 15 triệu", use_container_width=True):
-            prompt_to_send = "Tôi muốn build PC văn phòng 15 triệu"
-
-    row2 = st.columns(2)
-    with row2[0]:
-        if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
-            prompt_to_send = "Kiểm tra đơn hàng của tôi"
-    with row2[1]:
-        if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
-            prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
 
 for msg in st.session_state.messages:
     st.markdown(get_message_html(msg["role"], msg["content"]), unsafe_allow_html=True)
