@@ -127,12 +127,13 @@ st.markdown("""
 
     .sidebar-card ul {
         margin: 0;
-        padding-left: 1.15rem;
+        padding-left: 1rem;
     }
 
     .sidebar-card li {
-        margin-bottom: 0.52rem;
-        line-height: 1.65;
+        margin-bottom: 0.28rem;
+        line-height: 1.45;
+        font-size: 0.84rem;
         color: #243244;
     }
 
@@ -145,7 +146,7 @@ st.markdown("""
 
     .hero-wrap {
         padding-top: 0.4rem;
-        padding-bottom: 0.8rem;
+        padding-bottom: 0.2rem;
     }
 
     .hero-topline {
@@ -177,7 +178,7 @@ st.markdown("""
         color: var(--pmt-muted);
         font-size: 1rem;
         margin-top: 0.45rem;
-        margin-bottom: 1rem;
+        margin-bottom: 0.3rem;
         line-height: 1.7;
     }
 
@@ -287,24 +288,24 @@ st.markdown("""
 
     /* Badge clickable buttons */
     #badge-row + div .stButton > button {
-        background: #ffffff !important;
+        background: #eef4ff !important;
         color: #163a70 !important;
-        border: 1.5px solid #b8cef0 !important;
-        border-radius: 8px !important;
-        font-size: 0.76rem !important;
-        font-weight: 600 !important;
-        padding: 0.48rem 0.5rem !important;
-        box-shadow: 0 2px 6px rgba(22, 58, 112, 0.09) !important;
+        border: 1.5px solid #9db8e8 !important;
+        border-radius: 10px !important;
+        font-size: 0.82rem !important;
+        font-weight: 700 !important;
+        padding: 0.55rem 0.5rem !important;
+        box-shadow: 0 2px 8px rgba(22, 58, 112, 0.10) !important;
         cursor: pointer !important;
         transition: all 0.15s ease !important;
         width: 100% !important;
     }
     #badge-row + div .stButton > button:hover {
-        background: #eef4ff !important;
+        background: #dceaff !important;
         border-color: #2b5fb8 !important;
-        color: #1a4ba0 !important;
-        box-shadow: 0 4px 14px rgba(22, 58, 112, 0.16) !important;
-        transform: translateY(-1px) !important;
+        color: #102d57 !important;
+        box-shadow: 0 4px 16px rgba(22, 58, 112, 0.20) !important;
+        transform: translateY(-2px) !important;
     }
     #badge-row + div .stButton > button:active {
         transform: translateY(0px) !important;
