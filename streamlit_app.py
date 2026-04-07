@@ -36,6 +36,10 @@ st.markdown("""
     [data-testid="stHeader"] {display: none;}
     [data-testid="stTopBlock"] {display: none;}
 
+    /* Always keep sidebar visible — hide collapse/expand toggle buttons */
+    [data-testid="stSidebarCollapseButton"] {display: none !important;}
+    [data-testid="collapsedControl"] {display: none !important;}
+
     :root {
         --pmt-bg: #f4f6fb;
         --pmt-surface: #ffffff;
