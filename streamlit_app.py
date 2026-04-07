@@ -36,9 +36,25 @@ st.markdown("""
     [data-testid="stHeader"] {display: none;}
     [data-testid="stTopBlock"] {display: none;}
 
-    /* Always keep sidebar visible — hide collapse/expand toggle buttons */
-    [data-testid="stSidebarCollapseButton"] {display: none !important;}
-    [data-testid="collapsedControl"] {display: none !important;}
+    /* Sidebar collapse/expand button — styled, not hidden */
+    [data-testid="stSidebarCollapseButton"] {
+        background: rgba(255,255,255,0.85) !important;
+        border: 1px solid rgba(15, 23, 42, 0.12) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10) !important;
+        width: 28px !important;
+        height: 28px !important;
+        top: 12px !important;
+        right: -14px !important;
+    }
+    [data-testid="stSidebarCollapseButton"]:hover {
+        background: #eef4ff !important;
+        border-color: #9db8e8 !important;
+    }
+    /* Restore collapsed sidebar expand button */
+    [data-testid="collapsedControl"] {
+        display: flex !important;
+    }
 
     :root {
         --pmt-bg: #f4f6fb;
@@ -72,8 +88,8 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
-        min-width: 248px;
-        max-width: 248px;
+        min-width: 260px;
+        max-width: 280px;
     }
 
     .sidebar-brand {
@@ -98,7 +114,7 @@ st.markdown("""
     }
 
     .sidebar-brand-title {
-        font-size: 1.55rem;
+        font-size: 1.2rem;
         font-weight: 800;
         color: var(--pmt-text);
         line-height: 1.1;
@@ -113,7 +129,7 @@ st.markdown("""
     }
 
     .sidebar-section-title {
-        font-size: 1rem;
+        font-size: 0.88rem;
         font-weight: 800;
         color: var(--pmt-text);
         margin-top: 1rem;
@@ -137,7 +153,7 @@ st.markdown("""
     .sidebar-card li {
         margin-bottom: 0.28rem;
         line-height: 1.45;
-        font-size: 1rem;
+        font-size: 0.87rem;
         color: #243244;
     }
 
