@@ -68,8 +68,8 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
-        min-width: 310px;
-        max-width: 310px;
+        min-width: 248px;
+        max-width: 248px;
     }
 
     .sidebar-brand {
@@ -133,7 +133,7 @@ st.markdown("""
     .sidebar-card li {
         margin-bottom: 0.28rem;
         line-height: 1.45;
-        font-size: 0.84rem;
+        font-size: 1rem;
         color: #243244;
     }
 
