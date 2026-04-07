@@ -291,7 +291,7 @@ st.markdown("""
         color: #163a70 !important;
         border: 1.5px solid #b8cef0 !important;
         border-radius: 8px !important;
-        font-size: 0.8rem !important;
+        font-size: 0.76rem !important;
         font-weight: 600 !important;
         padding: 0.48rem 0.5rem !important;
         box-shadow: 0 2px 6px rgba(22, 58, 112, 0.09) !important;
@@ -439,7 +439,6 @@ with st.sidebar:
             <li>Kiểm tra đơn hàng của tôi</li>
             <li>Liệt kê danh sách các CPU</li>
             <li>Mainboard nào hỗ trợ Intel Gen 14?</li>
-            <li>Shop có hỗ trợ trả góp không?</li>
             <li>Cho tôi xin địa chỉ cửa hàng</li>
         </ul>
     </div>
@@ -471,7 +470,7 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<div id="badge-row"></div>', unsafe_allow_html=True)
+st.markdown('<div id="badge-row"><p style="font-size:0.85rem;font-weight:700;color:#1f2f46;margin:0 0 0.45rem 0;">Thao tác nhanh</p></div>', unsafe_allow_html=True)
 badge_cols = st.columns(4)
 with badge_cols[0]:
     if st.button("Tư vấn build PC", key="badge_build"):
