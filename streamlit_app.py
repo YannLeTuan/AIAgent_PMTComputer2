@@ -284,6 +284,26 @@ st.markdown("""
     .msg-bubble p:last-child { margin-bottom: 0; }
     .msg-bubble ul { margin: 0.3rem 0; padding-left: 1.5rem; }
     .msg-bubble li { margin-bottom: 0.25rem; }
+
+    /* Badge clickable buttons */
+    #badge-row + div {
+        gap: 0.65rem !important;
+    }
+    #badge-row + div .stButton > button {
+        background: #eef4ff !important;
+        color: #2b5fb8 !important;
+        border: 1px solid #dce7ff !important;
+        border-radius: 999px !important;
+        font-size: 0.86rem !important;
+        font-weight: 700 !important;
+        padding: 0.42rem 0.85rem !important;
+        width: auto !important;
+    }
+    #badge-row + div .stButton > button:hover {
+        background: #d8eaff !important;
+        border-color: #a8c7f0 !important;
+        color: #1a4ba0 !important;
+    }
 </style>
 """, unsafe_allow_html=True)
 
@@ -442,33 +462,42 @@ st.markdown("""
     <div class="hero-subtitle">
         Hệ thống AI Agent đa kênh ứng dụng RAG cho chăm sóc khách hàng cửa hàng máy tính
     </div>
-    <div class="hero-badge-row">
-        <div class="hero-badge">Tư vấn linh kiện</div>
-        <div class="hero-badge">Tra cứu đơn hàng</div>
-        <div class="hero-badge">Bảo hành / đổi trả</div>
-        <div class="hero-badge">Memory multi-turn</div>
-    </div>
 </div>
 """, unsafe_allow_html=True)
+
+st.markdown('<div id="badge-row"></div>', unsafe_allow_html=True)
+badge_cols = st.columns(4)
+with badge_cols[0]:
+    if st.button("🖥️ Tư vấn build PC", key="badge_build"):
+        prompt_to_send = "Tôi muốn build PC, bạn có thể tư vấn giúp tôi không?"
+with badge_cols[1]:
+    if st.button("📦 Tra cứu đơn hàng", key="badge_order"):
+        prompt_to_send = "Tôi muốn tra cứu đơn hàng của mình"
+with badge_cols[2]:
+    if st.button("🛡️ Bảo hành / đổi trả", key="badge_warranty"):
+        prompt_to_send = "Chính sách bảo hành và đổi trả của PMT Computer như thế nào?"
+with badge_cols[3]:
+    if st.button("📍 Thông tin cửa hàng", key="badge_info"):
+        prompt_to_send = "Cho tôi biết thông tin, địa chỉ và giờ làm việc của PMT Computer"
 
 if len(st.session_state.messages) == 0:
     st.markdown('<div class="quick-actions-title">Gợi ý thao tác nhanh</div>', unsafe_allow_html=True)
 
     row1 = st.columns(2)
     with row1[0]:
-        if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
-            prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
+        if st.button("Tôi có 25 triệu, build PC gaming", use_container_width=True):
+            prompt_to_send = "Tôi có 25 triệu, build PC gaming"
     with row1[1]:
-        if st.button("Tôi muốn build PC chơi game", use_container_width=True):
-            prompt_to_send = "Tôi muốn build PC chơi game"
+        if st.button("Tôi muốn build PC văn phòng 15 triệu", use_container_width=True):
+            prompt_to_send = "Tôi muốn build PC văn phòng 15 triệu"
 
     row2 = st.columns(2)
     with row2[0]:
         if st.button("Kiểm tra đơn hàng của tôi", use_container_width=True):
             prompt_to_send = "Kiểm tra đơn hàng của tôi"
     with row2[1]:
-        if st.button("Liệt kê danh sách các CPU", use_container_width=True):
-            prompt_to_send = "Liệt kê danh sách các CPU"
+        if st.button("Ổ cứng SSD khác HDD như thế nào?", use_container_width=True):
+            prompt_to_send = "Ổ cứng SSD khác HDD như thế nào?"
 
 for msg in st.session_state.messages:
     st.markdown(get_message_html(msg["role"], msg["content"]), unsafe_allow_html=True)
