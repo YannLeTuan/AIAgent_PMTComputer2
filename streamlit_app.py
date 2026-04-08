@@ -102,6 +102,7 @@ st.markdown("""
     div[data-testid="stChatInput"] {
         max-width: 850px !important;
         margin: 0 auto !important;
+        padding-left: 3.25rem !important;
     }
 
     [data-testid="stSidebar"] {
@@ -283,10 +284,17 @@ st.markdown("""
         transition: all 0.2s ease;
     }
 
+    /* Sidebar button — override Streamlit's default min-height + line-height */
+    [data-testid="stSidebar"] .stButton {
+        min-height: unset !important;
+    }
     [data-testid="stSidebar"] .stButton > button {
-        font-size: 70% !important;
-        padding: 0.25rem 0.4rem !important;
-        min-height: 0 !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+        padding: 0.22rem 0.5rem !important;
+        min-height: unset !important;
+        height: auto !important;
+        line-height: 1.3 !important;
     }
 
     .stButton > button:hover {
@@ -400,16 +408,10 @@ with st.sidebar:
     </div>
     """, unsafe_allow_html=True)
 
-    col_a, col_b = st.columns(2)
-    with col_a:
-        if st.button("Reset dữ liệu", use_container_width=True):
-            reset_demo_state()
-            st.rerun()
-    with col_b:
-        if st.button("Xóa hội thoại", use_container_width=True):
-            session_store.clear_session(st.session_state.thread_id)
-            st.session_state.messages = []
-            st.rerun()
+    if st.button("Xóa hội thoại", use_container_width=True):
+        session_store.clear_session(st.session_state.thread_id)
+        st.session_state.messages = []
+        st.rerun()
 
     st.markdown('<div class="sidebar-footer">PMT Computer • Demo online</div>', unsafe_allow_html=True)
 
