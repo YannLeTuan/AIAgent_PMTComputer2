@@ -49,7 +49,9 @@
       "Bash(python:*)",
       "Bash(find:*)",
       "Bash(python3:*)",
-      "WebFetch(domain:raw.githubusercontent.com)"
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "Bash(.venv/Scripts/pip install:*)",
+      "Bash(.venv/Scripts/python -m pytest tests/test_run_tool_security.py -v)"
     ]
   }
 }

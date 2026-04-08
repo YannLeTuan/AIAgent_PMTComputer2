@@ -5,6 +5,7 @@ import time
 from google import genai
 from google.genai import types
 
+from app.agent.memory import DEFAULT_CONTEXT
 from app.core.config import settings
 from app.core.logger import write_log
 from app.core.prompts import SYSTEM_PROMPT
@@ -171,6 +172,9 @@ FOLLOW_CUSTOMER_WORDS = [
 ]
 
 
+_DESTRUCTIVE_TOOLS = {"cancel_order", "cancel_multiple_orders"}
+
+
 def run_tool(name: str, args: dict):
     dispatch = {
         "check_order_status": check_order_status,
@@ -185,7 +189,9 @@ def run_tool(name: str, args: dict):
     }
     fn = dispatch.get(name)
     if fn is None:
-        return {"success": False, "message": f"công cụ {name} không tồn tại"}
+        return {"success": False, "message": f"công cụ {name} không được phép gọi"}
+    if name in _DESTRUCTIVE_TOOLS and not args.get("customer_email", "").strip():
+        return {"success": False, "message": "Thiếu customer_email để xác thực danh tính trước khi thực hiện thao tác này."}
     return fn(**args)
 
 
@@ -281,14 +287,7 @@ def history_to_contents(history: list):
 
 
 def copy_context(context_state: dict | None):
-    base = {
-        "last_order_code": None,
-        "last_product_name": None,
-        "last_customer_email": None,
-        "last_customer_name": None,
-        "last_order_codes": [],
-        "context_summary": ""
-    }
+    base = DEFAULT_CONTEXT.copy()
 
     if not context_state:
         return base

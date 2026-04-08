@@ -22,12 +22,12 @@ _FILENAME_CHUNK_TYPE: dict[str, str] = {
 }
 
 
-def _get_chunk_config(file_path: Path) -> dict:
+def _get_chunk_config(file_path: Path) -> tuple[dict, str]:
     stem = file_path.stem
     for key, chunk_type in _FILENAME_CHUNK_TYPE.items():
         if key in stem:
-            return _CHUNK_CONFIG[chunk_type]
-    return _CHUNK_CONFIG["standard"]
+            return _CHUNK_CONFIG[chunk_type], chunk_type
+    return _CHUNK_CONFIG["standard"], "standard"
 
 
 def read_text_file(path: Path) -> str:
@@ -93,13 +93,9 @@ def ingest_folder(folder_path: str):
 
     for file_path in txt_files:
         raw_text = read_text_file(file_path)
-        cfg = _get_chunk_config(file_path)
+        cfg, chunk_type = _get_chunk_config(file_path)
         chunks = split_text(raw_text, chunk_size=cfg["chunk_size"], overlap=cfg["overlap"])
 
-        chunk_type = next(
-            (v for k, v in _FILENAME_CHUNK_TYPE.items() if k in file_path.stem),
-            "standard"
-        )
         print(f"  {file_path.name}: {len(chunks)} chunks [{chunk_type}, size={cfg['chunk_size']}, overlap={cfg['overlap']}]")
 
         for chunk in chunks:

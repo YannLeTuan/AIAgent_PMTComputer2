@@ -1,4 +1,6 @@
 import json
+import threading
+from pathlib import Path
 
 import faiss
 import numpy as np
@@ -10,6 +12,7 @@ class LocalFaissStore:
         self.index = None
         self.documents: list[str] = []
         self._loaded = False
+        self._lock = threading.Lock()
 
     def build(self, embeddings: np.ndarray, documents: list[str]):
         dim = embeddings.shape[1]
@@ -24,37 +27,38 @@ class LocalFaissStore:
             json.dump(self.documents, f, ensure_ascii=False)
 
     def load(self):
-        if self._loaded:
-            return
-        faiss_path = self.index_path + ".faiss"
-        json_path = self.index_path + ".json"
-        if not __import__("os").path.exists(faiss_path) or not __import__("os").path.exists(json_path):
-            raise FileNotFoundError(
-                f"Vector index files not found: {faiss_path} / {json_path}. "
-                "Run ingest_folder() to build the index first."
-            )
-        index = faiss.read_index(faiss_path)
-        with open(json_path, "r", encoding="utf-8") as f:
-            documents = json.load(f)
-        # Assign atomically so index and documents are always in sync
-        self.index = index
-        self.documents = documents
-        self._loaded = True
+        with self._lock:
+            if self._loaded:
+                return
+            faiss_path = Path(self.index_path + ".faiss")
+            json_path = Path(self.index_path + ".json")
+            if not faiss_path.exists() or not json_path.exists():
+                raise FileNotFoundError(
+                    f"Vector index files not found: {faiss_path} / {json_path}. "
+                    "Run ingest_folder() to build the index first."
+                )
+            index = faiss.read_index(str(faiss_path))
+            with open(json_path, "r", encoding="utf-8") as f:
+                documents = json.load(f)
+            self.index = index
+            self.documents = documents
+            self._loaded = True
 
     def reload(self):
-        self._loaded = False
+        with self._lock:
+            self._loaded = False
         self.load()
 
     def search(self, query_embedding: np.ndarray, top_k: int = 4):
         if not self._loaded:
             self.load()
 
-        if self.index is None or len(self.documents) == 0:
-            return []
+        with self._lock:
+            if self.index is None or len(self.documents) == 0:
+                return []
+            distances, indices = self.index.search(query_embedding.astype("float32"), top_k)
+            n_docs = len(self.documents)
 
-        distances, indices = self.index.search(query_embedding.astype("float32"), top_k)
-
-        n_docs = len(self.documents)
         results = []
         for idx in indices[0]:
             if 0 <= idx < n_docs:

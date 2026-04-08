@@ -3,6 +3,15 @@ import time
 SESSION_TTL_SECONDS = 1800  # 30 min
 CLEANUP_INTERVAL = 60       # cleanup check interval
 
+DEFAULT_CONTEXT: dict = {
+    "last_order_code": None,
+    "last_product_name": None,
+    "last_customer_email": None,
+    "last_customer_name": None,
+    "last_order_codes": [],
+    "context_summary": ""
+}
+
 
 class InMemorySessionStore:
     def __init__(self, ttl: int = SESSION_TTL_SECONDS):
@@ -13,14 +22,7 @@ class InMemorySessionStore:
         self._last_cleanup = time.time()
 
     def _default_context(self):
-        return {
-            "last_order_code": None,
-            "last_product_name": None,
-            "last_customer_email": None,
-            "last_customer_name": None,
-            "last_order_codes": [],
-            "context_summary": ""
-        }
+        return DEFAULT_CONTEXT.copy()
 
     def _touch(self, thread_id: str):
         self.last_access[thread_id] = time.time()

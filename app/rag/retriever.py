@@ -1,3 +1,5 @@
+import threading
+
 import numpy as np
 from sentence_transformers import SentenceTransformer
 
@@ -5,13 +7,16 @@ from app.core.config import settings
 from app.rag.vector_store import LocalFaissStore
 
 _model = None
+_model_lock = threading.Lock()
 store = LocalFaissStore(settings.VECTOR_INDEX_PATH)
 
 
 def get_embedding_model():
     global _model
     if _model is None:
-        _model = SentenceTransformer(settings.EMBEDDING_MODEL)
+        with _model_lock:
+            if _model is None:
+                _model = SentenceTransformer(settings.EMBEDDING_MODEL)
     return _model
 
 
