@@ -149,7 +149,7 @@ The core technical foundation is complete. Current and future development phases
 - [x] Asynchronous text streaming and UI/UX modernization.
 - [ ] **Phase 2:** Implementation of "Build PC Advisor" (Constraint-based recommendation system).
 - [ ] **Phase 2:** Hardware comparison capabilities.
-- [ ] **Phase 3:** Final automated evaluation metrics reporting.
+- [ ] **Phase 3:** Final automated evaluation metrics reporting..
 
 ## Author & Contact
 
