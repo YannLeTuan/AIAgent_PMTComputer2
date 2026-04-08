@@ -277,7 +277,7 @@ st.markdown("""
         width: 100%;
         border-radius: 10px;
         font-weight: 600;
-        font-size: 0.65rem;
+        font-size: 0.55rem;
         padding: 0.45rem 0.4rem;
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
