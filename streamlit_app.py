@@ -106,15 +106,16 @@ st.markdown("""
         margin: 0 auto !important;
     }
 
-    /* Outer sidebar — no width constraints here, breaks Streamlit collapse animation */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
+        min-width: 200px !important;
+        max-width: 200px !important;
     }
 
-    /* Width on inner content only — does not affect collapse behaviour */
-    [data-testid="stSidebarContent"] {
+    [data-testid="stSidebar"] > div:first-child {
         width: 200px !important;
+        min-width: 200px !important;
     }
 
     .sidebar-brand {
@@ -162,12 +163,12 @@ st.markdown("""
     }
 
     .sidebar-card {
-        background: rgba(255,255,255,0.95);
-        border: 1px solid var(--pmt-border);
-        border-radius: 14px;
-        padding: 0.55rem 0.6rem;
+        background: transparent;
+        border: none;
+        border-radius: 0;
+        padding: 0;
         margin-bottom: 1rem;
-        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
+        box-shadow: none;
     }
 
     .sidebar-card ul {
@@ -182,21 +183,24 @@ st.markdown("""
     .sidebar-card li {
         display: block;
         text-align: left;
-        font-size: 0.82rem;
-        line-height: 1.35;
-        color: #1f3a5f;
-        background: #f0f5ff;
-        border: 1px solid #dce8ff;
-        border-radius: 7px;
-        padding: 0.28rem 0.55rem;
+        font-size: 0.80rem;
+        line-height: 1.4;
+        color: #2b4a7a;
+        background: transparent;
+        border: none;
+        border-bottom: 1px solid #e8edf5;
+        border-radius: 0;
+        padding: 0.38rem 0.1rem;
         white-space: normal;
     }
 
+    .sidebar-card li:last-child {
+        border-bottom: none;
+        padding-bottom: 0;
+    }
+
     .sidebar-card li::before {
-        content: "→ ";
-        color: #5a88d4;
-        font-weight: 700;
-        font-size: 0.78rem;
+        content: none;
     }
 
     .sidebar-footer {
