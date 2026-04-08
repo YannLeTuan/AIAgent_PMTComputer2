@@ -277,12 +277,16 @@ st.markdown("""
         width: 100%;
         border-radius: 10px;
         font-weight: 600;
-        font-size: 0.38rem;
+        font-size: 0.75rem;
         padding: 0.45rem 0.4rem;
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
         color: var(--pmt-text);
         transition: all 0.2s ease;
+    }
+
+    [data-testid="stSidebar"] .stButton > button {
+        font-size: 0.38rem !important;
     }
 
     .stButton > button:hover {
