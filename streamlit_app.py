@@ -33,10 +33,23 @@ from app.rag.ingest import ingest_folder
 
 st.markdown("""
 <style>
-    [data-testid="stHeader"] {display: none;}
-    [data-testid="stTopBlock"] {display: none;}
+    /* DO NOT use display:none on stHeader — it contains stExpandSidebarButton.
+       Hiding the whole header permanently kills the sidebar re-open button. */
+    [data-testid="stHeader"] {
+        background: transparent !important;
+        border-bottom: none !important;
+        box-shadow: none !important;
+    }
 
-    /* Collapse button inside sidebar */
+    /* Hide only the visual clutter inside the header */
+    [data-testid="stHeaderActionElements"],
+    [data-testid="stHeaderLogo"],
+    [data-testid="stAppDeployButton"],
+    [data-testid="stDecoration"] {
+        display: none !important;
+    }
+
+    /* Collapse button (inside sidebar, arrow pointing left) */
     [data-testid="stSidebarCollapseButton"] {
         display: flex !important;
         background: rgba(255,255,255,0.9) !important;
@@ -48,11 +61,20 @@ st.markdown("""
         background: #eef4ff !important;
         border-color: #9db8e8 !important;
     }
-    /* Expand button shown on left edge when sidebar is collapsed */
-    [data-testid="collapsedControl"] {
+
+    /* Expand button (in header toolbar, shown when sidebar is collapsed) — Streamlit 1.55 */
+    [data-testid="stExpandSidebarButton"] {
         display: flex !important;
         visibility: visible !important;
         opacity: 1 !important;
+        background: rgba(255,255,255,0.9) !important;
+        border: 1px solid rgba(15, 23, 42, 0.12) !important;
+        border-radius: 50% !important;
+        box-shadow: 0 2px 8px rgba(15, 23, 42, 0.10) !important;
+    }
+    [data-testid="stExpandSidebarButton"]:hover {
+        background: #eef4ff !important;
+        border-color: #9db8e8 !important;
     }
 
     :root {
@@ -84,13 +106,13 @@ st.markdown("""
         margin: 0 auto !important;
     }
 
-    /* Outer sidebar section — DO NOT set min/max-width here, breaks collapse */
+    /* Outer sidebar — no width constraints here, breaks Streamlit collapse animation */
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
     }
 
-    /* Control width via inner content div only */
+    /* Width on inner content only — does not affect collapse behaviour */
     [data-testid="stSidebarContent"] {
         width: 272px !important;
     }
