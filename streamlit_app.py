@@ -109,13 +109,13 @@ st.markdown("""
     [data-testid="stSidebar"] {
         background: linear-gradient(180deg, #f7f8fc 0%, #f2f5fb 100%);
         border-right: 1px solid var(--pmt-border);
-        min-width: 200px !important;
-        max-width: 200px !important;
+        min-width: 230px !important;
+        max-width: 230px !important;
     }
 
     [data-testid="stSidebar"] > div:first-child {
-        width: 200px !important;
-        min-width: 200px !important;
+        width: 230px !important;
+        min-width: 230px !important;
     }
 
     .sidebar-brand {
