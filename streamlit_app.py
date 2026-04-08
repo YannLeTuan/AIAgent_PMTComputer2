@@ -114,7 +114,7 @@ st.markdown("""
 
     /* Width on inner content only — does not affect collapse behaviour */
     [data-testid="stSidebarContent"] {
-        width: 272px !important;
+        width: 200px !important;
     }
 
     .sidebar-brand {
