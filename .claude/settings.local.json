@@ -44,7 +44,12 @@
       "Bash(\"C:/Users/Yoga/Documents/PKA/DATN/AIAgent_PMTComputer2/.venv/Scripts/python.exe\" --version)",
       "Bash(\".venv/Scripts/python.exe\" -m app.db.seed)",
       "Bash(claude --dangerously-skip-permissions --print \"hello\")",
-      "Bash(echo \"exit: $?\")"
+      "Bash(echo \"exit: $?\")",
+      "Bash(pip show:)",
+      "Bash(python:*)",
+      "Bash(find:*)",
+      "Bash(python3:*)",
+      "WebFetch(domain:raw.githubusercontent.com)"
     ]
   }
 }
