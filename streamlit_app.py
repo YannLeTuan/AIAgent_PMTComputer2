@@ -1,6 +1,4 @@
-import html
 import os
-import re
 import uuid
 import time
 from pathlib import Path
@@ -286,7 +284,9 @@ st.markdown("""
     }
 
     [data-testid="stSidebar"] .stButton > button {
-        font-size: 0.38rem !important;
+        font-size: 70% !important;
+        padding: 0.25rem 0.4rem !important;
+        min-height: 0 !important;
     }
 
     .stButton > button:hover {
@@ -294,67 +294,18 @@ st.markdown("""
         background: #fcfdff;
     }
 
-    .msg-row {
-        display: flex;
-        width: 100%;
-        margin-bottom: 1.8rem;
+    /* Native st.chat_message() styling */
+    [data-testid="stChatMessage"] {
+        padding: 0.4rem 0;
+        gap: 0.75rem;
     }
 
-    .msg-row.user {
-        justify-content: flex-end;
-    }
-
-    .msg-row.assistant {
-        justify-content: flex-start;
-        align-items: flex-start;
-    }
-
-    .bot-avatar {
-        width: 32px;
-        height: 32px;
-        border-radius: 50%;
-        background: linear-gradient(135deg, #102d57 0%, #1f5fae 100%);
-        color: white;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        font-size: 0.65rem;
-        font-weight: 800;
-        margin-left: -44px;
-        margin-right: 12px;
-        margin-top: 4px;
-        flex-shrink: 0;
-        box-shadow: 0 2px 5px rgba(22, 58, 112, 0.15);
-    }
-
-    .msg-bubble {
-        font-size: 0.98rem;
+    /* User bubble — blue pill */
+    [data-testid="stChatMessage"][data-testid*="user"] .stChatMessageContent,
+    [data-testid="stChatMessageContent"] {
+        font-size: 0.97rem;
         line-height: 1.65;
-        word-wrap: break-word;
     }
-
-    .msg-bubble.user {
-        max-width: 75%;
-        padding: 0.85rem 1.15rem;
-        border-radius: 20px;
-        background-color: #4072c2;
-        color: #ffffff;
-        border-bottom-right-radius: 4px;
-        box-shadow: 0 2px 6px rgba(0,0,0,0.06);
-    }
-
-    .msg-bubble.assistant {
-        max-width: 92%;
-        padding: 0.2rem 0;
-        border-radius: 0;
-        background-color: transparent;
-        color: #1c1e21;
-    }
-
-    .msg-bubble p { margin: 0 0 0.6rem 0; }
-    .msg-bubble p:last-child { margin-bottom: 0; }
-    .msg-bubble ul { margin: 0.3rem 0; padding-left: 1.5rem; }
-    .msg-bubble li { margin-bottom: 0.25rem; }
 
     /* Badge clickable buttons */
     #badge-row + div .stButton > button {
@@ -408,75 +359,9 @@ def reset_demo_state():
     st.session_state.thread_id = str(uuid.uuid4())
 
 def stream_generator(text: str):
-    words = text.split(" ")
-    for word in words:
+    for word in text.split(" "):
         yield word + " "
-        stripped = word.rstrip("*_`")
-        if stripped.endswith((".", "!", "?")):
-            time.sleep(0.18)
-        elif stripped.endswith((",", ":", ";")):
-            time.sleep(0.07)
-        elif stripped.endswith("\n") or word == "\n":
-            time.sleep(0.12)
-        else:
-            time.sleep(0.038)
-
-def simple_markdown_to_html(text: str) -> str:
-    text = text or ""
-    lines = text.splitlines()
-    parts = []
-    in_list = False
-
-    def format_inline(s: str) -> str:
-        s = html.escape(s)
-        s = re.sub(r"\*\*(.+?)\*\*", r"<strong>\1</strong>", s)
-        return s
-
-    for raw in lines:
-        stripped = raw.strip()
-
-        if not stripped:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            continue
-
-        if stripped.startswith("- ") or stripped.startswith("* "):
-            if not in_list:
-                parts.append("<ul>")
-                in_list = True
-            item = format_inline(stripped[2:].strip())
-            parts.append(f"<li>{item}</li>")
-        else:
-            if in_list:
-                parts.append("</ul>")
-                in_list = False
-            parts.append(f"<p>{format_inline(stripped)}</p>")
-
-    if in_list:
-        parts.append("</ul>")
-
-    return "".join(parts) if parts else "<p></p>"
-
-def get_message_html(role: str, content: str) -> str:
-    bubble_html = simple_markdown_to_html(content)
-    if role == "user":
-        return f"""
-        <div class="msg-row user">
-            <div class="msg-bubble user">
-                {bubble_html}
-            </div>
-        </div>
-        """
-    else:
-        return f"""
-        <div class="msg-row assistant">
-            <div class="bot-avatar">PMT</div>
-            <div class="msg-bubble assistant">
-                {bubble_html}
-            </div>
-        </div>
-        """
+        time.sleep(0.035)
 
 init_demo_resources()
 
@@ -531,7 +416,8 @@ with st.sidebar:
 
 prompt_to_send = None
 
-st.markdown("""
+if not st.session_state.messages:
+    st.markdown("""
 <div class="hero-wrap">
     <div class="hero-topline">AI Customer Support • PMT Computer</div>
     <div class="hero-title"><span class="hero-title-accent">PMT Computer</span> AI Agent</div>
@@ -541,30 +427,32 @@ st.markdown("""
 </div>
 """, unsafe_allow_html=True)
 
-st.markdown('<div id="badge-row"><p style="font-size:0.85rem;font-weight:700;color:#1f2f46;margin:0 0 0.45rem 0;">Thao tác nhanh</p></div>', unsafe_allow_html=True)
-badge_cols = st.columns(4)
-with badge_cols[0]:
-    if st.button("Tư vấn build PC", key="badge_build"):
-        prompt_to_send = "Tôi muốn build PC, bạn có thể tư vấn giúp tôi không?"
-with badge_cols[1]:
-    if st.button("Tra cứu đơn hàng", key="badge_order"):
-        prompt_to_send = "Tôi muốn tra cứu đơn hàng của mình"
-with badge_cols[2]:
-    if st.button("Bảo hành / đổi trả", key="badge_warranty"):
-        prompt_to_send = "Chính sách bảo hành và đổi trả của PMT Computer như thế nào?"
-with badge_cols[3]:
-    if st.button("Thông tin cửa hàng", key="badge_info"):
-        prompt_to_send = "Cho tôi biết thông tin, địa chỉ và giờ làm việc của PMT Computer"
+    st.markdown('<div id="badge-row"><p style="font-size:0.85rem;font-weight:700;color:#1f2f46;margin:0 0 0.45rem 0;">Thao tác nhanh</p></div>', unsafe_allow_html=True)
+    badge_cols = st.columns(4)
+    with badge_cols[0]:
+        if st.button("Tư vấn build PC", key="badge_build"):
+            prompt_to_send = "Tôi muốn build PC, bạn có thể tư vấn giúp tôi không?"
+    with badge_cols[1]:
+        if st.button("Tra cứu đơn hàng", key="badge_order"):
+            prompt_to_send = "Tôi muốn tra cứu đơn hàng của mình"
+    with badge_cols[2]:
+        if st.button("Bảo hành / đổi trả", key="badge_warranty"):
+            prompt_to_send = "Chính sách bảo hành và đổi trả của PMT Computer như thế nào?"
+    with badge_cols[3]:
+        if st.button("Thông tin cửa hàng", key="badge_info"):
+            prompt_to_send = "Cho tôi biết thông tin, địa chỉ và giờ làm việc của PMT Computer"
 
 for msg in st.session_state.messages:
-    st.markdown(get_message_html(msg["role"], msg["content"]), unsafe_allow_html=True)
+    with st.chat_message(msg["role"]):
+        st.markdown(msg["content"])
 
 user_input = st.chat_input("Nhập câu hỏi của bạn...")
 prompt = user_input or prompt_to_send
 
 if prompt:
     st.session_state.messages.append({"role": "user", "content": prompt})
-    st.markdown(get_message_html("user", prompt), unsafe_allow_html=True)
+    with st.chat_message("user"):
+        st.markdown(prompt)
 
     history = session_store.get_history(st.session_state.thread_id)
     context_state = session_store.get_context(st.session_state.thread_id)
@@ -579,11 +467,8 @@ if prompt:
     session_store.set_history(st.session_state.thread_id, result["history"])
     session_store.set_context(st.session_state.thread_id, result["context_state"])
 
-    placeholder = st.empty()
-    streamed_text = ""
-    for chunk in stream_generator(result["answer"]):
-        streamed_text += chunk
-        placeholder.markdown(get_message_html("assistant", streamed_text), unsafe_allow_html=True)
-        
+    with st.chat_message("assistant"):
+        st.write_stream(stream_generator(result["answer"]))
+
     st.session_state.messages.append({"role": "assistant", "content": result["answer"]})
     st.rerun()
