@@ -172,7 +172,8 @@ st.markdown("""
 
     .sidebar-card ul {
         margin: 0;
-        padding-left: 1rem;
+        padding-left: 0;
+        list-style: none;
     }
 
     .sidebar-card li {
@@ -256,8 +257,8 @@ st.markdown("""
         width: 100%;
         border-radius: 10px;
         font-weight: 600;
-        font-size: 0.88rem;
-        padding: 0.45rem 0.7rem;
+        font-size: 0.75rem;
+        padding: 0.45rem 0.4rem;
         border: 1px solid rgba(15, 23, 42, 0.1);
         background: #ffffff;
         color: var(--pmt-text);
