@@ -164,23 +164,39 @@ st.markdown("""
     .sidebar-card {
         background: rgba(255,255,255,0.95);
         border: 1px solid var(--pmt-border);
-        border-radius: 20px;
-        padding: 1rem 1rem 0.95rem 1rem;
+        border-radius: 14px;
+        padding: 0.55rem 0.6rem;
         margin-bottom: 1rem;
-        box-shadow: 0 8px 24px rgba(15, 23, 42, 0.03);
+        box-shadow: 0 4px 12px rgba(15, 23, 42, 0.04);
     }
 
     .sidebar-card ul {
         margin: 0;
-        padding-left: 0;
+        padding: 0;
         list-style: none;
+        display: flex;
+        flex-direction: column;
+        gap: 0.28rem;
     }
 
     .sidebar-card li {
-        margin-bottom: 0.28rem;
-        line-height: 1.45;
-        font-size: 0.87rem;
-        color: #243244;
+        display: block;
+        text-align: left;
+        font-size: 0.82rem;
+        line-height: 1.35;
+        color: #1f3a5f;
+        background: #f0f5ff;
+        border: 1px solid #dce8ff;
+        border-radius: 7px;
+        padding: 0.28rem 0.55rem;
+        white-space: normal;
+    }
+
+    .sidebar-card li::before {
+        content: "→ ";
+        color: #5a88d4;
+        font-weight: 700;
+        font-size: 0.78rem;
     }
 
     .sidebar-footer {
