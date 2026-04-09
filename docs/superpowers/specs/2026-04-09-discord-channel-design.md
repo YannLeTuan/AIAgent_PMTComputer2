@@ -68,15 +68,24 @@ on_message("!reset")
 Câu trả lời được wrap trong `discord.Embed` để đọc dễ hơn plain text:
 
 ```
-┌─────────────────────────────────┐
-│ 🤖  PMT Computer Assistant      │  ← title
-│                                  │
-│  <nội dung trả lời>              │  ← description (max 4000 chars)
-│                                  │
-│  PMT Computer · #channel-name   │  ← footer
-└─────────────────────────────────┘
+┌─────────────────────────────────────────┐
+│ 🖥️ PMT Computer Assistant  [avatar]     │  ← set_author (name + icon_url)
+│                                          │
+│  <nội dung trả lời>                      │  ← description (max 4000 chars)
+│                                          │
+│  PMT Computer · #channel-name           │  ← footer
+└─────────────────────────────────────────┘
 ```
 
+**`set_author` config:**
+```python
+embed.set_author(
+    name="PMT Computer Assistant",
+    icon_url="https://cdn-icons-png.flaticon.com/512/2920/2920244.png"  # computer icon
+)
+```
+
+- `icon_url` dùng public CDN icon máy tính — không cần host ảnh riêng
 - **Màu:** `0x3498db` (xanh dương) — success
 - **Màu lỗi:** `0xe74c3c` (đỏ) — khi API/exception
 - Nếu answer > 4000 ký tự: truncate tại 3990 và append `"\n…(phản hồi bị cắt ngắn)"`
