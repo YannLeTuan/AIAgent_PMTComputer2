@@ -1,198 +1,23 @@
-
-import re
 import time
 
 from google import genai
 from google.genai import types
 
-from app.agent.memory import DEFAULT_CONTEXT
+from app.agent.context_manager import (
+    copy_context, trim_history,
+    update_context_from_user_message, update_context_from_tool_result,
+)
+from app.agent.prompt_builder import build_user_message
+from app.agent.small_talk import get_small_talk_answer
+from app.agent.tool_runner import run_tool, tool_declarations
 from app.core.config import settings
 from app.core.logger import write_log
 from app.core.prompts import SYSTEM_PROMPT
-from app.rag.retriever import retrieve_context
-from app.tools.customer_tools import get_customer_orders
-from app.tools.order_tools import check_order_status, cancel_order, cancel_multiple_orders
-from app.tools.product_tools import search_product, list_products, get_product_details
-from app.tools.pc_build_tools import build_pc_config, check_compatibility
 
 client = genai.Client(api_key=settings.GEMINI_API_KEY)
 
-MAX_HISTORY_TURNS = 10
-SUMMARY_THRESHOLD = 8
 GEMINI_MAX_RETRIES = 2
-
-tool_declarations = [
-    types.FunctionDeclaration(
-        name="check_order_status",
-        description="kiểm tra trạng thái đơn hàng theo mã order_code",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "order_code": {"type": "string"}
-            },
-            "required": ["order_code"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="cancel_order",
-        description="hủy đơn hàng theo mã order_code và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính khách hàng trước khi hủy.",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "order_code": {"type": "string"},
-                "reason": {"type": "string"},
-                "customer_email": {
-                    "type": "string",
-                    "description": "email của khách hàng để xác thực danh tính, phải khớp với email đăng ký đơn hàng"
-                }
-            },
-            "required": ["order_code", "reason", "customer_email"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="search_product",
-        description="tìm sản phẩm theo từ khóa, có thể tìm theo tên, loại, hãng hoặc sku",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "keyword": {"type": "string"}
-            },
-            "required": ["keyword"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="list_products",
-        description="liệt kê danh sách sản phẩm theo nhóm category, hãng brand hoặc giá tối đa max_price",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "category": {"type": "string"},
-                "brand": {"type": "string"},
-                "max_price": {"type": "number"},
-                "limit": {"type": "integer"}
-            }
-        }
-    ),
-    types.FunctionDeclaration(
-        name="cancel_multiple_orders",
-        description="hủy nhiều đơn hàng cùng lúc theo danh sách order_codes và lý do reason. Bắt buộc truyền customer_email để xác thực danh tính.",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "order_codes": {
-                    "type": "array",
-                    "items": {"type": "string"}
-                },
-                "reason": {"type": "string"},
-                "customer_email": {
-                    "type": "string",
-                    "description": "email của khách hàng để xác thực danh tính"
-                }
-            },
-            "required": ["order_codes", "reason", "customer_email"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="get_customer_orders",
-        description="lấy danh sách đơn hàng của khách hàng theo email",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "customer_email": {"type": "string"}
-            },
-            "required": ["customer_email"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="get_product_details",
-        description="xem thông số kỹ thuật chi tiết của một sản phẩm theo SKU hoặc tên. Dùng khi khách hỏi về specs, thông số, socket, DDR, TDP, tốc độ đọc ghi, v.v.",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "sku_or_name": {
-                    "type": "string",
-                    "description": "SKU hoặc tên sản phẩm cần xem chi tiết"
-                }
-            },
-            "required": ["sku_or_name"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="build_pc_config",
-        description="tư vấn cấu hình PC theo ngân sách và mục đích sử dụng. Tự động chọn linh kiện tương thích từ kho hàng hiện có.",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "budget": {
-                    "type": "number",
-                    "description": "ngân sách tổng (VND), tối thiểu 8.000.000"
-                },
-                "use_case": {
-                    "type": "string",
-                    "description": "mục đích sử dụng: gaming, office, streaming, graphics"
-                },
-                "brand_preference": {
-                    "type": "string",
-                    "description": "hãng ưu tiên cho CPU/VGA (nếu có), ví dụ: AMD, Intel, MSI, ASUS"
-                }
-            },
-            "required": ["budget", "use_case"]
-        }
-    ),
-    types.FunctionDeclaration(
-        name="check_compatibility",
-        description="kiểm tra tương thích phần cứng giữa các linh kiện. Truyền danh sách SKU hoặc tên sản phẩm.",
-        parameters_json_schema={
-            "type": "object",
-            "properties": {
-                "component_skus": {
-                    "type": "array",
-                    "items": {"type": "string"},
-                    "description": "danh sách SKU hoặc tên sản phẩm cần kiểm tra tương thích"
-                }
-            },
-            "required": ["component_skus"]
-        }
-    ),
-]
-
-ORDER_PATTERN = re.compile(r"\bORD\d+\b", re.IGNORECASE)
-EMAIL_PATTERN = re.compile(r"[\w\.-]+@[\w\.-]+\.\w+")
-
-FOLLOW_ORDER_WORDS = [
-    "đơn này", "đơn đó", "đơn kia", "mã đó", "trong các đơn đó", "đơn hàng này"
-]
-
-FOLLOW_PRODUCT_WORDS = [
-    "sản phẩm này", "con này", "mẫu này", "cái này", "loại này"
-]
-
-FOLLOW_CUSTOMER_WORDS = [
-    "khách này", "người này", "email đó", "khách đó"
-]
-
-
-_DESTRUCTIVE_TOOLS = {"cancel_order", "cancel_multiple_orders"}
-
-
-def run_tool(name: str, args: dict):
-    dispatch = {
-        "check_order_status": check_order_status,
-        "cancel_order": cancel_order,
-        "cancel_multiple_orders": cancel_multiple_orders,
-        "search_product": search_product,
-        "list_products": list_products,
-        "get_customer_orders": get_customer_orders,
-        "get_product_details": get_product_details,
-        "build_pc_config": build_pc_config,
-        "check_compatibility": check_compatibility,
-    }
-    fn = dispatch.get(name)
-    if fn is None:
-        return {"success": False, "message": f"công cụ {name} không được phép gọi"}
-    if name in _DESTRUCTIVE_TOOLS and not args.get("customer_email", "").strip():
-        return {"success": False, "message": "Thiếu customer_email để xác thực danh tính trước khi thực hiện thao tác này."}
-    return fn(**args)
+MIN_MEANINGFUL_RESPONSE_LEN = 8
 
 
 def normalize_answer(text: str):
@@ -201,67 +26,10 @@ def normalize_answer(text: str):
 
     text = text.strip()
 
-    if len(text) < 8:
+    if len(text) < MIN_MEANINGFUL_RESPONSE_LEN:
         return "Hiện tôi chưa có đủ thông tin để trả lời chính xác. Bạn có thể hỏi rõ hơn về đơn hàng, sản phẩm, bảo hành, đổi trả hoặc thông tin của PMT Computer."
 
     return text
-
-
-def _extract_key_facts(turns: list) -> str:
-    order_codes = set()
-    emails = set()
-    key_info = []
-
-    for turn in turns:
-        text = turn.get("text", "")
-        role = turn.get("role", "")
-
-        codes = ORDER_PATTERN.findall(text)
-        order_codes.update(c.upper() for c in codes)
-
-        found_emails = EMAIL_PATTERN.findall(text)
-        emails.update(found_emails)
-
-        if role == "model":
-            for keyword in ["bảo hành", "đã hủy", "đã giao", "đang xử lý", "đang vận chuyển"]:
-                if keyword in text.lower():
-                    # Lấy 1 dòng ngắn mô tả trạng thái
-                    for line in text.split("\n"):
-                        line = line.strip()
-                        if keyword in line.lower() and len(line) < 120:
-                            key_info.append(line)
-                            break
-                    break
-
-    parts: list[str] = []
-    if order_codes:
-        parts.append(f"Các mã đơn hàng đã nhắc tới: {', '.join(sorted(order_codes))}")
-    if emails:
-        parts.append(f"Email khách hàng: {', '.join(emails)}")
-    if key_info:
-        parts.append("Thông tin chính: " + "; ".join(key_info[:3]))
-
-    return ". ".join(parts)
-
-
-def trim_history(history: list, context_state: dict | None = None):
-    if len(history) <= MAX_HISTORY_TURNS:
-        return history
-
-    excess = len(history) - SUMMARY_THRESHOLD
-    trimmed_turns = history[:excess]
-    kept_turns = history[excess:]
-
-    summary = _extract_key_facts(trimmed_turns)
-
-    if summary and context_state is not None:
-        context_state["context_summary"] = summary
-
-    if summary:
-        summary_msg = {"role": "user", "text": f"[Tóm tắt ngữ cảnh trước đó: {summary}]"}
-        return [summary_msg] + kept_turns
-
-    return kept_turns
 
 
 def history_to_contents(history: list):
@@ -284,170 +52,6 @@ def history_to_contents(history: list):
             )
 
     return contents
-
-
-def copy_context(context_state: dict | None):
-    base = DEFAULT_CONTEXT.copy()
-
-    if not context_state:
-        return base
-
-    for k in base:
-        if k in context_state:
-            base[k] = context_state[k]
-
-    return base
-
-
-def update_context_from_user_message(user_message: str, context_state: dict):
-    order_codes = ORDER_PATTERN.findall(user_message)
-    emails = EMAIL_PATTERN.findall(user_message)
-
-    if order_codes:
-        context_state["last_order_code"] = order_codes[-1].upper()
-
-    if emails:
-        context_state["last_customer_email"] = emails[-1]
-
-
-def update_context_from_tool_result(tool_name: str, tool_result: dict, args: dict, context_state: dict):
-    if tool_name == "check_order_status" and tool_result.get("success"):
-        context_state["last_order_code"] = tool_result.get("order_code")
-        context_state["last_product_name"] = tool_result.get("product_name")
-
-    elif tool_name == "cancel_order" and tool_result.get("success"):
-        context_state["last_order_code"] = args.get("order_code")
-
-    elif tool_name == "search_product" and tool_result.get("success"):
-        results = tool_result.get("results", [])
-        if results:
-            context_state["last_product_name"] = results[0].get("name")
-
-    elif tool_name == "get_customer_orders" and tool_result.get("success"):
-        context_state["last_customer_email"] = tool_result.get("customer_email")
-        context_state["last_customer_name"] = tool_result.get("customer_name")
-        context_state["last_product_name"] = None
-
-        orders = tool_result.get("orders", [])
-        order_codes = [x.get("order_code") for x in orders if x.get("order_code")]
-        context_state["last_order_codes"] = order_codes
-
-        for item in orders:
-            if item.get("status") == "processing":
-                context_state["last_order_code"] = item.get("order_code")
-                break
-        else:
-            if order_codes:
-                context_state["last_order_code"] = order_codes[0]
-
-    elif tool_name == "get_product_details" and tool_result.get("success"):
-        context_state["last_product_name"] = tool_result.get("name")
-
-
-def needs_follow_order_hint(user_message: str):
-    lower = user_message.lower()
-    return any(x in lower for x in FOLLOW_ORDER_WORDS)
-
-
-def needs_follow_product_hint(user_message: str):
-    lower = user_message.lower()
-    return any(x in lower for x in FOLLOW_PRODUCT_WORDS)
-
-
-def needs_follow_customer_hint(user_message: str):
-    lower = user_message.lower()
-    return any(x in lower for x in FOLLOW_CUSTOMER_WORDS)
-
-
-def build_reference_hint(user_message: str, context_state: dict):
-    hints = []
-    lower = user_message.lower()
-
-    if needs_follow_order_hint(user_message) and context_state.get("last_order_code"):
-        hints.append(f"Đơn hàng đang được nhắc tới gần nhất là {context_state['last_order_code']}.")
-
-    if ("trong các đơn đó" in lower or "2 đơn" in lower or "các đơn" in lower or "những đơn" in lower) and context_state.get("last_order_codes"):
-        joined = ", ".join(context_state["last_order_codes"])
-        hints.append(f"Danh sách đơn hàng gần nhất đang được nhắc tới gồm: {joined}.")
-        hints.append("Nếu người dùng đang hỏi ở số nhiều, hãy xem xét toàn bộ danh sách đơn hàng này, không chỉ một đơn duy nhất.")
-
-    if needs_follow_product_hint(user_message) and context_state.get("last_product_name"):
-        hints.append(f"Sản phẩm đang được nhắc tới gần nhất là {context_state['last_product_name']}.")
-
-    if needs_follow_customer_hint(user_message):
-        if context_state.get("last_customer_email"):
-            hints.append(f"Khách hàng đang được nhắc tới gần nhất có email {context_state['last_customer_email']}.")
-        if context_state.get("last_customer_name"):
-            hints.append(f"Tên khách hàng gần nhất là {context_state['last_customer_name']}.")
-
-    if "vậy" in lower and context_state.get("last_order_code"):
-        hints.append(f'Ngữ cảnh gần nhất liên quan tới đơn hàng {context_state["last_order_code"]}.')
-
-    if context_state.get("context_summary"):
-        hints.append(f"Thông tin từ đầu hội thoại: {context_state['context_summary']}")
-
-    return "\n".join(hints).strip()
-
-
-def build_retrieval_query(user_message: str, context_state: dict):
-    parts = [user_message]
-
-    # inject entity refs only, not answer content
-    if needs_follow_order_hint(user_message) and context_state.get("last_order_code"):
-        parts.append(f"đơn hàng {context_state['last_order_code']}")
-
-    if needs_follow_product_hint(user_message) and context_state.get("last_product_name"):
-        parts.append(context_state["last_product_name"])
-
-    return " | ".join(parts)
-
-
-def normalize_simple(text: str):
-    return (text or "").strip().lower()
-
-
-def get_small_talk_answer(user_message: str):
-    msg = normalize_simple(user_message)
-
-    # skip if message contains any business keyword
-    business_keywords = ["đơn", "ord", "sản phẩm", "bảo hành", "đổi trả", "kiểm tra",
-                         "tìm", "hủy", "email", "khách", "giá", "mua", "build", "tư vấn",
-                         "thông số", "tương thích", "cấu hình", "specs", "socket", "tdp"]
-    if any(kw in msg for kw in business_keywords):
-        return None
-
-    if "cảm ơn" in msg or "cam on" in msg:
-        return "Không có gì ạ. Nếu bạn cần tra cứu đơn hàng, sản phẩm, bảo hành hoặc chính sách của PMT Computer thì cứ nhắn tôi nhé."
-
-    if msg in ["chào", "xin chào", "hello", "hi"]:
-        return "Xin chào, tôi là trợ lý của PMT Computer. Tôi có thể hỗ trợ về sản phẩm, đơn hàng, bảo hành, đổi trả và thông tin cửa hàng."
-
-    if "tạm biệt" in msg or "bye" in msg:
-        return "Cảm ơn bạn đã liên hệ PMT Computer. Khi cần hỗ trợ thêm, bạn cứ nhắn lại nhé."
-
-    return None
-
-
-def build_user_message(user_message: str, context_state: dict):
-    retrieval_query = build_retrieval_query(user_message, context_state)
-    contexts = retrieve_context(retrieval_query, top_k=settings.TOP_K_RETRIEVAL)
-    context_block = "\n\n".join(contexts)
-
-    reference_hint = build_reference_hint(user_message, context_state)
-    if not reference_hint:
-        reference_hint = "Không có tham chiếu hội thoại đặc biệt."
-
-    return (
-        f"Ngữ cảnh tri thức nội bộ:\n{context_block}\n\n"
-        f"Ngữ cảnh hội thoại gần đây đã suy ra:\n{reference_hint}\n\n"
-        f"Yêu cầu:\n"
-        f"- Nếu câu hỏi cần dữ liệu đơn hàng, sản phẩm hoặc khách hàng trong hệ thống, hãy gọi tool phù hợp.\n"
-        f"- Nếu câu hỏi là chính sách, thông tin cửa hàng hoặc FAQ, hãy ưu tiên dựa vào ngữ cảnh.\n"
-        f"- Nếu là kiến thức máy tính cơ bản, có thể trả lời ngắn gọn và đúng trọng tâm.\n"
-        f'- Nếu người dùng đang dùng từ tham chiếu như "đơn này", "con này", "trường hợp đó", hãy tận dụng ngữ cảnh hội thoại đã suy ra.\n'
-        f"- Nếu không đủ dữ liệu, hãy nói rõ và hướng người dùng hỏi cụ thể hơn.\n\n"
-        f"Câu hỏi người dùng:\n{user_message}"
-    ).strip(), retrieval_query, contexts, reference_hint
 
 
 def _call_gemini(contents: list, temperature: float = 0.2):
@@ -513,7 +117,6 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
         "reference_hint": reference_hint,
         "history_size": len(history),
         "retrieved_context_count": len(contexts),
-        "retrieved_context_preview": contexts[:2]
     })
 
     contents = history_to_contents(history) + [
@@ -612,7 +215,6 @@ def chat_with_agent(user_message: str, history: list | None = None, context_stat
             "answer": final_text,
             "tool_called": True,
             "latency_sec": round(time.perf_counter() - start_time, 3),
-            "context_state": context_state
         })
 
         return {
