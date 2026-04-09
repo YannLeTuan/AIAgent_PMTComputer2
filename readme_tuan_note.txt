@@ -6,3 +6,5 @@ git add . ; git commit -m "Update streamlit_app.py to create new UI versionr" ; 
 -- Run to update local to github
 
 git add . ; git commit -m "Update streamlit_app.py to create newest UI versionr" ; git push origin main 
+
+claude --dangerously-skip-permissions

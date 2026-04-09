@@ -6,3 +6,4 @@ logs/
 evaluation/results/
 .streamlit/secrets.toml.
 .claude/settings.local.json
+CODE_REVIEW_RAG.md
