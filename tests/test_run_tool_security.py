@@ -76,9 +76,9 @@ def test_read_only_tool_is_not_blocked():
 # A-1-6: cancel_order có customer_email hợp lệ → đi tới tool function (mock DB)
 # ---------------------------------------------------------------------------
 def test_cancel_order_with_valid_email_reaches_tool():
-    from app.agent.orchestrator import run_tool
+    from app.agent.tool_runner import run_tool
     mock_return = {"success": True, "message": "Đã hủy"}
-    with patch("app.agent.orchestrator.cancel_order", return_value=mock_return):
+    with patch("app.agent.tool_runner.cancel_order", return_value=mock_return):
         result = run_tool("cancel_order", {
             "order_code": "ORD001",
             "reason": "test",
