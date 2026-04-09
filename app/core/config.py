@@ -9,6 +9,7 @@ class Settings(BaseSettings):
     EMBEDDING_MODEL: str = "sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2"
     TOP_K_RETRIEVAL: int = 4
     TELEGRAM_BOT_TOKEN: str | None = None
+    DISCORD_BOT_TOKEN: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 
