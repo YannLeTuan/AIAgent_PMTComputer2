@@ -6,7 +6,7 @@ Cách hỗ trợ: Tìm theo nhóm SSD và thương hiệu Samsung, sau đó nế
 
 Tình huống 2:
 Khách hỏi: Đơn hàng này có hủy được không?
-Cách hỗ trợ: Nếu trước đó đã xác định mã đơn hàng, chatbot cần dùng ngữ cảnh hội thoại để hiểu “đơn hàng này” đang nói tới đơn nào. Sau đó đối chiếu trạng thái đơn và chính sách hủy đơn.
+Cách hỗ trợ: Nếu trước đó đã xác định mã đơn hàng, chatbot cần dùng ngữ cảnh hội thoại để hiểu "đơn hàng này" đang nói tới đơn nào. Sau đó đối chiếu trạng thái đơn và chính sách hủy đơn.
 
 Tình huống 3:
 Khách hỏi: Tôi muốn build máy chơi game
@@ -26,9 +26,136 @@ Cách hỗ trợ: Nếu có model cụ thể thì tra cứu tương thích, nế
 
 Tình huống 7:
 Khách hỏi: Khách phamminhtuan.pmt@gmail.com đã có những đơn nào?
-Cách hỗ trợ: Gọi tool kiểm tra khách hàng theo email, sau đó có thể follow-up nhiều lượt như “đơn nào đang xử lý” hoặc “đơn đó có hủy được không”.
+Cách hỗ trợ: Gọi tool kiểm tra khách hàng theo email, sau đó có thể follow-up nhiều lượt như "đơn nào đang xử lý" hoặc "đơn đó có hủy được không".
 
 Tình huống 8:
 Khách hỏi: Cảm ơn bạn
 Cách hỗ trợ: Trả lời lịch sự, ngắn gọn, không cần gọi tool hay retrieval nếu không cần thiết.
 
+Tình huống 9:
+Khách hỏi: Tôi đặt hàng 3 ngày rồi mà chưa thấy giao, sao vậy?
+Cách hỗ trợ: Hỏi mã đơn hàng hoặc email đặt hàng. Sau đó kiểm tra trạng thái đơn bằng tool. Nếu đơn đang processing hoặc shipped thì giải thích thời gian giao hàng tiêu chuẩn (2-5 ngày làm việc). Nếu quá thời hạn, hướng dẫn liên hệ hotline 0912 888 999.
+
+Tình huống 10:
+Khách hỏi: Tôi muốn hủy tất cả đơn hàng của tôi
+Cách hỗ trợ: Yêu cầu email để xác thực. Sau đó gọi tool lấy danh sách đơn, xác nhận lại các đơn có thể hủy (trạng thái pending/processing), gọi tool cancel_multiple_orders. Thông báo rõ những đơn không thể hủy (đã shipped, delivered, cancelled).
+
+Tình huống 11:
+Khách hỏi: Shop có giảm giá hay không? Tôi mua nhiều có được discount không?
+Cách hỗ trợ: Giải thích PMT Computer có các chương trình khuyến mãi theo thời điểm (có thể hỏi file FAQ bảo giá tồn kho khuyến mãi). Không được tự ý hứa hẹn mức giảm giá cụ thể không có trong dữ liệu. Gợi ý khách liên hệ hotline 0912 888 999 hoặc Zalo để được tư vấn giá tốt hơn khi mua số lượng lớn.
+
+Tình huống 12:
+Khách hỏi: Intel Core i5 và AMD Ryzen 5 thì chọn cái nào?
+Cách hỗ trợ: Giải thích điểm khác biệt: Intel thường mạnh hơn cho single-core (gaming FPS cao, một số phần mềm chuyên dụng), AMD Ryzen thường tốt hơn cho đa nhân (rendering, streaming, multitasking) và thường rẻ hơn ở cùng phân khúc. Hỏi thêm nhu cầu và ngân sách để tư vấn model cụ thể.
+
+Tình huống 13:
+Khách hỏi: PC của tôi tự khởi động lại liên tục, nguyên nhân là gì?
+Cách hỗ trợ: Gợi ý các nguyên nhân phổ biến: nguồn không đủ công suất, RAM lỗi hoặc không tương thích, CPU/GPU quá nhiệt, driver lỗi, lỗi phần mềm hoặc virus. Khuyên kiểm tra nhiệt độ CPU/GPU, kiểm tra nguồn, test RAM từng thanh. Nếu máy mua tại PMT và còn bảo hành, hướng dẫn mang máy vào để kiểm tra.
+
+Tình huống 14:
+Khách hỏi: Cho tôi xem tất cả sản phẩm của shop
+Cách hỗ trợ: Không liệt kê toàn bộ sản phẩm vì số lượng quá lớn. Hỏi lại khách muốn xem danh mục nào: CPU, VGA, RAM, SSD, HDD, Mainboard, PSU, Case, Tản nhiệt, Màn hình, Chuột, Bàn phím, Tai nghe, Webcam? Hoặc hỏi theo hãng: Intel, AMD, NVIDIA, Samsung, Kingston, Corsair, v.v.
+
+Tình huống 15:
+Khách hỏi: Build PC 20 triệu cho đồ họa/Photoshop/Premiere
+Cách hỗ trợ: Gọi tool build_pc_config với budget=20000000 và use_case="graphics". Trình bày cấu hình theo định dạng chuẩn có giá từng linh kiện, tổng và số dư. Nhấn mạnh RAM dung lượng cao và VGA có VRAM lớn là ưu tiên cho đồ họa.
+
+Tình huống 16:
+Khách hỏi: Build PC 30 triệu để chạy AI, machine learning
+Cách hỗ trợ: Gọi tool build_pc_config với budget=30000000 và use_case="office" (lập trình/AI). Bổ sung tư vấn thêm về tầm quan trọng của RAM dung lượng lớn (32-64GB), SSD NVMe nhanh để load model, và VGA NVIDIA (CUDA cores quan trọng cho training). Nếu ngân sách lớn hơn có thể xem xét VGA cao cấp hơn.
+
+Tình huống 17:
+Khách hỏi: Tôi nhận được hàng nhưng bị lỗi, xử lý thế nào?
+Cách hỗ trợ: Hỏi tên sản phẩm, mô tả lỗi và thời gian nhận hàng. Nếu trong 7 ngày kể từ khi nhận hàng thì được đổi trả theo chính sách. Hướng dẫn cách đóng gói và gửi về hoặc mang trực tiếp đến cửa hàng tại 1A Hùng Vương, Ba Đình, Hà Nội. Nếu ngoài 7 ngày thì hướng dẫn làm bảo hành.
+
+Tình huống 18:
+Khách hỏi: Hotline của shop là gì? Liên hệ qua Zalo được không?
+Cách hỗ trợ: Trả lời trực tiếp: Hotline và Zalo hỗ trợ: 0912 888 999. Email: hotro@pmtcomputer.vn. Giờ làm việc: 8h30 - 21h00 tất cả các ngày trong tuần. Địa chỉ: 1A Hùng Vương, Ba Đình, Hà Nội.
+
+Tình huống 19:
+Khách hỏi: Shop ở đâu? Tôi muốn đến trực tiếp
+Cách hỗ trợ: Trả lời địa chỉ: Số 1A Hùng Vương, phường Điện Biên, quận Ba Đình, TP. Hà Nội. Giờ làm việc 8h30 - 21h00, tất cả các ngày trong tuần. Gợi ý gọi trước qua hotline 0912 888 999 để đặt lịch tư vấn.
+
+Tình huống 20:
+Khách hỏi: Tôi muốn mua RAM nhưng không biết mainboard của tôi hỗ trợ loại gì
+Cách hỗ trợ: Hỏi tên mainboard hoặc model máy tính. Nếu có thể tra cứu tương thích bằng tool check_compatibility thì gọi tool. Nếu không có thông tin, hướng dẫn cách tự kiểm tra: vào BIOS xem thông số RAM, hoặc tra tờ thông số kỹ thuật mainboard trên trang hãng.
+
+Tình huống 21:
+Khách hỏi: Mainboard ASUS B550 có dùng được RAM DDR5 không?
+Cách hỗ trợ: Giải thích rõ: Mainboard chipset B550 (AMD AM4) chỉ hỗ trợ DDR4, không tương thích DDR5. DDR5 chỉ chạy trên các platform mới như AMD AM5 (Ryzen 7000 series) hoặc Intel LGA1700 (Gen 12/13/14). Đây là lỗi thường gặp và không thể khắc phục, phải dùng đúng loại RAM.
+
+Tình huống 22:
+Khách hỏi: Phạm Minh Tuấn là ai?
+Cách hỗ trợ: Chỉ trả lời theo thông tin nội bộ đang có. Phạm Minh Tuấn là tác giả/người phát triển hệ thống AI Agent này cho PMT Computer, không bịa thêm thông tin cá nhân.
+
+Tình huống 23:
+Khách hỏi: Tôi đã đặt hàng nhưng muốn thay đổi địa chỉ giao hàng
+Cách hỗ trợ: Giải thích rằng chatbot không có chức năng thay đổi địa chỉ giao hàng trực tiếp. Hướng dẫn khách liên hệ ngay hotline 0912 888 999 hoặc Zalo để được hỗ trợ thay đổi, đặc biệt nếu đơn chưa được giao cho đơn vị vận chuyển.
+
+Tình huống 24:
+Khách hỏi: VGA RTX 4060 có chạy được game AAA không? Chơi Cyberpunk 2077 được không?
+Cách hỗ trợ: Giải thích RTX 4060 là card tầm trung, chơi được hầu hết game AAA ở độ phân giải 1080p với setting cao đến ultra. Cyberpunk 2077 chơi được tốt ở 1080p, có thể bật ray tracing ở mức thấp-trung nhờ DLSS. Gợi ý xem thông số chi tiết bằng tool get_product_details nếu cần.
+
+Tình huống 25:
+Khách hỏi: Tôi không hài lòng với sản phẩm, tôi muốn khiếu nại
+Cách hỗ trợ: Lắng nghe và thể hiện sự đồng cảm. Hỏi chi tiết về vấn đề: tên sản phẩm, mã đơn hàng, mô tả sự cố. Hướng dẫn các kênh khiếu nại: hotline 0912 888 999, email hotro@pmtcomputer.vn, hoặc đến trực tiếp cửa hàng. Xác nhận PMT Computer có trách nhiệm giải quyết theo đúng chính sách đổi trả và bảo hành.
+
+Tình huống 26:
+Khách hỏi: CPU Intel i7-13700K có tương thích với mainboard B660 không?
+Cách hỗ trợ: Giải thích Intel i7-13700K (Raptor Lake) dùng socket LGA1700 và tương thích với các mainboard Z790/Z690. Mainboard B660 về mặt kỹ thuật có cùng socket LGA1700 nhưng thường bị giới hạn overclocking và một số tính năng nâng cao. Khuyên dùng Z790 nếu muốn khai thác hết tiềm năng CPU. Có thể gọi tool check_compatibility để kiểm tra chi tiết.
+
+Tình huống 27:
+Khách hỏi: Tôi mua CPU nhưng không có tản nhiệt đi kèm, shop có bán không?
+Cách hỗ trợ: Gọi tool tìm kiếm sản phẩm theo danh mục "Cooler" hoặc "Tản nhiệt". Liệt kê các tùy chọn có trong kho với giá và thông số. Hỏi thêm socket CPU của khách (AM4, AM5, LGA1700...) để đảm bảo tản nhiệt tương thích.
+
+Tình huống 28:
+Khách hỏi: Shop có dịch vụ lắp ráp máy tính không? Giá bao nhiêu?
+Cách hỗ trợ: Trả lời theo dữ liệu dịch vụ lắp ráp: PMT Computer có dịch vụ lắp ráp và vệ sinh máy tính. Giá phí lắp ráp phụ thuộc vào cấu hình, thông thường miễn phí hoặc phí rất thấp nếu mua linh kiện tại shop. Hướng dẫn liên hệ trực tiếp hoặc đến cửa hàng để được báo giá cụ thể.
+
+Tình huống 29:
+Khách hỏi: Tôi mua RAM 16GB, cắm vào máy nhưng chỉ nhận 8GB, tại sao?
+Cách hỗ trợ: Giải thích các nguyên nhân phổ biến: RAM chưa cắm chắc vào khe, khe RAM bị lỗi, mainboard chưa nhận do cần vào BIOS bật XMP/DOCP, phiên bản Windows 32-bit chỉ nhận tối đa 4GB. Hướng dẫn kiểm tra BIOS và thử cắm sang khe khác. Nếu vẫn lỗi có thể mang đến cửa hàng kiểm tra.
+
+Tình huống 30:
+Khách hỏi: Tôi muốn so sánh SSD Samsung 970 EVO và Samsung 980 Pro
+Cách hỗ trợ: Gọi tool get_product_details để lấy thông số cụ thể nếu có trong hệ thống. Giải thích chung: 980 Pro là dòng cao hơn, sử dụng PCIe 4.0 với tốc độ đọc đến 7000 MB/s, trong khi 970 EVO dùng PCIe 3.0 với tốc độ đọc đến 3500 MB/s. Với nhu cầu thông thường, 970 EVO là đủ và rẻ hơn; 980 Pro phù hợp cho đồ họa/AI cần I/O cao.
+
+Tình huống 31:
+Khách hỏi: Nguồn 500W có đủ để chạy RTX 4060 không?
+Cách hỗ trợ: RTX 4060 có TDP khoảng 115W, cộng với CPU tầm trung khoảng 65-125W và các linh kiện khác. Tổng tiêu thụ thường khoảng 300-350W. Nguồn 500W 80 Plus Bronze là đủ với biên an toàn tốt. Khuyên chọn nguồn hãng uy tín (Seasonic, Corsair, be quiet!) dù công suất nhỏ hơn vẫn tốt hơn nguồn rẻ tiền công suất lớn.
+
+Tình huống 32:
+Khách hỏi: Shop có bảo hành tại nhà không?
+Cách hỗ trợ: Theo chính sách chuẩn PMT Computer, khách mang sản phẩm lỗi đến cửa hàng tại 1A Hùng Vương, Ba Đình, Hà Nội để được kiểm tra và xử lý bảo hành. Hiện tại không có dịch vụ bảo hành tại nhà theo thông tin đang có. Gợi ý liên hệ hotline 0912 888 999 để xác nhận các tùy chọn hỗ trợ đặc biệt.
+
+Tình huống 33:
+Khách hỏi: Tôi có thể thanh toán trả góp không?
+Cách hỗ trợ: Dựa theo thông tin hiện có về phương thức thanh toán của PMT Computer (chuyển khoản ngân hàng, tiền mặt). Nếu không có thông tin về trả góp trong dữ liệu, trả lời trung thực rằng chatbot không có thông tin về trả góp và hướng dẫn liên hệ hotline 0912 888 999 hoặc đến trực tiếp cửa hàng để hỏi.
+
+Tình huống 34:
+Khách hỏi: RAM của tôi đang chạy 2133MHz nhưng tôi mua RAM 3200MHz, sao tốc độ thấp vậy?
+Cách hỗ trợ: Giải thích đây là tình trạng bình thường nếu chưa bật XMP (Intel) hoặc DOCP/EXPO (AMD) trong BIOS. Hướng dẫn: vào BIOS → Ai Tweaker / D.O.C.P → Enable XMP/DOCP → Save và khởi động lại. Lưu ý mainboard phải hỗ trợ tốc độ RAM đó.
+
+Tình huống 35:
+Khách hỏi: Tôi muốn mua VGA nhưng lo ngại tiêu thụ điện năng cao, chọn loại nào tiết kiệm điện?
+Cách hỗ trợ: Dòng NVIDIA RTX 40 series (Ada Lovelace) nổi tiếng về hiệu năng/watt tốt hơn thế hệ trước. RTX 4060 chỉ tiêu thụ 115W trong khi hiệu năng tương đương RTX 3070 (220W). AMD RX 7600 cũng tiết kiệm điện. Hỏi thêm nhu cầu chơi game và ngân sách để gợi ý model phù hợp.
+
+Tình huống 36:
+Khách hỏi: Tôi mua hàng online, ship đến Đà Nẵng được không?
+Cách hỗ trợ: Theo thông tin vận chuyển của PMT Computer, shop hỗ trợ giao hàng toàn quốc qua đơn vị vận chuyển. Thời gian giao hàng thường 2-5 ngày làm việc tùy tỉnh thành. Phí ship tính theo trọng lượng và khoảng cách. Gợi ý liên hệ hotline 0912 888 999 để xác nhận phí vận chuyển cụ thể đến Đà Nẵng.
+
+Tình huống 37:
+Khách hỏi: Bao lâu thì hàng về kho? Sản phẩm đang hết hàng thì sao?
+Cách hỗ trợ: Giải thích rằng chatbot không có thông tin về thời gian nhập hàng tiếp theo trong hệ thống. Gợi ý khách để lại số điện thoại hoặc email để shop thông báo khi có hàng, hoặc liên hệ trực tiếp qua hotline 0912 888 999. Có thể gợi ý sản phẩm thay thế tương đương nếu có trong kho.
+
+Tình huống 38:
+Khách hỏi: Tôi không nhớ email đặt hàng, có thể tra cứu theo tên không?
+Cách hỗ trợ: Giải thích hệ thống hiện tại tra cứu đơn hàng theo email hoặc mã đơn hàng. Không thể tra theo tên vì có thể trùng tên nhiều khách. Gợi ý khách kiểm tra lại email xác nhận đơn hàng đã nhận khi đặt, hoặc liên hệ hotline 0912 888 999 để nhân viên hỗ trợ tìm kiếm thủ công.
+
+Tình huống 39:
+Khách hỏi: Case máy tính Montech AIR 903 MAX có vừa mainboard ATX không?
+Cách hỗ trợ: Gọi tool get_product_details để xem thông số case nếu có trong hệ thống. Nếu không có thông tin cụ thể, giải thích cách kiểm tra: case cần hỗ trợ form factor ATX (thường là full tower hoặc mid tower). Gợi ý kiểm tra tờ thông số kỹ thuật của case trên trang hãng Montech.
+
+Tình huống 40:
+Khách hỏi: Tôi muốn nâng cấp máy cũ Core i5-8400, nên nâng gì trước?
+Cách hỗ trợ: Core i5-8400 (Coffee Lake, socket LGA1151) vẫn là CPU ổn cho văn phòng và game nhẹ. Gợi ý thứ tự nâng cấp hợp lý: nếu đang dùng HDD thì nâng SSD trước (cải thiện rõ nhất), sau đó nâng RAM nếu đang dưới 16GB, cuối cùng mới xem xét nâng CPU/mainboard (phải đổi cả bộ vì khác platform). Hỏi nhu cầu cụ thể và ngân sách.

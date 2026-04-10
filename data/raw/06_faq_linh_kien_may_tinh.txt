@@ -28,7 +28,7 @@ Câu hỏi: VGA có cần nguồn phụ không?
 Trả lời: Nhiều card đồ họa tầm trung và cao cấp cần đầu cấp nguồn riêng từ PSU (6-pin, 8-pin hoặc 12VHPWR). Khi tư vấn, cần kiểm tra công suất nguồn và đầu cắm phù hợp.
 
 Câu hỏi: Có nên nâng SSD trước hay RAM trước?
-Trả lời: Nếu máy còn dùng HDD, nâng SSD thường cho cảm giận cải thiện rõ nhất. Nếu máy đã có SSD mà hay thiếu bộ nhớ, nâng RAM sẽ hợp lý hơn.
+Trả lời: Nếu máy còn dùng HDD, nâng SSD thường cho cảm giác cải thiện rõ nhất. Nếu máy đã có SSD mà hay thiếu bộ nhớ, nâng RAM sẽ hợp lý hơn.
 
 Câu hỏi: Chuột gaming bị double click có sửa được không?
 Trả lời: Nếu còn bảo hành và lỗi thuộc diện được hỗ trợ, cửa hàng có thể tiếp nhận kiểm tra bảo hành. Nếu hết bảo hành, có thể tư vấn sửa hoặc thay switch tùy sản phẩm.
@@ -62,3 +62,57 @@ Trả lời: Tai nghe (headset) tại PMT Computer có thời gian bảo hành t
 
 Câu hỏi: Case máy tính có cần chọn kỹ không?
 Trả lời: Có. Case cần phù hợp kích thước mainboard (ATX, Micro-ATX, Mini-ITX), có đủ không gian cho VGA dài, tản nhiệt cao, và luồng gió tốt. Case có airflow tốt giúp linh kiện mát hơn và bền hơn.
+
+Câu hỏi: Intel và AMD khác nhau gì? Nên chọn hãng nào?
+Trả lời: Intel thường mạnh hơn về hiệu năng đơn nhân (single-core), phù hợp cho gaming FPS cao và các phần mềm ưu tiên xung nhịp cao. AMD Ryzen thường có ưu thế về đa nhân (multi-core) với giá cạnh tranh hơn, phù hợp cho rendering, streaming và multitasking. Hiện tại cả hai đều rất cạnh tranh. Lựa chọn tốt nhất phụ thuộc vào nhu cầu cụ thể và ngân sách.
+
+Câu hỏi: CPU có đồ họa tích hợp (iGPU) là gì? Có cần mua VGA riêng không?
+Trả lời: CPU có đồ họa tích hợp (như Intel UHD Graphics hoặc AMD Radeon Graphics) có thể xuất hình ảnh mà không cần VGA rời. Đủ cho văn phòng, xem phim, lập trình nhẹ. Nếu chơi game, dựng video hoặc làm đồ họa thì bắt buộc cần VGA rời để có hiệu năng đủ tốt. CPU AMD Ryzen 5000 series (không có chữ G) không có iGPU, bắt buộc cần VGA rời.
+
+Câu hỏi: PCIe 4.0 và PCIe 5.0 khác nhau gì?
+Trả lời: PCIe 5.0 có băng thông gấp đôi PCIe 4.0. SSD NVMe PCIe 5.0 có thể đạt 10000-14000 MB/s so với 7000 MB/s của PCIe 4.0. Tuy nhiên trong thực tế sử dụng hàng ngày, sự khác biệt không rõ ràng. PCIe 5.0 SSD đắt hơn nhiều và sinh nhiệt cao hơn, cần tản nhiệt riêng. Với đa số người dùng, PCIe 4.0 là đủ và tối ưu về giá.
+
+Câu hỏi: Keo tản nhiệt có cần thay không? Bao lâu thay một lần?
+Trả lời: Keo tản nhiệt (thermal paste) giữa CPU và tản nhiệt khô dần theo thời gian, làm giảm khả năng tản nhiệt. Thông thường nên thay keo mỗi 2-3 năm hoặc khi thấy nhiệt độ CPU tăng bất thường. Khi tháo tản nhiệt ra để nâng cấp thì cũng cần thay keo mới. PMT Computer có dịch vụ vệ sinh và thay keo tản nhiệt.
+
+Câu hỏi: Mainboard có bao nhiêu khe RAM? Cắm 2 hay 4 thanh tốt hơn?
+Trả lời: Mainboard thông thường có 2-4 khe RAM. Cắm 2 thanh ở 2 khe đúng vị trí (thường là khe 2 và 4 tính từ CPU) sẽ kích hoạt chế độ Dual Channel, tăng băng thông RAM lên gấp đôi so với cắm 1 thanh duy nhất. Dual Channel cho hiệu năng tốt hơn đáng kể, đặc biệt khi dùng CPU có iGPU.
+
+Câu hỏi: Overclocking là gì? Có nên ép xung không?
+Trả lời: Overclocking là nâng xung nhịp CPU/GPU/RAM vượt mức mặc định để tăng hiệu năng. Yêu cầu: CPU không khóa xung (Intel K-series, AMD Ryzen), mainboard hỗ trợ (Intel Z-series, AMD B/X), tản nhiệt đủ mạnh và nguồn ổn định. Rủi ro: máy không ổn định, nhiệt độ cao, giảm tuổi thọ linh kiện nếu làm không đúng. Người mới không nên tự ép xung mà chưa tìm hiểu kỹ.
+
+Câu hỏi: Tản nhiệt khí (air cooler) hay tản nhiệt nước (AIO) tốt hơn?
+Trả lời: Tản nhiệt khí lớn (như Noctua NH-D15, Deepcool AK620) có thể đạt hiệu quả ngang AIO 240mm với chi phí thấp hơn, độ bền cao, không lo rò rỉ. AIO 240/360mm tản nhiệt tốt hơn cho CPU TDP cao, trông đẹp hơn và tiết kiệm không gian trong case. Với CPU thông thường (không ép xung), tản nhiệt khí tốt là đủ.
+
+Câu hỏi: Tấm nền màn hình IPS, VA, TN khác nhau thế nào?
+Trả lời: TN: phản hồi nhanh nhất (1ms), giá rẻ, nhưng góc nhìn hẹp và màu sắc kém. Phù hợp game thi đấu FPS. IPS: góc nhìn rộng, màu sắc chính xác và đẹp, thích hợp thiết kế đồ họa và làm việc. VA: độ tương phản cao nhất, màu đen sâu, phù hợp xem phim, nhưng hơi chậm phản hồi. Với đa dụng, IPS là lựa chọn cân bằng tốt nhất.
+
+Câu hỏi: Bàn phím cơ (mechanical) khác bàn phím màng (membrane) thế nào?
+Trả lời: Bàn phím cơ dùng switch riêng cho từng phím, có phản hồi xúc giác và âm thanh rõ, tuổi thọ cao (50-100 triệu lần gõ), gõ cảm giác tốt hơn. Giá cao hơn. Bàn phím màng dùng lớp cao su, êm hơn, giá rẻ hơn nhưng độ bền thấp và phản hồi ít rõ ràng hơn. Bàn phím cơ thường được ưa chuộng hơn cho gaming và lập trình.
+
+Câu hỏi: AMD Ryzen 7000 series (AM5) khác Ryzen 5000 (AM4) thế nào?
+Trả lời: Ryzen 7000 (AM5) dùng architecture Zen 4, socket AM5 mới, hỗ trợ DDR5 và PCIe 5.0, hiệu năng cao hơn 15-25% so với Ryzen 5000. Tuy nhiên nền tảng AM5 đắt hơn (mainboard và DDR5 cao hơn). Ryzen 5000 (AM4) vẫn là lựa chọn tốt về giá/hiệu năng nếu ngân sách hạn chế. AM4 và AM5 không tương thích nhau.
+
+Câu hỏi: Intel Gen 12 (Alder Lake) và Gen 13 (Raptor Lake) khác nhau không?
+Trả lời: Cả hai dùng cùng socket LGA1700 nên có thể dùng chung mainboard (Z690/Z790/B660/B760). Gen 13 cải thiện hiệu năng khoảng 10-15% so với Gen 12 cùng phân khúc, chủ yếu nhờ thêm nhân hiệu năng. Nếu đang có mainboard Z690/B660, có thể nâng cấp lên CPU Gen 13 mà không cần đổi mainboard (cần cập nhật BIOS).
+
+Câu hỏi: VRAM của VGA quan trọng không? Cần bao nhiêu VRAM?
+Trả lời: VRAM (Video RAM) là bộ nhớ riêng của card đồ họa, ảnh hưởng trực tiếp đến độ phân giải và chất lượng texture game. Gaming 1080p: 8GB VRAM là đủ. Gaming 1440p: cần 10-12GB. Gaming 4K hoặc đồ họa chuyên nghiệp: 16GB trở lên. AI/Deep Learning: càng nhiều VRAM càng tốt (16-24GB). RTX 4060 Ti 16GB là lựa chọn tốt nếu cần VRAM lớn với ngân sách trung bình.
+
+Câu hỏi: M.2 SSD có hai loại: NVMe và SATA. Cắm vào khe M.2 thì tự nhận loại nào?
+Trả lời: Khe M.2 trên mainboard có thể hỗ trợ NVMe, SATA hoặc cả hai tùy mainboard. SSD NVMe và SSD M.2 SATA có cùng hình dạng vật lý nhưng giao thức khác nhau. Cần kiểm tra mainboard hỗ trợ loại nào trước khi mua. Hầu hết mainboard hiện đại hỗ trợ cả hai nhưng một số khe chỉ hỗ trợ NVMe. Tốc độ NVMe nhanh hơn SATA rất nhiều.
+
+Câu hỏi: Có nên mua CPU box hay tray? Khác nhau gì?
+Trả lời: CPU Box (retail) đi kèm hộp, tem chống hàng giả, và thường có tản nhiệt đi kèm (Intel), bảo hành 3 năm chính hãng. CPU Tray (OEM) không có hộp, thường không có tản nhiệt, bảo hành theo nhà phân phối (thường ngắn hơn). CPU Box an toàn hơn và được khuyên dùng. PMT Computer bán CPU Box chính hãng với bảo hành 36 tháng.
+
+Câu hỏi: Chơi game online (MOBA, FPS) có cần CPU mạnh không?
+Trả lời: Game online thường phụ thuộc nhiều vào CPU hơn VGA vì cần xử lý nhiều thực thể, AI và logic mạng đồng thời. Với game MOBA (LMHT, DOTA) CPU tầm trung (i5/Ryzen 5) là đủ. Game FPS thi đấu (CS2, Valorant) cần CPU đơn nhân mạnh để đạt FPS cao ổn định (i7/Ryzen 7 trở lên). Tuy nhiên VGA vẫn cần đủ mạnh để không tạo bottleneck.
+
+Câu hỏi: Bottleneck là gì? Làm sao tránh?
+Trả lời: Bottleneck xảy ra khi một linh kiện yếu hơn kéo lùi hiệu năng toàn hệ thống. Ví dụ: VGA RTX 4090 ghép với CPU cũ Core i3 sẽ bị CPU giới hạn hiệu năng. Nguyên tắc cân bằng: CPU và VGA cùng tầm giá (không lệch quá 2x), RAM đủ dung lượng và tốc độ, SSD để không bị bottleneck storage. Khi tư vấn build PC, PMT Computer luôn đảm bảo các linh kiện được chọn cân bằng với nhau.
+
+Câu hỏi: SSD có bị hỏng dữ liệu khi mất điện đột ngột không?
+Trả lời: SSD hiện đại có cơ chế bảo vệ khi mất điện (Power Loss Protection - PLP) ở dòng enterprise. SSD consumer thông thường không có PLP nên có thể mất dữ liệu đang ghi khi mất điện đột ngột, tương tự HDD. Tuy nhiên trong thực tế, SSD bền hơn HDD về mặt vật lý vì không có bộ phận cơ học. Khuyên dùng UPS (bộ lưu điện) để bảo vệ hệ thống.
+
+Câu hỏi: Mua VGA AMD hay NVIDIA cho máy học AI, deep learning?
+Trả lời: NVIDIA được ưu tiên hơn cho AI/Deep learning vì hệ sinh thái CUDA được hỗ trợ rộng rãi bởi PyTorch, TensorFlow và hầu hết framework AI. RTX 3080, 4080, 4090 là các lựa chọn phổ biến. AMD có ROCm nhưng hỗ trợ chưa tốt bằng CUDA. Nếu chỉ inference (chạy model đã train) thì AMD cũng được, nhưng training model thì NVIDIA là lựa chọn tốt hơn.

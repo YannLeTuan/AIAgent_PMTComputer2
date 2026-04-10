@@ -1,162 +1,279 @@
 <a id="readme-top"></a>
 
 <div align="center">
-  <img src="https://blog.omnichat.ai/wp-content/uploads/2025/02/AI-Agent-workflowss-en.png" alt="PMT Computer AI Agent Workflow" width="600">
 
-  <h2>PMT Computer AI Agent</h2>
+  <h1>PMT Computer AI Agent</h1>
+  <p><strong>Hệ thống AI Agent tư vấn & chăm sóc khách hàng đa kênh cho cửa hàng linh kiện máy tính</strong><br/>
+  <em>Enterprise-Grade Omnichannel Customer Support powered by RAG + Agentic Workflow</em></p>
+
   <p>
-    <strong>Enterprise-Grade Omnichannel Customer Support System powered by RAG and Agentic Workflow</strong>
-    <br />
-    <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer"><strong>Explore the Documentation »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer">View Live Demo</a>
+    <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer">View Demo</a>
     ·
-    <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer/issues">Report Issue</a>
+    <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer/issues">Report Bug</a>
     ·
     <a href="https://github.com/YannLeTuan/AIAgent_PMTComputer/issues">Request Feature</a>
   </p>
 
-  <p align="center">
-    <img src="https://img.shields.io/badge/Python-3.10%2B-blue?style=flat-square" alt="Python Version">
-    <img src="https://img.shields.io/badge/LLM-Google_Gemini-orange?style=flat-square" alt="LLM Engine">
-    <img src="https://img.shields.io/badge/Vector_DB-FAISS-lightgrey?style=flat-square" alt="Vector Database">
-    <img src="https://img.shields.io/badge/Deployment-Streamlit_Cloud-red?style=flat-square" alt="Deployment">
+  <p>
+    <img src="https://img.shields.io/badge/Python-3.10%2B-3776AB?style=flat-square&logo=python&logoColor=white" alt="Python">
+    <img src="https://img.shields.io/badge/Google_Gemini-2.0_Flash-8E75B2?style=flat-square&logo=google&logoColor=white" alt="Gemini">
+    <img src="https://img.shields.io/badge/FAISS-Vector_Search-444?style=flat-square" alt="FAISS">
+    <img src="https://img.shields.io/badge/Streamlit-Cloud-FF4B4B?style=flat-square&logo=streamlit&logoColor=white" alt="Streamlit">
+    <img src="https://img.shields.io/badge/FastAPI-REST_API-009688?style=flat-square&logo=fastapi&logoColor=white" alt="FastAPI">
+    <img src="https://img.shields.io/badge/SQLite-ORM-003B57?style=flat-square&logo=sqlite&logoColor=white" alt="SQLite">
   </p>
+
 </div>
 
-<hr />
+---
 
-## Abstract and Project Overview
+## Table of Contents
 
-The **PMT Computer AI Agent** is an end-to-end, automated customer service system engineered specifically for computer hardware retail. Developed as a capstone graduation project, it transcends the limitations of standard conversational bots by operating as a fully functional, autonomous agent.
+- [Overview](#overview)
+- [System Architecture](#system-architecture)
+- [Key Features](#key-features)
+- [Technology Stack](#technology-stack)
+- [Project Structure](#project-structure)
+- [Installation & Setup](#installation--setup)
+- [Channels](#channels)
+- [Roadmap](#roadmap)
+- [Author](#author)
 
-The system leverages a sophisticated architecture combining **Retrieval-Augmented Generation (RAG)** for internal knowledge processing and **Tool Calling (Function Calling)** for real-time business operations. This allows the agent to not only answer policy and hardware capability queries but also actively interact with the company's database to check order statuses, verify customer histories, and provide highly personalized technical consulting.
+---
 
-Designed with an omnichannel approach, the architecture serves end-users seamlessly across a highly customized, responsive web interface and a dedicated Telegram bot, ensuring continuous availability and a standardized customer experience.
+## Overview
 
-## System Architecture and Core Capabilities
+**PMT Computer AI Agent** là hệ thống AI Agent end-to-end, được xây dựng cho cửa hàng bán lẻ linh kiện máy tính PMT Computer. Hệ thống vượt ra ngoài giới hạn của chatbot thông thường bằng cách kết hợp hai kiến trúc hiện đại:
 
-The project is structured around a modular, microservices-inspired architecture to ensure scalability, maintainability, and accurate telemetry.
+- **RAG (Retrieval-Augmented Generation):** Truy xuất ngữ cảnh từ cơ sở tri thức nội bộ gồm 14 tập dữ liệu (chính sách bảo hành, FAQ linh kiện, kịch bản hỏi đáp thực tế,...) thông qua FAISS vector search.
+- **Agentic Workflow (Tool Calling):** Google Gemini đóng vai trò orchestrator, tự động quyết định khi nào cần gọi tool để truy vấn database nghiệp vụ thời gian thực (tra đơn hàng, hủy đơn, tìm sản phẩm, tư vấn build PC).
 
-### 1. Advanced Retrieval-Augmented Generation (RAG)
+Được triển khai đa kênh: **Streamlit Web UI** và **Telegram Bot**, sử dụng cùng một backend RAG + Agent.
 
-- **Knowledge Ingestion:** Processes and indexes a comprehensive internal knowledge base (comprising 12 specialized textual datasets covering hardware specifications, warranty policies, and troubleshooting FAQs).
-- **Semantic Search:** Utilizes `sentence-transformers` to generate high-dimensional embeddings, stored and queried locally via **FAISS** (Facebook AI Similarity Search) for low-latency, highly relevant context retrieval.
+---
 
-### 2. Autonomous Agentic Workflow (Tool Calling)
+## System Architecture
 
-- **Dynamic Decision Making:** Powered by the Google Gemini API, the orchestrator evaluates user intent to determine whether to answer based on semantic context or to invoke specific business logic tools.
-- **Database Interoperability:** Safely executes programmatic queries against a relational **SQLite** database (managed via SQLAlchemy ORM) to retrieve dynamic, real-time data such as tracking specific order IDs or pulling up historical customer configurations.
+```
+┌──────────────────────────────────────────────────────────────┐
+│                        CHANNELS                              │
+│   Streamlit Web UI  │  Telegram Bot  │  REST API (FastAPI)  │
+└────────────┬─────────────────┬──────────────────────────────┘
+             │                 │
+             ▼                 ▼
+┌─────────────────────────────────────────────────────────────┐
+│                    AGENT ORCHESTRATOR                        │
+│   Google Gemini 2.0 Flash  +  Tool Calling (Function Call)  │
+│   ┌────────────────┐   ┌──────────────────────────────────┐ │
+│   │  Prompt Builder│   │  Multi-turn Memory (Session TTL) │ │
+│   │  + RAG Context │   │  + Context Manager               │ │
+│   └────────────────┘   └──────────────────────────────────┘ │
+└──────────────────────────────┬──────────────────────────────┘
+                               │
+           ┌───────────────────┼────────────────────┐
+           ▼                   ▼                    ▼
+┌─────────────────┐  ┌──────────────────┐  ┌──────────────────┐
+│   RAG PIPELINE  │  │   TOOL RUNNER    │  │   SMALL TALK     │
+│ FAISS Vector DB │  │ order_tools      │  │ greeting/bye     │
+│ 14 knowledge    │  │ product_tools    │  │ bypass RAG       │
+│ base txt files  │  │ customer_tools   │  └──────────────────┘
+│ sentence-trans- │  │ pc_build_tools   │
+│ formers embed.  │  └────────┬─────────┘
+└─────────────────┘           │
+                              ▼
+                   ┌─────────────────────┐
+                   │   SQLite DATABASE   │
+                   │  Customer | Product │
+                   │  Order | SQLAlchemy │
+                   └─────────────────────┘
+```
 
-### 3. Contextual State Management (Multi-turn Memory)
+---
 
-- **Session Tracking:** Implements a robust session store utilizing unique thread identifiers to maintain conversational context across multiple turns.
-- **Context Window Optimization:** Intelligently summarizes and prunes conversation history to maintain token efficiency without sacrificing the system's ability to handle complex, follow-up inquiries.
+## Key Features
 
-### 4. Omnichannel Delivery
+| Feature | Description |
+|---|---|
+| **RAG Knowledge Base** | 14 file tri thức tiếng Việt: chính sách, FAQ, kịch bản thực tế. Chunked + embedded bằng `sentence-transformers`, indexed bằng FAISS |
+| **Agentic Tool Calling** | Gemini tự quyết định gọi tool phù hợp: tra đơn hàng, hủy đơn, tìm sản phẩm, tư vấn build PC theo ngân sách |
+| **Multi-turn Memory** | Session store với TTL 30 phút, thread-safe, tự động trim lịch sử khi vượt 10 lượt |
+| **Context Manager** | Nhận diện tham chiếu ("đơn này", "sản phẩm kia") và bảo toàn ngữ cảnh hội thoại |
+| **PC Build Advisor** | Tư vấn cấu hình PC theo ngân sách + mục đích (gaming, văn phòng, đồ họa, lập trình) |
+| **Security Guard** | Whitelist tool, xác thực email trước khi hủy đơn, không tự bịa thông tin nghiệp vụ |
+| **Omnichannel** | Streamlit Web + Telegram Bot + REST API (FastAPI) cùng chung backend |
+| **Evaluation Framework** | Test harness đánh giá độ chính xác, context adherence, hallucination rate |
 
-- **Web Frontend (Streamlit):** Deployed on Streamlit Community Cloud. The default UI has been fundamentally overridden using custom HTML and CSS to create a modern, asynchronous "Bubble Chat" interface identical to leading communication platforms. It features real-time text streaming to eliminate perceived latency.
-- **Messaging Integration (Telegram):** A concurrent bot instance built with `python-telegram-bot`, allowing customers to request support directly through their mobile devices using the exact same underlying RAG and Agent logic.
-
-### 5. Evaluation and Telemetry
-
-- **Quality Assurance Framework:** Includes custom evaluation scripts designed to test the agent's accuracy, context adherence, and hallucination rates against a predefined set of ground-truth interactions.
-- **Comprehensive Logging:** System-wide logging tracks API latencies, retrieval confidence scores, and tool execution success rates, providing critical data for continuous model refinement.
+---
 
 ## Technology Stack
 
-The system is built entirely on a modern Python ecosystem, ensuring high performance and ease of deployment.
+**AI & Machine Learning**
 
-**Application & API Layer**<br/>
-![Python](https://img.shields.io/badge/python-3670A0?style=flat-square&logo=python&logoColor=ffdd54)
-![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi)
-
-**AI & Machine Learning**<br/>
 ![Google Gemini](https://img.shields.io/badge/Google%20Gemini-8E75B2?style=flat-square&logo=google&logoColor=white)
 ![FAISS](https://img.shields.io/badge/FAISS-Vector_Search-444444?style=flat-square)
-![Sentence Transformers](https://img.shields.io/badge/Sentence_Transformers-Embedding-blue?style=flat-square)
+![Sentence Transformers](https://img.shields.io/badge/Sentence_Transformers-Embedding-4A90D9?style=flat-square)
 
-**Data Persistence Layer**<br/>
-![SQLite](https://img.shields.io/badge/sqlite-%2307405e.svg?style=flat-square&logo=sqlite&logoColor=white)
-![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=flat-square&logo=python&logoColor=white)
+**Application & API**
 
-**Frontend & Integrations**<br/>
+![Python](https://img.shields.io/badge/Python-3670A0?style=flat-square&logo=python&logoColor=ffdd54)
+![FastAPI](https://img.shields.io/badge/FastAPI-005571?style=flat-square&logo=fastapi)
+
+**Data Layer**
+
+![SQLite](https://img.shields.io/badge/SQLite-%2307405e.svg?style=flat-square&logo=sqlite&logoColor=white)
+![SQLAlchemy](https://img.shields.io/badge/SQLAlchemy-D71F00?style=flat-square)
+
+**Frontend & Integrations**
+
 ![Streamlit](https://img.shields.io/badge/Streamlit-%23FE4B4B.svg?style=flat-square&logo=streamlit&logoColor=white)
-![Telegram API](https://img.shields.io/badge/Telegram_Bot-2CA5E0?style=flat-square&logo=telegram&logoColor=white)
-![HTML5](https://img.shields.io/badge/html5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white)
-![CSS3](https://img.shields.io/badge/css3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white)
+![Telegram](https://img.shields.io/badge/Telegram_Bot-2CA5E0?style=flat-square&logo=telegram&logoColor=white)
+![HTML5](https://img.shields.io/badge/HTML5-%23E34F26.svg?style=flat-square&logo=html5&logoColor=white)
+![CSS3](https://img.shields.io/badge/CSS3-%231572B6.svg?style=flat-square&logo=css3&logoColor=white)
 
-## Local Installation and Setup
+---
 
-To run this project locally for development or evaluation purposes, follow these technical guidelines:
+## Project Structure
 
-1. **Clone the repository**
+```
+AIAgent_PMTComputer2/
+├── app/
+│   ├── agent/          # Orchestrator, memory, context, prompt builder, tool runner
+│   ├── api/            # FastAPI REST endpoints
+│   ├── channels/       # Streamlit UI, Telegram bot
+│   ├── core/           # Config, logger, system prompt
+│   ├── db/             # SQLAlchemy models, seed data, session
+│   ├── rag/            # Ingest, retriever, FAISS vector store
+│   └── tools/          # order, product, customer, pc_build tools
+├── data/
+│   ├── raw/            # 14 knowledge base .txt files (Vietnamese)
+│   └── vector_index/   # FAISS index files
+├── tests/              # Pytest unit tests
+├── scripts/            # Evaluation & testing scripts
+├── streamlit_app.py    # Streamlit entry point
+├── requirements.txt
+└── .env.example
+```
 
-   ```bash
-   git clone [https://github.com/YannLeTuan/AIAgent_PMTComputer.git](https://github.com/YannLeTuan/AIAgent_PMTComputer.git)
-   cd AIAgent_PMTComputer
-   ```
+---
 
-2. **Initialize the virtual environment**
+## Installation & Setup
 
-   ```bash
-   python -m venv venv
-   source venv/bin/activate  # On Windows use `venv\Scripts\activate`
-   ```
+### Prerequisites
 
-3. **Install dependencies**
+- Python 3.10+
+- Google Gemini API key ([Get one here](https://aistudio.google.com/))
 
-   ```bash
-   pip install -r requirements.txt
-   ```
+### Steps
 
-4. **Environment Configuration**
-   Create a `.env` file in the root directory and configure your API keys and parameters:
+**1. Clone the repository**
 
-   ```env
-   GEMINI_API_KEY=your_api_key_here
-   GEMINI_MODEL=gemini-1.5-flash
-   TOP_K_RETRIEVAL=3
-   TELEGRAM_BOT_TOKEN=your_telegram_token
-   ```
+```bash
+git clone https://github.com/YannLeTuan/AIAgent_PMTComputer.git
+cd AIAgent_PMTComputer
+```
 
-5. **Database and Vector Index Initialization**
+**2. Create virtual environment**
 
-   ```bash
-   # Seed the SQLite database with mock products, customers, and orders
-   python -m app.db.seed
+```bash
+python -m venv .venv
+# Windows
+.venv\Scripts\activate
+# macOS/Linux
+source .venv/bin/activate
+```
 
-   # Process raw text files and build the FAISS vector index
-   python -m app.rag.ingest
-   ```
+**3. Install dependencies**
 
-6. **Launch the Application**
-   ```bash
-   # Run the Streamlit web interface
-   streamlit run streamlit_app.py
-   ```
+```bash
+pip install -r requirements.txt
+```
 
-## Roadmap and Future Enhancements
+**4. Configure environment**
 
-The core technical foundation is complete. Current and future development phases are focused on business-value features and optimization:
+```bash
+cp .env.example .env
+```
 
-- [x] Initial architecture setup and database seeding.
-- [x] RAG pipeline implementation with local FAISS.
-- [x] Agent Orchestrator with Tool Calling capabilities.
-- [x] Multi-turn memory management.
-- [x] Omnichannel deployment (Streamlit + Telegram).
-- [x] Asynchronous text streaming and UI/UX modernization.
-- [ ] **Phase 2:** Implementation of "Build PC Advisor" (Constraint-based recommendation system).
-- [ ] **Phase 2:** Hardware comparison capabilities.
-- [ ] **Phase 3:** Final automated evaluation metrics reporting..
+Edit `.env`:
 
-## Author & Contact
+```env
+GEMINI_API_KEY=your_gemini_api_key_here
+GEMINI_MODEL=gemini-2.0-flash
+TOP_K_RETRIEVAL=3
+TELEGRAM_BOT_TOKEN=your_telegram_token_here   # optional
+```
+
+**5. Initialize database**
+
+```bash
+python -m app.db.seed
+```
+
+**6. Build vector index**
+
+```bash
+python -m app.rag.ingest
+```
+
+**7. Launch**
+
+```bash
+# Streamlit web UI
+streamlit run streamlit_app.py
+
+# REST API
+uvicorn app.api.main:app --reload
+
+# Telegram Bot (requires TELEGRAM_BOT_TOKEN)
+python run_telegram.py
+```
+
+---
+
+## Channels
+
+### Streamlit Web UI
+
+Custom chat bubble interface built with HTML/CSS overrides on Streamlit. Hỗ trợ real-time streaming và multi-turn conversation.
+
+### Telegram Bot
+
+Cùng RAG + Agent backend, khách hàng nhắn tin qua Telegram để được hỗ trợ trực tiếp trên điện thoại.
+
+### REST API
+
+`POST /chat` — nhận `session_id` + `message`, trả về câu trả lời của Agent.
+
+```json
+{
+  "session_id": "user_123",
+  "message": "Đơn hàng ORD009 của tôi đang ở đâu?"
+}
+```
+
+---
+
+## Roadmap
+
+- [x] RAG pipeline với FAISS local vector store
+- [x] Agentic workflow với Google Gemini Function Calling
+- [x] Multi-turn memory với session TTL
+- [x] Omnichannel: Streamlit Web + Telegram + REST API
+- [x] PC Build Advisor (budget + use case)
+- [x] Security: tool whitelist, email authentication
+- [x] Evaluation framework
+- [ ] Hardware comparison tool
+- [ ] Discord bot integration
+- [ ] Automated evaluation metrics dashboard
+
+---
+
+## Author
 
 **Pham Minh Tuan**
 
 - Email: tuanqn8899@gmail.com
 - GitHub: [@YannLeTuan](https://github.com/YannLeTuan)
-- Project Link: [AIAgent_PMTComputer](https://github.com/YannLeTuan/AIAgent_PMTComputer)
+- Project: [AIAgent_PMTComputer](https://github.com/YannLeTuan/AIAgent_PMTComputer)
 
 <p align="right">(<a href="#readme-top">back to top</a>)</p>
