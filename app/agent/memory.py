@@ -1,3 +1,4 @@
+import threading
 import time
 
 SESSION_TTL_SECONDS = 1800  # 30 min
@@ -20,21 +21,24 @@ class InMemorySessionStore:
         self.last_access: dict[str, float] = {}
         self.ttl = ttl
         self._last_cleanup = time.time()
+        self._lock = threading.Lock()
 
     def _default_context(self):
         return DEFAULT_CONTEXT.copy()
 
     def _touch(self, thread_id: str):
+        # Must be called with self._lock held
         self.last_access[thread_id] = time.time()
         self._maybe_cleanup()
 
     def _maybe_cleanup(self):
+        # Must be called with self._lock held
         now = time.time()
         if now - self._last_cleanup < CLEANUP_INTERVAL:
             return
         self._last_cleanup = now
         expired = [
-            tid for tid, ts in self.last_access.items()
+            tid for tid, ts in list(self.last_access.items())
             if now - ts > self.ttl
         ]
         for tid in expired:
@@ -43,28 +47,34 @@ class InMemorySessionStore:
             self.last_access.pop(tid, None)
 
     def get_history(self, thread_id: str) -> list:
-        self._touch(thread_id)
-        return self.histories.get(thread_id, [])
+        with self._lock:
+            self._touch(thread_id)
+            return self.histories.get(thread_id, [])
 
     def set_history(self, thread_id: str, history: list):
-        self._touch(thread_id)
-        self.histories[thread_id] = history
+        with self._lock:
+            self._touch(thread_id)
+            self.histories[thread_id] = history
 
     def get_context(self, thread_id: str) -> dict:
-        self._touch(thread_id)
-        return self.contexts.get(thread_id, self._default_context())
+        with self._lock:
+            self._touch(thread_id)
+            return self.contexts.get(thread_id, self._default_context())
 
     def set_context(self, thread_id: str, context: dict):
-        self._touch(thread_id)
-        self.contexts[thread_id] = context
+        with self._lock:
+            self._touch(thread_id)
+            self.contexts[thread_id] = context
 
     def clear_session(self, thread_id: str):
-        self.histories.pop(thread_id, None)
-        self.contexts.pop(thread_id, None)
-        self.last_access.pop(thread_id, None)
+        with self._lock:
+            self.histories.pop(thread_id, None)
+            self.contexts.pop(thread_id, None)
+            self.last_access.pop(thread_id, None)
 
     def active_session_count(self) -> int:
-        return len(self.last_access)
+        with self._lock:
+            return len(self.last_access)
 
 
 session_store = InMemorySessionStore()

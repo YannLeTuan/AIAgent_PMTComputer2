@@ -70,7 +70,12 @@ def _call_gemini(contents: list, temperature: float = 0.2):
         except Exception as e:
             last_error = e
             err_str = str(e).lower()
-            if "429" in err_str or "503" in err_str or "500" in err_str:
+            transient = (
+                "429" in err_str or "503" in err_str or "500" in err_str
+                or "timeout" in err_str or "connection" in err_str
+                or isinstance(e, (ConnectionError, TimeoutError, OSError))
+            )
+            if transient:
                 time.sleep(1.5 * (attempt + 1))
                 continue
             raise

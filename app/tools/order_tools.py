@@ -74,6 +74,12 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
         else:
             order.note = f"hủy đơn: {reason}"
 
+        # Restore stock in same transaction to guarantee data consistency
+        if order.product_id and order.quantity:
+            product = db.query(Product).filter(Product.id == order.product_id).first()
+            if product:
+                product.stock += order.quantity
+
         db.commit()
 
         return {

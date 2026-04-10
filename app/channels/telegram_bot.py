@@ -29,18 +29,21 @@ async def handle_message(update: Update, context: ContextTypes.DEFAULT_TYPE):
     history = session_store.get_history(chat_id)
     context_state = session_store.get_context(chat_id)
 
-    result = await asyncio.to_thread(
-    chat_with_agent,
-    user_text,
-    history,
-    context_state,
-    chat_id
-)
-
-    session_store.set_history(chat_id, result["history"])
-    session_store.set_context(chat_id, result["context_state"])
-
-    await update.message.reply_text(result["answer"])
+    try:
+        result = await asyncio.to_thread(
+            chat_with_agent,
+            user_text,
+            history,
+            context_state,
+            chat_id,
+        )
+        session_store.set_history(chat_id, result["history"])
+        session_store.set_context(chat_id, result["context_state"])
+        await update.message.reply_text(result["answer"])
+    except Exception:
+        await update.message.reply_text(
+            "Xin lỗi, đã xảy ra lỗi khi xử lý yêu cầu của bạn. Vui lòng thử lại."
+        )
 
 
 def main():
