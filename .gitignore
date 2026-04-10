@@ -7,3 +7,5 @@ evaluation/results/
 .streamlit/secrets.toml.
 .claude/settings.local.json
 CODE_REVIEW_RAG.md
+readme_tuan_note.txt
+ecommerce.db
