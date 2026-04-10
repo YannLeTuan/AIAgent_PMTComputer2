@@ -55,8 +55,9 @@ def build_search_conditions(tokens: list[str]):
 
 
 def get_product_details(sku_or_name: str) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         product = db.query(Product).filter(Product.sku == sku_or_name).first()
         if not product:
             pattern = f"%{sku_or_name}%"
@@ -79,12 +80,14 @@ def get_product_details(sku_or_name: str) -> dict:
             result["specs"] = product.specs
         return result
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 
 def search_product(keyword: str, limit: int = 20) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         tokens = expand_keywords(keyword)
         clauses = build_search_conditions(tokens)
 
@@ -121,12 +124,14 @@ def search_product(keyword: str, limit: int = 20) -> dict:
             "results": results
         }
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 
 def list_products(category: str | None = None, brand: str | None = None, max_price: float | None = None, limit: int = 10) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         query = db.query(Product)
 
         if category:
@@ -177,4 +182,5 @@ def list_products(category: str | None = None, brand: str | None = None, max_pri
             }
         }
     finally:
-        db.close()
+        if db is not None:
+            db.close()

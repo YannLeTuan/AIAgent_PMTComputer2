@@ -3,8 +3,9 @@ from app.db.session import SessionLocal
 
 
 def check_order_status(order_code: str) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         order = db.query(Order).filter(Order.order_code == order_code).first()
 
         if not order:
@@ -33,18 +34,21 @@ def check_order_status(order_code: str) -> dict:
 
         return result
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 
 def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
-    if not customer_email or not customer_email.strip():
+    customer_email = (customer_email or "").strip()
+    if not customer_email:
         return {
             "success": False,
             "message": "thiếu email xác thực. Vui lòng cung cấp email đã đặt hàng để xác thực danh tính."
         }
 
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         order = db.query(Order).filter(Order.order_code == order_code).first()
 
         if not order:
@@ -54,7 +58,7 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
             }
 
         customer = db.query(Customer).filter(Customer.id == order.customer_id).first()
-        if not customer or customer.email.lower() != customer_email.strip().lower():
+        if not customer or customer.email.lower() != customer_email.lower():
             return {
                 "success": False,
                 "message": f"email xác thực không khớp với đơn hàng {order_code}. Vui lòng kiểm tra lại email đã đặt hàng."
@@ -89,12 +93,18 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
             "new_status": order.status,
             "reason": reason
         }
+    except Exception:
+        if db is not None:
+            db.rollback()
+        raise
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 
 def cancel_multiple_orders(order_codes: list[str], reason: str, customer_email: str) -> dict:
-    if not customer_email or not customer_email.strip():
+    customer_email = (customer_email or "").strip()
+    if not customer_email:
         return {
             "success": False,
             "message": "thiếu email xác thực. Vui lòng cung cấp email đã đặt hàng để xác thực danh tính."

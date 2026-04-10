@@ -86,17 +86,25 @@ def create_bot() -> discord.Client:
 
         try:
             async with message.channel.typing():
-                result = await asyncio.to_thread(
-                    chat_with_agent,
-                    user_text,
-                    history,
-                    context_state,
-                    thread_id,
+                result = await asyncio.wait_for(
+                    asyncio.to_thread(
+                        chat_with_agent,
+                        user_text,
+                        history,
+                        context_state,
+                        thread_id,
+                    ),
+                    timeout=60.0,
                 )
             session_store.set_history(thread_id, result["history"])
             session_store.set_context(thread_id, result["context_state"])
             await message.channel.send(embed=build_embed(result["answer"]))
 
+        except asyncio.TimeoutError:
+            write_log("discord_timeout", {"thread_id": thread_id})
+            await message.channel.send(
+                embed=build_embed("Yêu cầu mất quá nhiều thời gian. Vui lòng thử lại.", error=True)
+            )
         except Exception as e:
             write_log("discord_error", {"error": str(e), "thread_id": thread_id})
             await message.channel.send(

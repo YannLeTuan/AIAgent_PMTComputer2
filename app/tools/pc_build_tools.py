@@ -79,8 +79,9 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
         }
 
     skip_vga = (use_key == "office")
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         warnings = []
         huge = 999_999_999
 
@@ -205,7 +206,8 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
                                     cpu_socket = new_socket
                                     ram_type = new_ram_type
                                     mb_ff = new_mb_specs.get("form_factor")
-                                    min_watt = int(((better.specs or {}).get("tdp", 65) + vga_tdp + 100) * 1.2)
+                                    current_vga_tdp = (picks["VGA"].specs or {}).get("tdp", 0) if "VGA" in picks else 0
+                                    min_watt = int(((better.specs or {}).get("tdp", 65) + current_vga_tdp + 100) * 1.2)
                                     continue
                         # rollback CPU upgrade nếu không tìm được combo tương thích
                         picks = old_picks
@@ -246,7 +248,8 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
 
         return result
     finally:
-        db.close()
+        if db is not None:
+            db.close()
 
 
 def _check_selected_compatibility(selected: dict) -> dict:
@@ -304,8 +307,9 @@ def _check_selected_compatibility(selected: dict) -> dict:
 
 
 def check_compatibility(component_skus: list[str]) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         components = {}
         not_found = []
         for sku in component_skus:
@@ -338,4 +342,5 @@ def check_compatibility(component_skus: list[str]) -> dict:
             result["message"] = "Tất cả linh kiện tương thích với nhau."
         return result
     finally:
-        db.close()
+        if db is not None:
+            db.close()

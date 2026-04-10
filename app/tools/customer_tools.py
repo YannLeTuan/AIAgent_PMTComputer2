@@ -3,8 +3,9 @@ from app.db.session import SessionLocal
 
 
 def get_customer_orders(customer_email: str) -> dict:
-    db = SessionLocal()
+    db = None
     try:
+        db = SessionLocal()
         customer = db.query(Customer).filter(Customer.email == customer_email).first()
 
         if not customer:
@@ -42,4 +43,5 @@ def get_customer_orders(customer_email: str) -> dict:
             "orders": data
         }
     finally:
-        db.close()
+        if db is not None:
+            db.close()
