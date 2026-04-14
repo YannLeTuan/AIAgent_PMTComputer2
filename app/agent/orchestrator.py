@@ -82,6 +82,18 @@ def _call_gemini(contents: list, temperature: float = 0.2):
     raise last_error
 
 
+_WORD_DELAY = 0.02  # 20 ms per word → ~50 words/sec; keeps each word in its own browser frame
+
+
+def _emit_words(text: str):
+    """Split a Gemini chunk into words and pace them for smooth browser rendering."""
+    words = text.split(" ")
+    for word in words:
+        if word:
+            yield word + " "
+            time.sleep(_WORD_DELAY)
+
+
 def _make_gemini_config(temperature: float = 0.2):
     return types.GenerateContentConfig(
         system_instruction=SYSTEM_PROMPT,
@@ -158,7 +170,7 @@ def stream_chat_with_agent(
                 elif part.text:
                     text_chunks.append(part.text)
                     if not fc_parts:
-                        yield part.text  # stream text immediately if no tool call
+                        yield from _emit_words(part.text)
     except Exception as e:
         write_log("chat_error", {
             "thread_id": thread_id,
@@ -215,7 +227,7 @@ def stream_chat_with_agent(
         for chunk in final_stream:
             if chunk.text:
                 final_chunks.append(chunk.text)
-                yield chunk.text
+                yield from _emit_words(chunk.text)
     except Exception as e:
         write_log("chat_error", {
             "thread_id": thread_id,
