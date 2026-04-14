@@ -1,9 +1,10 @@
+import json
 import uuid
 
 import requests
 import streamlit as st
 
-API_URL = "http://127.0.0.1:8000/chat"
+STREAM_URL = "http://127.0.0.1:8000/chat/stream"
 
 st.set_page_config(page_title="PMT Computer Chatbot", page_icon="💻")
 st.title("PMT Computer Chatbot")
@@ -30,28 +31,37 @@ if user_input:
     with st.chat_message("user"):
         st.write(user_input)
 
-    try:
-        response = requests.post(
-            API_URL,
-            json={
-                "thread_id": st.session_state.thread_id,
-                "message": user_input
-            },
-            timeout=60
-        )
+    with st.chat_message("assistant"):
+        def _stream_response():
+            try:
+                with requests.post(
+                    STREAM_URL,
+                    json={"thread_id": st.session_state.thread_id, "message": user_input},
+                    stream=True,
+                    timeout=60,
+                ) as resp:
+                    if resp.status_code != 200:
+                        yield f"Lỗi backend: {resp.status_code}"
+                        return
+                    for raw_line in resp.iter_lines():
+                        if not raw_line:
+                            continue
+                        line = raw_line.decode("utf-8")
+                        if not line.startswith("data: "):
+                            continue
+                        data = line[6:]
+                        if data in ("[DONE]", "[ERROR]") or data.startswith("[ERROR]"):
+                            return
+                        try:
+                            yield json.loads(data)
+                        except json.JSONDecodeError:
+                            yield data
+            except Exception as e:
+                yield f"Không gọi được backend: {e}"
 
-        if response.status_code == 200:
-            answer = response.json()["answer"]
-        else:
-            answer = f"Lỗi backend: {response.status_code}"
-
-    except Exception as e:
-        answer = f"Không gọi được backend: {e}"
+        answer = st.write_stream(_stream_response())
 
     st.session_state.messages.append({
         "role": "assistant",
-        "content": answer
+        "content": answer or ""
     })
-
-    with st.chat_message("assistant"):
-        st.write(answer)
