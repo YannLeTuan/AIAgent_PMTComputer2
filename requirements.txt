@@ -7,7 +7,6 @@ pydantic
 pydantic-settings
 python-dotenv
 faiss-cpu
-sentence-transformers
 pypdf
 streamlit
 requests
