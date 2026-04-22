@@ -10,6 +10,9 @@ class Settings(BaseSettings):
     TOP_K_RETRIEVAL: int = 4
     TELEGRAM_BOT_TOKEN: str | None = None
     DISCORD_BOT_TOKEN: str | None = None
+    FACEBOOK_PAGE_TOKEN: str | None = None
+    FACEBOOK_VERIFY_TOKEN: str | None = None
+    FACEBOOK_APP_SECRET: str | None = None
 
     model_config = SettingsConfigDict(env_file=".env", extra="ignore")
 

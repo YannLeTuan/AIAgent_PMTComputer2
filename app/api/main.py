@@ -5,6 +5,7 @@ from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 
 from app.api.routes_chat import router as chat_router
+from app.channels.facebook_bot import router as facebook_router
 
 MAX_REQUESTS_PER_MINUTE = 20
 
@@ -37,6 +38,7 @@ async def rate_limit_middleware(request: Request, call_next):
 
 
 app.include_router(chat_router)
+app.include_router(facebook_router)
 
 
 @app.get("/")

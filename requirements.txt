@@ -14,3 +14,4 @@ requests
 loguru
 python-telegram-bot
 discord.py>=2.3.0
+httpx
