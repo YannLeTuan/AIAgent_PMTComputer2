@@ -5,10 +5,5 @@ __pycache__/
 logs/
 evaluation/results/
 .streamlit/secrets.toml.
-.claude/
-claude.md
-CLAUDE.md
-CODE_REVIEW_RAG.md
-readme_tuan_note.txt
 # ecommerce.db
 docs/
