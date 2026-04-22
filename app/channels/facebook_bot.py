@@ -3,7 +3,7 @@ import hashlib
 import hmac
 import httpx
 
-from fastapi import APIRouter, HTTPException, Request
+from fastapi import APIRouter, BackgroundTasks, HTTPException, Request
 from fastapi.responses import PlainTextResponse
 
 from app.agent.memory import session_store
@@ -66,10 +66,34 @@ async def verify_webhook(request: Request):
     raise HTTPException(status_code=403, detail="Verify token không khớp")
 
 
+async def _process_and_reply(sender_id: str, text: str) -> None:
+    """Xử lý tin nhắn và gửi reply — chạy hoàn toàn trong background."""
+    history = session_store.get_history(sender_id)
+    context_state = session_store.get_context(sender_id)
+
+    try:
+        result = await asyncio.to_thread(
+            chat_with_agent,
+            text,
+            history,
+            context_state,
+            sender_id,
+        )
+        session_store.set_history(sender_id, result["history"])
+        session_store.set_context(sender_id, result["context_state"])
+        await _send_message(sender_id, result["answer"])
+    except Exception:
+        await _send_message(
+            sender_id,
+            "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.",
+        )
+
+
 @router.post("/webhook/facebook")
-async def receive_message(request: Request):
+async def receive_message(request: Request, background_tasks: BackgroundTasks):
     """
     Meta gọi vào đây mỗi khi có tin nhắn mới từ user.
+    Trả 200 OK ngay lập tức, xử lý tin nhắn ở background.
     """
     body = await request.body()
     signature = request.headers.get("x-hub-signature-256", "")
@@ -88,29 +112,10 @@ async def receive_message(request: Request):
             message = event.get("message", {})
             text = message.get("text", "").strip()
 
-            # Bỏ qua echo (tin nhắn do bot tự gửi)
             if message.get("is_echo") or not text or not sender_id:
                 continue
 
-            history = session_store.get_history(sender_id)
-            context_state = session_store.get_context(sender_id)
+            background_tasks.add_task(_process_and_reply, sender_id, text)
 
-            try:
-                result = await asyncio.to_thread(
-                    chat_with_agent,
-                    text,
-                    history,
-                    context_state,
-                    sender_id,
-                )
-                session_store.set_history(sender_id, result["history"])
-                session_store.set_context(sender_id, result["context_state"])
-                await _send_message(sender_id, result["answer"])
-            except Exception:
-                await _send_message(
-                    sender_id,
-                    "Xin lỗi, hệ thống đang gặp sự cố. Vui lòng thử lại sau.",
-                )
-
-    # Meta yêu cầu phải trả 200 OK nhanh, không thì sẽ retry liên tục
+    # Trả 200 OK ngay, trước khi xử lý xong — Facebook không bị timeout
     return {"status": "ok"}
