@@ -139,7 +139,7 @@ AIAgent_PMTComputer2/
 ├── app/
 │   ├── agent/          # Orchestrator, memory, context, prompt builder, tool runner
 │   ├── api/            # FastAPI REST endpoints
-│   ├── channels/       # Streamlit UI, Telegram bot
+│   ├── channels/       # Streamlit UI, Telegram bot, Discord bot, Facebook Messenger bot
 │   ├── core/           # Config, logger, system prompt
 │   ├── db/             # SQLAlchemy models, seed data, session
 │   ├── rag/            # Ingest, retriever, FAISS vector store
@@ -258,12 +258,13 @@ Cùng RAG + Agent backend, khách hàng nhắn tin qua Telegram để được h
 - [x] RAG pipeline với FAISS local vector store
 - [x] Agentic workflow với Google Gemini Function Calling
 - [x] Multi-turn memory với session TTL
-- [x] Omnichannel: Streamlit Web + Telegram + REST API
+- [x] Omnichannel: Streamlit Web + Telegram + Discord + Facebook Messenger + REST API
 - [x] PC Build Advisor (budget + use case)
 - [x] Security: tool whitelist, email authentication
 - [x] Evaluation framework
+- [x] Discord bot integration
+- [x] Facebook Messenger bot (webhook, deployed on Render)
 - [ ] Hardware comparison tool
-- [ ] Discord bot integration
 - [ ] Automated evaluation metrics dashboard
 
 ---
