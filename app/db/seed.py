@@ -63,6 +63,8 @@ def seed():
                 specs={"interface": "NVMe PCIe 4.0", "capacity_gb": 2000, "read_speed_mbps": 7450, "write_speed_mbps": 6900, "form_factor": "M.2 2280"}),
         Product(sku="SSD-WD-SN850X-4TB", name="WD Black SN850X 4TB NVMe PCIe 4.0", category="SSD", brand="Western Digital", price=9_990_000, stock=3, warranty_months=60,
                 specs={"interface": "NVMe PCIe 4.0", "capacity_gb": 4000, "read_speed_mbps": 7300, "write_speed_mbps": 6600, "form_factor": "M.2 2280"}),
+        Product(sku="SSD-KINGSTON-NV2-500GB", name="Kingston NV2 500GB NVMe", category="SSD", brand="Kingston", price=990_000, stock=20, warranty_months=36,
+                specs={"interface": "NVMe PCIe 3.0", "capacity_gb": 500, "read_speed_mbps": 3500, "write_speed_mbps": 2100, "form_factor": "M.2 2280"}),
 
         # ── HDD ──
         Product(sku="HDD-WD-BLUE-1TB", name="WD Blue 1TB 7200RPM", category="HDD", brand="Western Digital", price=1_090_000, stock=14, warranty_months=24,
@@ -111,6 +113,8 @@ def seed():
                 specs={"socket": "LGA1700", "chipset": "Z790", "form_factor": "E-ATX", "memory_type": ["DDR5"], "max_memory_gb": 192, "memory_slots": 4, "m2_slots": 5, "pcie_x16_slots": 2}),
         Product(sku="MAIN-ASUS-Z790-APEX", name="ASUS ROG Maximus Z790 Apex Encore DDR5", category="Mainboard", brand="ASUS", price=18_990_000, stock=2, warranty_months=36,
                 specs={"socket": "LGA1700", "chipset": "Z790", "form_factor": "ATX", "memory_type": ["DDR5"], "max_memory_gb": 192, "memory_slots": 2, "m2_slots": 5, "pcie_x16_slots": 2}),
+        Product(sku="MAIN-GIGABYTE-H610M", name="Gigabyte H610M H DDR4", category="Mainboard", brand="Gigabyte", price=1_890_000, stock=13, warranty_months=36,
+                specs={"socket": "LGA1700", "chipset": "H610", "form_factor": "mATX", "memory_type": ["DDR4"], "max_memory_gb": 64, "memory_slots": 2, "m2_slots": 1, "pcie_x16_slots": 1}),
 
         # ── Case ──
         Product(sku="CASE-MONTECH-AIR100", name="Montech Air 100 ARGB", category="Case", brand="Montech", price=1_290_000, stock=10, warranty_months=12,
@@ -147,6 +151,8 @@ def seed():
                 specs={"size_inch": 27, "resolution": "2560x1440", "panel_type": "IPS", "refresh_rate_hz": 165, "response_time_ms": 1, "hdr": True}),
         Product(sku="MON-ASUS-PG32UQX", name="ASUS ROG Swift PG32UQX 32 inch 4K 144Hz", category="Monitor", brand="ASUS", price=28_990_000, stock=2, warranty_months=36,
                 specs={"size_inch": 32, "resolution": "3840x2160", "panel_type": "IPS", "refresh_rate_hz": 144, "response_time_ms": 4, "hdr": True}),
+        Product(sku="MON-LG-24GN600", name="LG 24GN600 24 inch 144Hz", category="Monitor", brand="LG", price=3_990_000, stock=8, warranty_months=24,
+                specs={"size_inch": 24, "resolution": "1920x1080", "panel_type": "IPS", "refresh_rate_hz": 144, "response_time_ms": 1, "hdr": False}),
 
         # ── Mouse ──
         Product(sku="MOUSE-SS-RIVAL3", name="SteelSeries Rival 3", category="Mouse", brand="SteelSeries", price=490_000, stock=20, warranty_months=24,
@@ -159,6 +165,8 @@ def seed():
                 specs={"sensor": "HERO 12K", "dpi_max": 12000, "weight_g": 99, "wireless": True, "buttons": 6}),
         Product(sku="MOUSE-LOGI-GPX2", name="Logitech G Pro X 2 Superlight Wireless", category="Mouse", brand="Logitech", price=2_990_000, stock=5, warranty_months=24,
                 specs={"sensor": "HERO 2", "dpi_max": 32000, "weight_g": 60, "wireless": True, "buttons": 5}),
+        Product(sku="MOUSE-LOGI-G102", name="Logitech G102 Lightsync", category="Mouse", brand="Logitech", price=420_000, stock=30, warranty_months=24,
+                specs={"sensor": "8K DPI Optical", "dpi_max": 8000, "weight_g": 85, "wireless": False, "buttons": 6}),
 
         # ── Keyboard ──
         Product(sku="KB-LOGI-G413", name="Logitech G413 Mechanical Keyboard", category="Keyboard", brand="Logitech", price=1_790_000, stock=8, warranty_months=24,
@@ -171,6 +179,12 @@ def seed():
                 specs={"switch_type": "Gateron Jupiter Red", "layout": "Full-size", "wireless": True, "backlight": "RGB"}),
         Product(sku="KB-ASUS-CLAYMORE2", name="ASUS ROG Claymore II Modular Wireless", category="Keyboard", brand="ASUS", price=4_990_000, stock=3, warranty_months=24,
                 specs={"switch_type": "Cherry MX Red", "layout": "Full-size (modular)", "wireless": True, "backlight": "RGB"}),
+        Product(sku="KB-AKKO-3087", name="Akko 3087 Mechanical Keyboard", category="Keyboard", brand="Akko", price=1_590_000, stock=11, warranty_months=12,
+                specs={"switch_type": "Akko CS Jelly Blue", "layout": "TKL", "wireless": False, "backlight": "RGB"}),
+
+        # ── Headset ──
+        Product(sku="HEADSET-HYPERX-CLOUD", name="HyperX Cloud Stinger", category="Headset", brand="HyperX", price=1_190_000, stock=9, warranty_months=24,
+                specs={"type": "over-ear", "connectivity": "wired", "microphone": True, "surround": "7.1 virtual", "weight_g": 275}),
     ]
 
     db.add_all(customers)
@@ -255,7 +269,7 @@ def seed():
     db.close()
 
     print("seeding complete")
-    print("created 15 customers, 60 products (12 categories x 5), 38 orders in ecommerce.db")
+    print("created 15 customers, 66 products (13 categories), 38 orders in ecommerce.db")
 
 
 if __name__ == "__main__":

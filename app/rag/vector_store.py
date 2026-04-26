@@ -57,11 +57,12 @@ class LocalFaissStore:
             if self.index is None or len(self.documents) == 0:
                 return []
             distances, indices = self.index.search(query_embedding.astype("float32"), top_k)
-            n_docs = len(self.documents)
+            docs_snapshot = self.documents
+            n_docs = len(docs_snapshot)
 
         results = []
         for idx in indices[0]:
             if 0 <= idx < n_docs:
-                results.append(self.documents[idx])
+                results.append(docs_snapshot[idx])
 
         return results

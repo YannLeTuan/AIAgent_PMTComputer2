@@ -16,7 +16,6 @@ GRAPH_API_URL = "https://graph.facebook.com/v19.0/me/messages"
 
 
 def _verify_signature(body: bytes, signature_header: str) -> bool:
-    """Xác minh request thật sự đến từ Meta, không phải giả mạo."""
     if not settings.FACEBOOK_APP_SECRET:
         return True
     if not signature_header.startswith("sha256="):
@@ -30,7 +29,6 @@ def _verify_signature(body: bytes, signature_header: str) -> bool:
 
 
 async def _send_message(recipient_id: str, text: str) -> None:
-    """Gửi tin nhắn về cho user qua Graph API."""
     payload = {
         "recipient": {"id": recipient_id},
         "message": {"text": text},
@@ -51,10 +49,6 @@ async def _send_message(recipient_id: str, text: str) -> None:
 
 @router.get("/webhook/facebook", response_class=PlainTextResponse)
 async def verify_webhook(request: Request):
-    """
-    Meta gọi vào đây 1 lần khi mình đăng ký webhook.
-    Mình phải trả lại hub.challenge để xác nhận mình là chủ server.
-    """
     params = request.query_params
     mode = params.get("hub.mode")
     token = params.get("hub.verify_token")
@@ -67,7 +61,6 @@ async def verify_webhook(request: Request):
 
 
 async def _process_and_reply(sender_id: str, text: str) -> None:
-    """Xử lý tin nhắn và gửi reply — chạy hoàn toàn trong background."""
     history = session_store.get_history(sender_id)
     context_state = session_store.get_context(sender_id)
 
@@ -91,10 +84,6 @@ async def _process_and_reply(sender_id: str, text: str) -> None:
 
 @router.post("/webhook/facebook")
 async def receive_message(request: Request, background_tasks: BackgroundTasks):
-    """
-    Meta gọi vào đây mỗi khi có tin nhắn mới từ user.
-    Trả 200 OK ngay lập tức, xử lý tin nhắn ở background.
-    """
     body = await request.body()
     signature = request.headers.get("x-hub-signature-256", "")
 
@@ -117,5 +106,4 @@ async def receive_message(request: Request, background_tasks: BackgroundTasks):
 
             background_tasks.add_task(_process_and_reply, sender_id, text)
 
-    # Trả 200 OK ngay, trước khi xử lý xong — Facebook không bị timeout
     return {"status": "ok"}

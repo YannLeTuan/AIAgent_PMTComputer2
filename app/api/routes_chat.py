@@ -39,7 +39,7 @@ async def chat_stream(req: ChatRequest):
     history = session_store.get_history(req.thread_id)
     context_state = session_store.get_context(req.thread_id)
 
-    loop = asyncio.get_event_loop()
+    loop = asyncio.get_running_loop()
     queue: asyncio.Queue = asyncio.Queue()
 
     def _run():

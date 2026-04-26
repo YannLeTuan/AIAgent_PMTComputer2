@@ -3,8 +3,17 @@ import re
 from app.core.config import settings
 from app.rag.retriever import retrieve_context
 
+_ORD_RE = re.compile(r"\bORD\d+\b", re.IGNORECASE)
+_EMAIL_RE = re.compile(r"[\w\.-]+@[\w\.-]+\.\w+")
+
+
+def _is_direct_cancel_request(msg: str) -> bool:
+    return bool(_ORD_RE.search(msg) and _EMAIL_RE.search(msg))
+
 FOLLOW_ORDER_WORDS = [
-    "đơn này", "đơn đó", "đơn kia", "mã đó", "trong các đơn đó", "đơn hàng này"
+    "đơn này", "đơn đó", "đơn kia", "mã đó", "trong các đơn đó", "đơn hàng này",
+    "nhận được hàng", "nhận hàng", "bao giờ giao", "giao bao giờ",
+    "khi nào giao", "khi nào nhận", "bao giờ tới",
 ]
 
 FOLLOW_PRODUCT_WORDS = [
@@ -78,18 +87,30 @@ def build_retrieval_query(user_message: str, context_state: dict):
 
 
 def build_user_message(user_message: str, context_state: dict):
+    skip_rag = _is_direct_cancel_request(user_message)
     retrieval_query = build_retrieval_query(user_message, context_state)
-    contexts = retrieve_context(retrieval_query, top_k=settings.TOP_K_RETRIEVAL)
-    context_block = "\n\n".join(contexts)
+
+    if skip_rag:
+        contexts = []
+        context_block = "Không áp dụng RAG cho yêu cầu này."
+    else:
+        contexts = retrieve_context(retrieval_query, top_k=settings.TOP_K_RETRIEVAL)
+        context_block = "\n\n".join(contexts)
 
     reference_hint = build_reference_hint(user_message, context_state)
     if not reference_hint:
         reference_hint = "Không có tham chiếu hội thoại đặc biệt."
 
+    tool_directive = (
+        "- Câu hỏi chứa mã đơn hàng VÀ email → GỌI TOOL cancel_order NGAY, không phân tích chính sách.\n"
+        if skip_rag else ""
+    )
+
     return (
         f"Ngữ cảnh tri thức nội bộ:\n{context_block}\n\n"
         f"Ngữ cảnh hội thoại gần đây đã suy ra:\n{reference_hint}\n\n"
         f"Yêu cầu:\n"
+        f"{tool_directive}"
         f"- Nếu câu hỏi cần dữ liệu đơn hàng, sản phẩm hoặc khách hàng trong hệ thống, hãy gọi tool phù hợp.\n"
         f"- Nếu câu hỏi là chính sách, thông tin cửa hàng hoặc FAQ, hãy ưu tiên dựa vào ngữ cảnh.\n"
         f"- Nếu là kiến thức máy tính cơ bản, có thể trả lời ngắn gọn và đúng trọng tâm.\n"

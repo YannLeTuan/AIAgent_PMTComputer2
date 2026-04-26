@@ -78,7 +78,7 @@ def cancel_order(order_code: str, reason: str, customer_email: str) -> dict:
         else:
             order.note = f"hủy đơn: {reason}"
 
-        # Restore stock in same transaction to guarantee data consistency
+        # restore stock atomically with the cancel
         if order.product_id and order.quantity:
             product = db.query(Product).filter(Product.id == order.product_id).first()
             if product:
@@ -110,25 +110,51 @@ def cancel_multiple_orders(order_codes: list[str], reason: str, customer_email: 
             "message": "thiếu email xác thực. Vui lòng cung cấp email đã đặt hàng để xác thực danh tính."
         }
 
-    results = []
-    success_count = 0
-    failed_count = 0
+    db = None
+    try:
+        db = SessionLocal()
+        results = []
+        success_count = 0
+        failed_count = 0
 
-    for code in order_codes:
-        result = cancel_order(code, reason, customer_email=customer_email)
-        results.append({
-            "order_code": code,
-            "result": result
-        })
+        for code in order_codes:
+            order = db.query(Order).filter(Order.order_code == code).first()
+            if not order:
+                results.append({"order_code": code, "result": {"success": False, "message": f"không tìm thấy đơn hàng {code}"}})
+                failed_count += 1
+                continue
 
-        if result.get("success"):
+            customer = db.query(Customer).filter(Customer.id == order.customer_id).first()
+            if not customer or customer.email.lower() != customer_email.lower():
+                results.append({"order_code": code, "result": {"success": False, "message": f"email xác thực không khớp với đơn hàng {code}"}})
+                failed_count += 1
+                continue
+
+            if order.status in ["shipped", "delivered", "cancelled"]:
+                results.append({"order_code": code, "result": {"success": False, "message": f"đơn {code} đang ở trạng thái {order.status}, không thể hủy"}})
+                failed_count += 1
+                continue
+
+            old_status = order.status
+            order.status = "cancelled"
+            order.note = f"{order.note} | hủy đơn: {reason}" if order.note else f"hủy đơn: {reason}"
+
+            # restore stock atomically with the cancel
+            if order.product_id and order.quantity:
+                product = db.query(Product).filter(Product.id == order.product_id).first()
+                if product:
+                    product.stock += order.quantity
+
+            results.append({"order_code": code, "result": {"success": True, "message": f"đã hủy đơn {code}", "old_status": old_status, "new_status": "cancelled", "reason": reason}})
             success_count += 1
-        else:
-            failed_count += 1
 
-    return {
-        "success": True,
-        "success_count": success_count,
-        "failed_count": failed_count,
-        "results": results
-    }
+        db.commit()
+        return {"success": True, "success_count": success_count, "failed_count": failed_count, "results": results}
+
+    except Exception:
+        if db is not None:
+            db.rollback()
+        raise
+    finally:
+        if db is not None:
+            db.close()

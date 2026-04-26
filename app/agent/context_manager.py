@@ -66,14 +66,15 @@ def trim_history(history: list, context_state: dict | None = None):
 
 
 def copy_context(context_state: dict | None):
-    base = DEFAULT_CONTEXT.copy()
+    import copy
+    base = copy.deepcopy(DEFAULT_CONTEXT)
 
     if not context_state:
         return base
 
     for k in base:
         if k in context_state:
-            base[k] = context_state[k]
+            base[k] = copy.deepcopy(context_state[k])
 
     return base
 
@@ -96,6 +97,12 @@ def update_context_from_tool_result(tool_name: str, tool_result: dict, args: dic
 
     elif tool_name == "cancel_order" and tool_result.get("success"):
         context_state["last_order_code"] = args.get("order_code")
+
+    elif tool_name == "cancel_multiple_orders" and tool_result.get("success"):
+        codes = args.get("order_codes", [])
+        if codes:
+            context_state["last_order_code"] = codes[-1]
+            context_state["last_order_codes"] = list(codes)
 
     elif tool_name == "search_product" and tool_result.get("success"):
         results = tool_result.get("results", [])

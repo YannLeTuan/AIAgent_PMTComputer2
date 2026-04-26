@@ -895,7 +895,7 @@
     "turns": [
       {
         "input": "Tìm CPU Core i9",
-        "must_include": [],
+        "must_include": ["i9", "13900K"],
         "must_not_include": ["không tìm thấy"]
       }
     ]

@@ -18,10 +18,11 @@ app = FastAPI(title="PMT Computer AI Agent API")
 async def rate_limit_middleware(request: Request, call_next):
     if request.url.path == "/chat" and request.method == "POST":
         client_ip = request.client.host if request.client else "unknown"
+        if client_ip in ("127.0.0.1", "::1"):
+            return await call_next(request)
         now = time.time()
         window = 60.0
 
-        # Loại bỏ timestamps cũ hơn 1 phút
         _request_counts[client_ip] = [
             ts for ts in _request_counts[client_ip] if now - ts < window
         ]

@@ -85,7 +85,6 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
         warnings = []
         huge = 999_999_999
 
-        # ══════ PASS 1: chọn cheapest compatible cho từng category ══════
         cpu = _find_compatible(db, "CPU", huge, brand=brand_preference, order_desc=False)
         if not cpu:
             cpu = _find_compatible(db, "CPU", huge, order_desc=False)
@@ -141,7 +140,6 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
                 "minimum_build_cost": min_total,
             }
 
-        # ══════ PASS 2: upgrade theo priority, dùng remaining budget ══════
         remaining = budget - min_total
         priority = UPGRADE_PRIORITY[use_key]
 
@@ -177,7 +175,7 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
                 old_picks = dict(picks)
                 picks[cat] = better
 
-                # Nếu upgrade CPU đổi socket → phải re-check mainboard + ram + cooler
+                # CPU socket change: re-verify mainboard, RAM, cooler compatibility
                 if cat == "CPU":
                     new_socket = (better.specs or {}).get("socket")
                     if new_socket != cpu_socket:
@@ -209,12 +207,11 @@ def build_pc_config(budget: float, use_case: str = "gaming", brand_preference: s
                                     current_vga_tdp = (picks["VGA"].specs or {}).get("tdp", 0) if "VGA" in picks else 0
                                     min_watt = int(((better.specs or {}).get("tdp", 65) + current_vga_tdp + 100) * 1.2)
                                     continue
-                        # rollback CPU upgrade nếu không tìm được combo tương thích
+                        # rollback: no compatible combo found for new socket
                         picks = old_picks
                         remaining += gained
                         continue
 
-        # ══════ BUILD RESULT ══════
         selected = {}
         total = 0
         for cat in BUILD_CATEGORIES:

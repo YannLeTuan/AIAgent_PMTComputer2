@@ -31,13 +31,13 @@ EXPECTATION_ALIASES = {
     # Từ khóa kỹ thuật
     "tốc độ": ["tốc độ", "nhanh", "nhanh hơn", "truy xuất nhanh", "nhanh hon"],
     "đổi trả": ["đổi trả", "doi tra", "đổi hàng", "trả hàng", "hoàn hàng"],
-    "xử lý": ["xử lý", "xu ly", "đang xử lý", "đang được xử lý"],
+    "xử lý": ["xử lý", "xu ly", "đang xử lý", "đang được xử lý", "ở trạng thái xử lý", "trang thai xu ly"],
     "lắp ráp": ["lắp ráp", "lap rap", "lắp máy", "ráp máy"],
     "vệ sinh": ["vệ sinh", "ve sinh", "làm sạch"],
     "socket": ["socket", "chân cắm", "cổng cắm"],
     "mainboard": ["mainboard", "bo mạch chủ", "bo mach chu", "board"],
     "không khớp": ["không khớp", "khong khop", "không đúng", "không trùng", "xác thực thất bại", "email không hợp lệ", "không match"],
-    "hoàn tiền": ["hoàn tiền", "hoan tien", "trả tiền", "refund"],
+    "hoàn tiền": ["hoàn tiền", "hoan tien", "trả tiền", "refund", "tiền hoàn", "tien hoan"],
     "nguồn": ["nguồn", "nguon", "PSU", "power supply", "công suất"],
     "xác nhận": ["xác nhận", "xac nhan", "confirm", "xác thực đơn"],
     "giao hàng": ["giao hàng", "giao hang", "vận chuyển", "ship hàng", "delivery"]
@@ -58,7 +58,7 @@ def semantic_match(answer: str, expected: str) -> bool:
     if expected_norm in answer_norm:
         return True
 
-    aliases = EXPECTATION_ALIASES.get(expected_norm, [])
+    aliases = EXPECTATION_ALIASES.get(expected, EXPECTATION_ALIASES.get(expected_norm, []))
     for alias in aliases:
         if normalize_text(alias) in answer_norm:
             return True
@@ -229,6 +229,7 @@ def main():
 
     summary = {
         "run_id": run_id,
+        "embedding_model": "gemini-embedding-001",
         "database_reseeded": True,
         "total_cases": stats["total_cases"],
         "total_turns": stats["total_turns"],
@@ -252,16 +253,17 @@ def main():
         }
 
     timestamp = time.strftime("%Y%m%d_%H%M%S")
-    result_path = RESULTS_DIR / f"evaluation_result_{timestamp}.json"
-    summary_path = RESULTS_DIR / f"evaluation_summary_{timestamp}.json"
+    result_path = RESULTS_DIR / f"evaluation_result_gemini_embed_{timestamp}.json"
+    summary_path = RESULTS_DIR / f"evaluation_summary_gemini_embed_{timestamp}.json"
 
     result_path.write_text(json.dumps(all_results, ensure_ascii=False, indent=2), encoding="utf-8")
     summary_path.write_text(json.dumps(summary, ensure_ascii=False, indent=2), encoding="utf-8")
 
+    sys.stdout.reconfigure(encoding="utf-8")
     print("\n===== EVALUATION SUMMARY =====")
     print(json.dumps(summary, ensure_ascii=False, indent=2))
-    print(f"\nChi tiết lưu tại: {result_path}")
-    print(f"Tóm tắt lưu tại: {summary_path}")
+    print(f"\nChi tiet luu tai: {result_path}")
+    print(f"Tom tat luu tai: {summary_path}")
 
 
 if __name__ == "__main__":

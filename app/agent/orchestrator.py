@@ -82,11 +82,10 @@ def _call_gemini(contents: list, temperature: float = 0.2):
     raise last_error
 
 
-_WORD_DELAY = 0.02  # 20 ms per word → ~50 words/sec; keeps each word in its own browser frame
+_WORD_DELAY = 0.02  # 20ms/word for smooth SSE streaming
 
 
 def _emit_words(text: str):
-    """Split a Gemini chunk into words and pace them for smooth browser rendering."""
     words = text.split(" ")
     for word in words:
         if word:
@@ -108,11 +107,7 @@ def stream_chat_with_agent(
     context_state: dict | None = None,
     thread_id: str | None = None,
 ):
-    """
-    Generator that yields str text chunks then a final dict:
-      {"history": [...], "context_state": {...}}
-    Callers must drain the generator to trigger session updates.
-    """
+    # yields str chunks then {"history": [...], "context_state": {...}}
     start_time = time.perf_counter()
 
     small_talk_answer = get_small_talk_answer(user_message)
@@ -150,7 +145,6 @@ def stream_chat_with_agent(
         types.Content(role="user", parts=[types.Part(text=full_message)])
     ]
 
-    # --- First streaming call: detect tool calls vs. pure text ---
     text_chunks: list[str] = []
     fc_parts: list = []
 
@@ -169,8 +163,6 @@ def stream_chat_with_agent(
                     fc_parts.append(part)
                 elif part.text:
                     text_chunks.append(part.text)
-                    if not fc_parts:
-                        yield from _emit_words(part.text)
     except Exception as e:
         write_log("chat_error", {
             "thread_id": thread_id,
@@ -180,8 +172,9 @@ def stream_chat_with_agent(
         })
         raise
 
-    # --- No tool calls: done ---
     if not fc_parts:
+        for chunk_text in text_chunks:
+            yield from _emit_words(chunk_text)
         final_text = normalize_answer("".join(text_chunks))
         new_history = history + [
             {"role": "user", "text": user_message},
@@ -197,7 +190,6 @@ def stream_chat_with_agent(
         yield {"history": trim_history(new_history, context_state), "context_state": context_state}
         return
 
-    # --- Tool call path ---
     current_turn_contents = contents + [types.Content(role="model", parts=fc_parts)]
 
     for fc_part in fc_parts:
@@ -216,7 +208,6 @@ def stream_chat_with_agent(
             )
         )
 
-    # --- Stream final response after tool execution ---
     final_chunks: list[str] = []
     try:
         final_stream = client.models.generate_content_stream(

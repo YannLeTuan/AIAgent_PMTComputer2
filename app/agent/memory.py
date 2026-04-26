@@ -1,3 +1,4 @@
+import copy
 import threading
 import time
 
@@ -24,15 +25,13 @@ class InMemorySessionStore:
         self._lock = threading.Lock()
 
     def _default_context(self):
-        return DEFAULT_CONTEXT.copy()
+        return copy.deepcopy(DEFAULT_CONTEXT)
 
     def _touch(self, thread_id: str):
-        # Must be called with self._lock held
         self.last_access[thread_id] = time.time()
         self._maybe_cleanup()
 
     def _maybe_cleanup(self):
-        # Must be called with self._lock held
         now = time.time()
         if now - self._last_cleanup < CLEANUP_INTERVAL:
             return
